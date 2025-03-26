@@ -1,0 +1,18 @@
+<section>
+    <div class="container mt-4">
+        <div th:if="${bookedRides == null}" class="row justify-content-center">
+            <div class="col-md-6"> <!-- Add text-center class here -->
+                <img th:src="@{/assets/rides-booked.jpg}" alt="" width="350" height="350" class="rounded mx-auto d-block">
+
+                <div class="d-flex flex-column align-items-center justify-content-center text-center mt-5">
+                    <h2 class="fw-bold text-dark-emphasis">
+                        Your future travel bookings will appear here.
+                    </h2>
+                    <p>
+                        Find the perfect ride from thousands of destinations to share your travel costs.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

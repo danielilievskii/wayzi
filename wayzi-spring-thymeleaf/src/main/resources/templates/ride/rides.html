@@ -1,0 +1,181 @@
+<div class="container mt-4 mb-5">
+    <!-- Filter Bar -->
+    <div th:replace="~{/fragments/rides-filter-form}"></div>
+
+    <!-- Ride Listings -->
+    <div class="container w-75 responsive-text">
+        <div class="row row-cols-1 g-3">
+
+            <th:block th:if="${!#lists.isEmpty(ridesOnDate)}">
+                <div class="row mb-0">
+                    <span class="text-dark-emphasis fw-bold fs-5 px-2 py-1"
+                          th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(date.atStartOfDay(), 'EEEE, d MMMM')}">
+                    </span>
+                </div>
+                <div th:each="ride : ${ridesOnDate}" class="col-md-12 ride-card">
+                    <a th:href="@{'/rides/details/' + ${ride.id}}" class="text-decoration-none">
+                        <div class="card shadow-sm border-0 px-3 py-3 py-sm-3 px-sm-3 py-md-3 px-md-5">
+                            <div class="row align-items-start justify-content-between">
+                                <!-- Ride Details -->
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <h5 class="text-dark-emphasis"
+                                                th:text="${ride.getDepartureLocation().getDisplayName()}"></h5>
+                                            <span class="bg-danger-subtle px-2 py-1 rounded"
+                                                  th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getDepartureTime(), 'hh:mm a')}"></span>
+
+                                            <i class="fa-solid fa-arrow-right"></i>
+                                            <h5 class="text-dark-emphasis"
+                                                th:text="${ride.getArrivalLocation().getDisplayName()}"></h5>
+                                            <span class="bg-danger-subtle px-2 py-1 rounded"
+                                                  th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getArrivalTime(), 'hh:mm a')}"></span>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="d-flex align-items-center align-content-end gap-3">
+                                            <p>
+                                                <img class="profile-pic"
+                                                     th:src="@{'/' + ${ride.driver.getProfilePicPath()}}" alt=""
+                                                     width="40"
+                                                     height="40">
+                                                <span class="color-gray" th:text="${ride.driver.getName()}"></span>
+                                            </p>
+
+                                            <p th:switch="${ride.getVehicle().getType().name()}">
+                                                <i th:case="'AUTOMOBILE'" class="fa-solid fa-car"></i>
+                                                <i th:case="'MOTORBIKE'" class="fa-solid fa-motorcycle"></i>
+                                                <i th:case="'BUS'" class="fa-solid fa-bus"></i>
+                                                <i th:case="'VAN'" class="fa-solid fa-van-shuttle"></i>
+                                                <span class="mx-2 color-gray"
+                                                      th:text="${ride.getVehicle().getName()}"></span>
+                                            </p>
+
+                                            <p>
+                                                <i class="fa-solid fa-users"></i>
+                                                <span class="mx-2 color-gray">
+                                                <span th:text="${ride.getAvailableSeats()}"></span>
+                                                <span th:text="${ride.getAvailableSeats() == 1 ? 'available seat' : 'available seats'}"></span>
+                                            </span>
+
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- Price per Seat -->
+                                <div class="col-md-3 text-end">
+                                    <h5 class="fw-bold text-dark-emphasis">
+                                        <span th:text="${ride.pricePerSeat}"></span>,00 MKD
+                                    </h5>
+
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div th:insert="fragments/paging :: pageSection(${page})"></div>
+            </th:block>
+
+            <th:block th:if="${#lists.isEmpty(ridesOnDate) && !#lists.isEmpty(ridesAfterDate)}">
+                <div>
+                    <p class="text-center">There aren't any rides scheduled on this date. Showing rides after the
+                        selected
+                        date...</p>
+                </div>
+
+                <div th:each="ride : ${ridesAfterDate}" class="col ride-card">
+                    <a th:href="@{'/rides/details/' + ${ride.id}}" class="text-decoration-none">
+                        <div class="card shadow-sm border-0 px-3 py-3 py-sm-3 px-sm-3 py-md-3 px-md-5">
+                            <div class="row align-items-start justify-content-between">
+                                <!-- Ride Details -->
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <span class="text-dark-emphasis fw-bold px-2 py-1"
+                                              th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getDepartureTime(), 'EEEE, d MMMM, yyyy')}">
+                                        </span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <h5 class="text-dark-emphasis"
+                                                th:text="${ride.getDepartureLocation().getDisplayName()}"></h5>
+                                            <span class="bg-danger-subtle px-2 py-1 rounded"
+                                                  th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getDepartureTime(), 'hh:mm a')}"></span>
+
+                                            <i class="fa-solid fa-arrow-right"></i>
+                                            <h5 class="text-dark-emphasis"
+                                                th:text="${ride.getArrivalLocation().getDisplayName()}"></h5>
+                                            <span class="bg-danger-subtle px-2 py-1 rounded"
+                                                  th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getArrivalTime(), 'hh:mm a')}"></span>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="d-flex align-items-center align-content-end gap-3">
+                                            <p>
+                                                <img class="profile-pic"
+                                                     th:src="@{'/' + ${ride.driver.getProfilePicPath()}}" alt=""
+                                                     width="40" height="40">
+                                                <span class="color-gray" th:text="${ride.driver.getName()}"></span>
+                                            </p>
+
+                                            <p th:switch="${ride.getVehicle().getType().name()}">
+                                                <i th:case="'AUTOMOBILE'" class="fa-solid fa-car"></i>
+                                                <i th:case="'MOTORBIKE'" class="fa-solid fa-motorcycle"></i>
+                                                <i th:case="'BUS'" class="fa-solid fa-bus"></i>
+                                                <i th:case="'VAN'" class="fa-solid fa-van-shuttle"></i>
+                                                <span class="mx-2 color-gray"
+                                                      th:text="${ride.getVehicle().getName()}"></span>
+                                            </p>
+
+                                            <p>
+                                                <i class="fa-solid fa-users"></i>
+                                                <span class="mx-2 color-gray">
+                                                <span th:text="${ride.getAvailableSeats()}"></span>
+                                                <span th:text="${ride.getAvailableSeats() == 1 ? 'available seat' : 'available seats'}"></span>
+                                            </span>
+
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- Price per Seat -->
+                                <div class="col-md-3 text-end">
+                                    <h5 class="fw-bold text-dark-emphasis">
+                                        <span th:text="${ride.pricePerSeat}"></span>,00 MKD
+                                    </h5>
+
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div th:insert="fragments/paging :: pageSection(${page})"></div>
+            </th:block>
+
+            <th:block th:if="${#lists.isEmpty(ridesOnDate) && #lists.isEmpty(ridesAfterDate)}">
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-10"> <!-- Add text-center class here -->
+                        <img th:src="@{/assets/rides-not-found.jpg}" alt="" width="350" height="350" class="rounded mx-auto d-block">
+
+                        <div class="d-flex flex-column align-items-center justify-content-center text-center mt-5">
+                            <h2 class="fw-bold text-dark-emphasis">
+                                No rides found for the selected criteria. Please check again later!
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+
+    </div>
+</div>
+

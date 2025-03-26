@@ -1,0 +1,92 @@
+ /*#9F5255, #DCBDC1, #E16A54, #7C444F */
+
+.app {
+    background-color: #E6E6E6;
+    height: 100vh;
+    overflow-y: auto;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: 1rem;
+    padding-top: 95px;
+}
+
+ .floating-card {
+     background: #fff;
+     border-radius: 12px;
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+ }
+
+
+.custom-btn {
+    /*background: linear-gradient(45deg, #007bff, #6610f2);*/
+    background: #9F5255 !important;
+    color: white !important;
+    border-radius: 10px !important;
+    /*padding: 8px 20px !important;*/
+    font-weight: bold !important;
+}
+.custom-btn:hover {
+    background: #7C444F !important;
+    color: white !important;
+}
+
+ .color-gray {
+     color: gray;
+ }
+
+.custom-container-md {
+    max-width: 70%;
+    margin: auto;
+}
+
+.custom-container {
+    max-width: 50%;
+    margin: auto;
+}
+
+@media (max-width: 768px) {
+    .custom-container {
+        max-width: 80%;
+    }
+
+    .custom-container-md {
+        max-width: 90%;
+    }
+}
+
+p, h5, h4 {
+    margin-bottom: 0 !important;
+}
+
+ .profile-pic {
+     border-radius: 100px;
+     object-fit: cover;
+ }
+
+ i {
+     scale: 120%;
+ }
+
+@media (max-width: 576px) {
+    .responsive-text {
+        font-size: 0.875em;
+    }
+
+    .w-75 {
+        width: 100% !important;
+    }
+}
+ .or-thing {
+     border-top: 1px solid rgb(213, 213, 213);
+     display: flex;
+     -webkit-box-pack: center;
+     justify-content: center;
+     margin-top: 40px;
+ }
+
+ .or-thing span {
+     margin-top: -13px;
+     background-color: rgb(255, 255, 255);
+     padding: 0px 8px;
+ }

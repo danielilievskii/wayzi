@@ -1,0 +1,152 @@
+<section>
+    <div class="container mt-4">
+        <th:block th:if="${publishedRides == null or #lists.isEmpty(publishedRides)}">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center">
+                    <img th:src="@{/assets/rides-published.jpg}" alt="Published Rides" height="350"
+                         class="rounded shadow-md mx-auto d-block">
+
+                    <div class="d-flex flex-column align-items-center justify-content-center text-center mt-5">
+                        <h2 class="fw-bold text-dark-emphasis">
+                            You haven't published any rides yet.
+                        </h2>
+                        <p>
+                            Start sharing your journey and find passengers to split travel costs.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+        <th:block th:if="${!#lists.isEmpty(publishedRides)}">
+            <!-- TODO: Fix filter form -->
+            <div th:replace="~{/fragments/rides-filter-form}"></div>
+
+            <!-- Ride Listings -->
+            <div class="container w-75 responsive-text">
+                <div class="row row-cols-1 g-3">
+                    <div th:each="ride : ${publishedRides}" class="col-md-12 ride-card">
+                        <a th:href="@{'/rides/details/' + ${ride.id}}" class="text-decoration-none">
+                            <div class="card shadow-sm border-0 px-2 py-3 py-sm-3 px-sm-3 py-md-3 px-md-3">
+
+
+                                <div class="row align-items-center justify-content-between">
+                                    <!-- Ride Details -->
+                                    <div class="col-md-8">
+                                        <div class="row mb-3">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div th:switch="${ride.getStatus().name()}" class="fw-semibold text-dark-emphasis">
+                                                    <span th:case="'PENDING'" class="pending-status-bar status-bar">PENDING</span>
+                                                    <span th:case="'CONFIRMED'" class="confirmed-status-bar status-bar">CONFIRMED</span>
+                                                    <span th:case="'CANCELLED'" class="cancelled-status-bar status-bar">CANCELLED</span>
+                                                    <span th:case="'STARTED'">STARTED</span>
+                                                    <span th:case="'FINISHED'" class="finished-status-bar status-bar">FINISHED</span>
+                                                </div>
+                                                <span class="text-dark-emphasis fw-bold"
+                                                      th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getDepartureTime(), 'EEEE, d MMMM, yyyy')}">
+
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <h5 class="text-dark-emphasis"
+                                                    th:text="${ride.getDepartureLocation().getDisplayName()}"></h5>
+                                                <span class="bg-light px-2 py-1 rounded"
+                                                      th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getDepartureTime(), 'hh:mm a')}"></span>
+
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                                <h5 class="text-dark-emphasis"
+                                                    th:text="${ride.getArrivalLocation().getDisplayName()}"></h5>
+                                                <span class="bg-light px-2 py-1 rounded"
+                                                      th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getArrivalTime(), 'hh:mm a')}"></span>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="d-flex align-items-center align-content-end gap-3">
+
+                                                <p th:switch="${ride.getVehicle().getType().name()}">
+                                                    <i th:case="'AUTOMOBILE'" class="fa-solid fa-car"></i>
+                                                    <i th:case="'MOTORBIKE'" class="fa-solid fa-motorcycle"></i>
+                                                    <i th:case="'BUS'" class="fa-solid fa-bus"></i>
+                                                    <i th:case="'VAN'" class="fa-solid fa-van-shuttle"></i>
+                                                    <span class="mx-2 color-gray"
+                                                          th:text="${ride.getVehicle().getName()}"></span>
+                                                </p>
+
+                                                <p>
+                                                    <i class="fa-solid fa-users"></i>
+                                                    <span class="mx-2 color-gray">
+                                                        <span th:text="${ride.getAvailableSeats()}"></span>
+                                                        <span th:text="${ride.getAvailableSeats() == 1 ? 'booked seat' : 'booked seats'}"></span>
+                                                    </span>
+                                                </p>
+
+                                                <p>
+                                                    <i class="fa-solid fa-coins"></i>
+                                                    <span class="mx-2 color-gray">
+                                                        <span th:text="${ride.pricePerSeat}"></span>,00 MKD
+                                                    </span>
+
+                                                </p>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-4 fw-semibold">
+                                        <div class="dropdown text-end">
+                                            <button class="btn btn-light border-0" type="button" id="rideMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="rideMenuButton">
+                                                <!-- Edit Ride (Disabled if status is CONFIRMED) -->
+                                                <li>
+                                                    <form th:action="@{'/rides/edit/' + ${ride.id}}" method="get">
+                                                        <button class="dropdown-item" th:disabled="${ride.getStatus().name() == 'CONFIRMED'}">Edit ride</button>
+                                                    </form>
+                                                </li>
+
+                                                <!-- Confirm Ride (Only visible if status is PENDING) -->
+                                                <li th:if="${ride.getStatus().name() == 'PENDING'}">
+                                                    <form th:action="@{'/rides/confirm/' + ${ride.id}}" method="post">
+                                                        <button class="dropdown-item">Confirm ride</button>
+                                                    </form>
+                                                </li>
+
+                                                <!-- Start Ride (Only visible if status is CONFIRMED) -->
+                                                <li th:if="${ride.getStatus().name() == 'CONFIRMED'}">
+                                                    <form th:action="@{'/rides/start/' + ${ride.id}}" method="post">
+                                                        <button class="dropdown-item">Start ride</button>
+                                                    </form>
+                                                </li>
+
+                                                <!-- Finish Ride (Only visible if status is STARTED) -->
+                                                <li th:if="${ride.getStatus().name() == 'STARTED'}">
+                                                    <form th:action="@{'/rides/finish/' + ${ride.id}}" method="post">
+                                                        <button class="dropdown-item">Start ride</button>
+                                                    </form>
+                                                </li>
+
+                                                <!-- Cancel Ride (Always visible) -->
+                                                <li>
+                                                    <form th:action="@{'/rides/cancel/' + ${ride.id}}" method="post">
+                                                        <button class="dropdown-item text-danger">Cancel ride</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</section>
+

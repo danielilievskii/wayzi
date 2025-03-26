@@ -1,0 +1,88 @@
+<form class="bg-white shadow-sm p-3 rounded mb-4" th:method="GET" th:action="@{/rides}">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3 position-relative">
+            <div class="input-group">
+                <input type="text" th:value="${departureLocationName}"  name="departureLocationName" id="leavingFrom" class="form-control"
+                       onkeyup="fetchLocations(this.value, 'leavingFrom')" placeholder="Leaving from">
+                <input type="hidden" th:value="${departureLocationId}" name="departureLocationId" id="leavingFromId">
+                <span class="input-group-text">
+                       <i class="fa-solid fa-location-dot"></i>
+                    </span>
+            </div>
+            <div id="leavingFromSuggestions"
+                 class="list-group position-absolute w-100 "
+                 style="z-index: 1000; margin-top: 10px;">
+            </div>
+        </div>
+
+        <div class="col-md-3 position-relative">
+            <div class="input-group">
+                <input type="text" th:value="${arrivalLocationName}"  name="arrivalLocationName" id="goingTo" class="form-control"
+                       onkeyup="fetchLocations(this.value, 'goingTo')" placeholder="Going to">
+                <input type="hidden" th:value="${arrivalLocationId}"  name="arrivalLocationId" id="goingToId">
+                <span class="input-group-text">
+                      <i class="fa-solid fa-location-dot"></i>
+                    </span>
+            </div>
+            <div id="goingToSuggestions"
+                 class="list-group position-absolute w-100"
+                 style="z-index: 1000; margin-top: 10px;">
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="input-group">
+                <input type="date" class="form-control" th:value="${date}" name="date" id="datePicker"
+                       th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                <span class="input-group-text" onclick="document.getElementById('datePicker').showPicker()">
+                        <i class="fa-solid fa-calendar"></i>
+                    </span>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="input-group">
+                <input type="number" class="form-control" th:value="${passengersNum}"  name="passengersNum" id="passengers" min="1" max="10" value="1"
+                       placeholder="1 Passenger">
+                <span class="input-group-text">
+                            <i class="fa-solid fa-users"></i>
+                    </span>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn custom-btn w-100">Search</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    function fetchLocations(query, type) {
+        document.getElementById(type + "Id").value = "";
+
+        if (query.length < 1) {
+            document.getElementById(type + "Suggestions").innerHTML = "";
+            return;
+        }
+
+        fetch(`/api/locations/search?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(locations => {
+                let suggestionsList = document.getElementById(type + "Suggestions");
+                suggestionsList.innerHTML = "";
+
+                locations.forEach(location => {
+                    let item = document.createElement("button");
+                    item.className = "list-group-item list-group-item-action";
+                    item.textContent = location.displayName;
+                    item.onclick = function () {
+                        document.getElementById(type).value = location.displayName;
+                        document.getElementById(type + "Id").value = location.id;
+                        suggestionsList.innerHTML = "";
+                    };
+                    suggestionsList.appendChild(item);
+                });
+            })
+            .catch(error => console.error("Error fetching locations:", error));
+    }
+</script>

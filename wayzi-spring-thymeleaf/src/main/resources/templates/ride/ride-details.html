@@ -1,0 +1,214 @@
+<div class="container py-5">
+    <div class="row d-flex align-items-stretched justify-content-center gap-3">
+        <div class="col-md-8 floating-card mr-3">
+            <div class="row p-3">
+                <!-- Ride Locations -->
+                <div>
+                    <h5 class="text-dark-emphasis fw-bold mb-2"
+                        th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getDepartureTime(), 'EEEE, d MMMM, yyyy')}">
+                    </h5>
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="d-flex flex-column gap-2">
+                        <div>
+                            <span class="my-1 d-block">
+                                <span class="fw-semibold text-dark-emphasis d-inline"
+                                    th:text="${ride.getDepartureLocation().getDisplayName()}"></span>
+                                <i class="fa-regular fa-map text-info"></i>
+                             </span>
+                            <span class="bg-danger-subtle px-2 py-1 rounded"
+                                  th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getDepartureTime(), 'hh:mm a')}">
+                            </span>
+                        </div>
+
+                        <div>
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </div>
+
+                        <div th:each="stop : ${ride.getRideStops()}" class="d-flex flex-column gap-1">
+                            <div>
+                            <span class="d-flex align-items-center gap-2">
+                                <span style="color: gray" th:text="${stop.getLocation().getDisplayName()}"></span>
+                            </span>
+                            </div>
+
+                            <div>
+                                <i class="fa-solid fa-arrow-down"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                        <span class="d-flex align-items-center gap-2 my-1">
+                             <span class="fw-semibold text-dark-emphasis"
+                                 th:text="${ride.getArrivalLocation().getDisplayName()}"></span>
+                            <i class="fa-regular fa-map text-info"></i>
+                        </span>
+                            <span class="bg-danger-subtle px-2 py-1 rounded"
+                                  th:text="${T(mk.ukim.finki.wayzi.utils.DateFormatterUtil).formatLocalDateTime(ride.getArrivalTime(), 'hh:mm a')}">
+                        </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-9">
+                    <div id="map" class="rounded" style="width: 100%; height: 400px"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3 floating-card p-3">
+
+
+            <div class="d-flex flex-column justify-content-between h-100">
+                <div>
+                    <div class="driver-info">
+                        <img class="profile-pic" th:src="@{'/' + ${ride.driver.getProfilePicPath()}}" alt="" width="50"
+                             height="50">
+                        <span th:text="${ride.driver.getName()}"></span>
+                    </div>
+
+                    <hr class="my-2" style="color:gray;">
+
+                    <div class="d-flex flex-column gap-2 mt-4">
+                        <div>
+                            <p th:switch="${ride.getVehicle().getType().name()}">
+                                <i th:case="'AUTOMOBILE'" class="fa-solid fa-car-side text-secondary"></i>
+                                <i th:case="'MOTORBIKE'" class="fa-solid fa-motorcycle"></i>
+                                <i th:case="'BUS'" class="fa-solid fa-bus"></i>
+                                <i th:case="'VAN'" class="fa-solid fa-van-shuttle"></i>
+                                <span class="mx-2" th:text="${ride.getVehicle().getName()}"></span> -
+                                <span class="mx-2" th:text="${ride.getVehicle().getColor()}"></span>
+                            </p>
+                        </div>
+
+                        <div>
+                            <i class="fa-solid fa-circle-check text-info"></i>
+                            <span class="mx-2">
+                                <span>Verified phone number</span>
+                            </span>
+                        </div>
+
+                        <div>
+                            <i class="fa-regular fa-calendar-days" style="color: #3EB489"></i>
+                            <span class="mx-2">
+                                <span>Rarely cancels rides</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div th:switch="${ride.getStatus().name()}" class="fw mb-2" style="color: gray">
+                        <span th:case="'PENDING'">
+                            The ride is still awaiting confirmation from the driver.
+                        </span>
+                        <span th:case="'CONFIRMED'">
+                            This ride has been confirmed. Hurry up and book your seat before it's full!
+                        </span>
+                        <span th:case="'CANCELLED'">
+                            This ride has been cancelled. Unfortunately, it is no longer available.
+                        </span>
+                        <span th:case="'STARTED'">
+                         The ride has already started. You can no longer book for this ride.
+                         </span>
+                        <span th:case="'FINISHED'">
+                            The ride has been completed. Check out other available rides!
+                        </span>
+                    </div>
+
+                    <!--            <div>-->
+                    <!--                <i class="fa-solid fa-users text-secondary"></i>-->
+                    <!--                <span class="mx-2">-->
+                    <!--                        <span th:text="${ride.getAvailableSeats()}"></span>-->
+                    <!--                        <span th:text="${ride.getAvailableSeats() == 1 ? 'available seat' : 'available seats'}"></span>-->
+                    <!--                </span>-->
+                    <!--            </div>-->
+
+                    <div class="d-flex justify-content-start" >
+                        <a href="#" class="btn btn-lg btn-info fw-bold text-light">Book now</a>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+</div>
+>
+
+<script th:inline="javascript">
+    var map = L.map('map')
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 20,
+    }).addTo(map);
+
+    map.setView([41.6086, 21.7453], 8);
+
+    var start = [
+        /*[[${ride.getDepartureLocation().getLatitude()}]]*/,
+        /*[[${ride.getDepartureLocation().getLongitude()}]]*/
+    ];
+
+    var end = [
+        /*[[${ride.getArrivalLocation().getLatitude()}]]*/,
+        /*[[${ride.getArrivalLocation().getLongitude()}]]*/
+    ];
+
+    L.marker(start).addTo(map).bindPopup("Departure: " + /*[[${ride.getDepartureLocation().getName()}]]*/);
+    L.marker(end).addTo(map).bindPopup("Arrival: " + /*[[${ride.getArrivalLocation().getName()}]]*/);
+
+    var coordinates = [];
+    coordinates.push(start);
+
+    var markerTick = []
+
+    /*[# th:each="stop : ${ride.getRideStops()}"]*/
+    markerTick = [
+        /*[[${stop.getLocation().getLatitude()}]]*/,
+        /*[[${stop.getLocation().getLongitude()}]]*/
+    ]
+    coordinates.push(markerTick)
+
+    L.marker(markerTick).addTo(map).bindPopup("Stop");
+    /*[/]*/
+
+    coordinates.push(end)
+
+
+    var routeColors = ["#08C2FF"];
+
+    async function fetchAndDisplayRoutes() {
+        for (let i = 0; i < coordinates.length - 1; i++) {
+            let start = coordinates[i];
+            let end = coordinates[i + 1];
+
+            let url = `/api/routes/directions?startLat=${start[0]}&startLng=${start[1]}&endLat=${end[0]}&endLng=${end[1]}`;
+
+            try {
+                let response = await fetch(url);
+                let data = await response.json();
+
+                if (data.features && data.features.length > 0) {
+                    let routeCoords = data.features[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+
+                    let routeColor = routeColors[i % routeColors.length];
+
+                    L.polyline(routeCoords, {color: routeColor, weight: 5}).addTo(map);
+                } else {
+                    console.error(`No route found for segment ${i + 1}`);
+                }
+            } catch (error) {
+                console.error(`Error fetching route ${i + 1}:`, error);
+            }
+        }
+    }
+
+    fetchAndDisplayRoutes();
+</script>

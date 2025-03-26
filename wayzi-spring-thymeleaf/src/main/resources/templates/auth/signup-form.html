@@ -1,0 +1,81 @@
+<section>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="floating-card p-5">
+                    <h5 class="text-center fw-bold text-uppercase mb-4">Create account</h5>
+                    <div class="">
+                        <form class="row" th:object="${signup}" th:action="@{/signup}" th:method="post">
+                            <!-- First and Last Name in the same row -->
+                            <div class="col-md-12 input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Your Name"
+                                       th:field="*{name}">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <span th:if="${#fields.hasErrors('name')}" th:text="${#fields.errors('name')[0]}"
+                                      style="color: red;"></span>
+                            </div>
+
+                            <!-- Email with FontAwesome Icon -->
+                            <div class="col-md-12 input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" id="email" name="email" class="form-control"
+                                       placeholder="Your Email"
+                                       th:field="*{email}">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <span th:if="${#fields.hasErrors('email')}" th:text="${#fields.errors('email')[0]}"
+                                      style="color: red;"></span>
+                            </div>
+
+                            <!-- Password with FontAwesome Icon -->
+                            <div class="col-md-12 input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" id="password" name="password" class="form-control"
+                                       placeholder="Password"
+                                       th:field="*{password}">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <span th:if="${#fields.hasErrors('password')}"
+                                      th:text="${#fields.errors('password')[0]}" style="color: red;"></span>
+                            </div>
+
+                            <!-- Confirm Password with FontAwesome Icon -->
+                            <div class="col-md-12 input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+                                       placeholder="Confirm Password"
+                                       th:field="*{confirmPassword}">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <span th:if="${#fields.hasErrors('confirmPassword')}"
+                                      th:text="${#fields.errors('confirmPassword')[0]}" style="color: red;">
+
+                                </span>
+
+                                <span th:if="${#fields.hasErrors('passwordMatch') && !#fields.hasErrors('confirmPassword')}"
+                                      th:text="${#fields.errors('passwordMatch')[0]}" style="color: red;">
+
+                                </span>
+                            </div>
+
+                            <!-- Error message handling -->
+                            <div th:if="${error}" class="alert alert-danger" role="alert">
+                                <p th:text="${error}"></p>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+
+                            <!-- Login Link -->
+                            <p class="mt-3 text-center">Already have an account? <a class="fw-bold text-dark"
+                                                                                    th:href="@{/login}">Login here</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

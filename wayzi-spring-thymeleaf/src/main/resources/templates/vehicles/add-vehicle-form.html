@@ -1,0 +1,150 @@
+<div class="custom-container mt-5">
+    <h2 th:text="'Add vehicle'" class="text-center mb-4"></h2>
+    <form class="bg-white p-4 rounded" th:method="POST" th:object="${vehicle}" th:action="'/vehicles/add'">
+        <!-- Brand and Model in Same Row -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Brand</label>
+                <input type="text" class="form-control" name="brand" placeholder="Enter brand"
+                       th:field="*{brand}" >
+                <span th:if="${#fields.hasErrors('brand')}" th:text="${#fields.errors('brand')[0]}" style="color: red;"></span>
+
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Model</label>
+                <input type="text" class="form-control" name="model" placeholder="Enter model"
+                       th:field="*{model}">
+                <span th:if="${#fields.hasErrors('model')}" th:text="${#fields.errors('model')[0]}" style="color: red;"></span>
+            </div>
+        </div>
+
+        <!-- Color and Capacity in Same Row -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Select Color</label>
+                <div class="d-flex flex-wrap gap-2">
+                    <!-- Loop through the color options and add active class if selected color matches -->
+                    <button type="button" class="color-btn bg-danger"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'RED' ? ' active' : ''}"
+                            data-color="RED"></button>
+                    <button type="button" class="color-btn bg-primary"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'BLUE' ? ' active' : ''}"
+                            th:cl
+                            data-color="BLUE"></button>
+                    <button type="button" class="color-btn bg-success"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'GREEN' ? ' active' : ''}"
+                            data-color="GREEN"></button>
+                    <button type="button" class="color-btn bg-warning"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'YELLOW' ? ' active' : ''}"
+                            data-color="YELLOW"></button>
+                    <button type="button" class="color-btn bg-black text-white"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'BLACK' ? ' active' : ''}"
+                            data-color="BLACK"></button>
+                    <button type="button" class="color-btn bg-white border-light"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'WHITE' ? ' active' : ''}"
+                            data-color="WHITE"></button>
+                    <button type="button" class="color-btn bg-orange"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'ORANGE' ? ' active' : ''}"
+                            data-color="ORANGE" style="background: orange;"></button>
+                    <button type="button" class="color-btn bg-purple"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'PURPLE' ? ' active' : ''}"
+                            data-color="PURPLE" style="background: purple;"></button>
+                    <button type="button" class="color-btn bg-pink"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'PINK' ? ' active' : ''}"
+                            data-color="PINK" style="background: pink;"></button>
+                    <button type="button" class="color-btn bg-brown"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'BROWN' ? ' active' : ''}"
+                            data-color="BROWN" style="background: brown;"></button>
+                    <button type="button" class="color-btn bg-secondary"
+                            th:classappend="${vehicle.getColor() != null && vehicle.getColor().name() == 'GREY' ? ' active' : ''}"
+                            data-color="GREY"></button>
+                </div>
+                <input type="hidden" name="color" id="selectedColor"
+                       th:field="*{color}">
+                <span th:if="${#fields.hasErrors('color')}" th:text="${#fields.errors('color')[0]}" style="color: red;"></span>
+
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Capacity</label>
+                <input type="number" class="form-control" name="capacity" placeholder="Enter capacity"
+                       th:field="*{capacity}">
+                <span th:if="${#fields.hasErrors('capacity')}" th:text="${#fields.errors('capacity')[0]}" style="color: red;"></span>
+            </div>
+        </div>
+
+        <!-- Vehicle Type Cards -->
+        <div class="mb-3">
+            <label class="form-label d-block">Vehicle Type</label>
+            <div class="row">
+                <div class="col-12 col-sm-6 col-md-3 mb-3">
+                    <button type="button" class="vehicle-btn w-100 text-center"
+                            data-vehicle="AUTOMOBILE"
+                            th:classappend="${vehicle.getType() != null && vehicle.getType().name() == 'AUTOMOBILE' ? ' active' : ''}">
+                        <i class="fa-solid fa-car"></i>
+                        <h5 class="card-title">Automobile</h5>
+                    </button>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3 mb-3">
+                    <button type="button" class="vehicle-btn w-100 text-center"
+                            data-vehicle="MOTORBIKE"
+                            th:classappend="${vehicle.getType() != null && vehicle.getType().name() == 'MOTORBIKE' ? ' active' : ''}">
+                        <i class="fa-solid fa-motorcycle"></i>
+                        <h5 class="card-title">Motorbike</h5>
+                    </button>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3 mb-3">
+                    <button type="button" class="vehicle-btn w-100 text-center"
+                            data-vehicle="BUS"
+                            th:classappend="${vehicle.getType() != null && vehicle.getType().name() == 'BUS' ? ' active' : ''}">
+                        <i class="fa-solid fa-bus"></i>
+                        <h5 class="card-title">Bus</h5>
+                    </button>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3 mb-3">
+                    <button type="button" class="vehicle-btn w-100 text-center"
+                            data-vehicle="VAN"
+                            th:classappend="${vehicle.getType() != null && vehicle.getType().name() == 'VAN' ? ' active' : ''}">
+                        <i class="fa-solid fa-van-shuttle"></i>
+                        <h5 class="card-title">Van</h5>
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="type" id="selectedVehicleType"
+                    th:field="*{type}">
+            <span th:if="${#fields.hasErrors('type')}" th:text="${#fields.errors('type')[0]}" style="color: red;"></span>
+
+        </div>
+        <!-- Submit Button -->
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-light ml-2">Cancel</button>
+            <button type="submit" class="btn btn-primary ml-2">Save</button>
+        </div>
+    </form>
+
+    <div th:if="${hasError}" class="alert alert-danger mt-3" role="alert">
+        <p class="m-0" th:text="${errorMessage}"></p>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.color-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById('selectedColor').value = this.getAttribute('data-color');
+        });
+    });
+
+    document.querySelectorAll('.vehicle-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            document.querySelectorAll('.vehicle-btn').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            const vehicleType = this.getAttribute('data-vehicle');
+            document.getElementById('selectedVehicleType').value = vehicleType;
+        });
+    });
+</script>

@@ -1,0 +1,20 @@
+.action-button {
+    background: none;
+    border: none;
+    transform: scale(1.4);
+    transition: 0.3s;
+    color: #9F5255;
+}
+.action-button:hover {
+    color: #7C444F;
+}
+
+.border-dashed {
+    border: 2px solid black;
+    border-style: dashed;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
