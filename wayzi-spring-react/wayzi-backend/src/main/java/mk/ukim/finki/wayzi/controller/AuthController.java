@@ -6,43 +6,44 @@ import jakarta.validation.Valid;
 import mk.ukim.finki.wayzi.dto.SignInDto;
 import mk.ukim.finki.wayzi.dto.AuthUserDto;
 import mk.ukim.finki.wayzi.dto.SignUpDto;
-import mk.ukim.finki.wayzi.service.AuthService;
+import mk.ukim.finki.wayzi.service.application.AuthApplicationService;
+import mk.ukim.finki.wayzi.service.domain.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final AuthService authService;
+    private final AuthApplicationService authApplicationService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    public AuthController(AuthApplicationService authApplicationService) {
+        this.authApplicationService = authApplicationService;
     }
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto signUpDto,
                                     HttpServletRequest request,
                                     HttpServletResponse response) {
-        return ResponseEntity.ok(authService.signUp(signUpDto, request, response));
+        return ResponseEntity.ok(authApplicationService.signUp(signUpDto, request, response));
     }
 
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@Valid @RequestBody SignInDto signInDto,
                                     HttpServletRequest request,
                                     HttpServletResponse response) {
-        return ResponseEntity.ok(authService.signIn(signInDto, request, response));
+        return ResponseEntity.ok(authApplicationService.signIn(signInDto, request, response));
     }
 
     @PostMapping("/signout")
     public ResponseEntity<?> signOut(HttpServletResponse response) {
-        authService.signOut(response);
+        authApplicationService.signOut(response);
         return ResponseEntity.ok("Logged out successfully");
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
-        AuthUserDto authUserDto = authService.getCurrentUser(request);
-        return ResponseEntity.ok(authUserDto);
+    public ResponseEntity<?> getAuthenticatedUser() {
+        return ResponseEntity.ok(authApplicationService.getAuthenticatedUser());
     }
 
 

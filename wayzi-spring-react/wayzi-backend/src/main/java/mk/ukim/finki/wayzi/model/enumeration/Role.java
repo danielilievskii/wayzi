@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.enumeration;
+package mk.ukim.finki.wayzi.model.enumeration;
 
 import org.springframework.security.core.GrantedAuthority;
 

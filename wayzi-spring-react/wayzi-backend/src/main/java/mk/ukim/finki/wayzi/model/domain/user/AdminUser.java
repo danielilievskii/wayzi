@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mk.ukim.finki.wayzi.enumeration.Role;
+import mk.ukim.finki.wayzi.model.enumeration.Role;
 
 @Entity
 @Data

@@ -1,5 +1,6 @@
 package mk.ukim.finki.wayzi.handler;
 
+import mk.ukim.finki.wayzi.exception.AccessDeniedException;
 import mk.ukim.finki.wayzi.exception.AuthenticationException;
 import mk.ukim.finki.wayzi.exception.AuthenticationFailedException;
 import mk.ukim.finki.wayzi.exception.InvalidCredentialsException;
@@ -19,6 +20,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDeniedException(Exception e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

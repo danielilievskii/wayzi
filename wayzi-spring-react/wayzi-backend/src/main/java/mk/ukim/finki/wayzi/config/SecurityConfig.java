@@ -1,6 +1,6 @@
 package mk.ukim.finki.wayzi.config;
 
-import mk.ukim.finki.wayzi.service.impl.CustomUserDetailsService;
+import mk.ukim.finki.wayzi.service.domain.impl.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.service.impl;
+package mk.ukim.finki.wayzi.service.domain.impl;
 
 import mk.ukim.finki.wayzi.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;

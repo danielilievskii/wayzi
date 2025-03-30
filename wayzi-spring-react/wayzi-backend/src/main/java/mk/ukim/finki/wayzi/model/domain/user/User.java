@@ -1,16 +1,15 @@
 package mk.ukim.finki.wayzi.model.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mk.ukim.finki.wayzi.enumeration.Role;
+import mk.ukim.finki.wayzi.model.enumeration.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -29,6 +28,7 @@ public abstract class User implements UserDetails {
     @Column(name = "email_verified")
     protected Boolean isEmailVerified;
 
+    @JsonIgnore
     protected String password;
 
     protected String name;
