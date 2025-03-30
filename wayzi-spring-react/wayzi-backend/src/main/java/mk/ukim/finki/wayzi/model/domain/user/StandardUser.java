@@ -1,11 +1,14 @@
 package mk.ukim.finki.wayzi.model.domain.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mk.ukim.finki.wayzi.enumeration.Role;
+import mk.ukim.finki.wayzi.model.enumeration.Role;
+import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,9 +21,9 @@ public class StandardUser extends User {
         this.isEmailVerified = false;
         this.password = password;
         this.name = name;
-
         this.phoneNumber = "";
         this.isPhoneNumberVerified = false;
+        this.vehicles = new ArrayList<>();
 
         this.role = Role.ROLE_STANDARD_USER;
     }
@@ -32,4 +35,8 @@ public class StandardUser extends User {
 
     @Column(name = "phone_number_verified")
     private Boolean isPhoneNumberVerified;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "owner", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    List<Vehicle> vehicles;
 }
