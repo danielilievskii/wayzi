@@ -1,13 +1,11 @@
-package mk.ukim.finki.wayzi.controller;
+package mk.ukim.finki.wayzi.web;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import mk.ukim.finki.wayzi.dto.SignInDto;
-import mk.ukim.finki.wayzi.dto.AuthUserDto;
 import mk.ukim.finki.wayzi.dto.SignUpDto;
 import mk.ukim.finki.wayzi.service.application.AuthApplicationService;
-import mk.ukim.finki.wayzi.service.domain.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
