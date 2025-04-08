@@ -21,4 +21,9 @@ public class LocationApplicationServiceImpl implements LocationApplicationServic
     public List<DisplayLocationDto> findAll() {
         return DisplayLocationDto.from(locationService.findAll());
     }
+
+    @Override
+    public DisplayLocationDto findById(Long id) {
+        return DisplayLocationDto.from(locationService.findById(id));
+    }
 }

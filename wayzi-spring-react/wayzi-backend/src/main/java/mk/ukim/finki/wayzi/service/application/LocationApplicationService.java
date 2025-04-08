@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface LocationApplicationService {
     List<DisplayLocationDto> findAll();
+    DisplayLocationDto findById(Long id);
 }

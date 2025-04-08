@@ -1,5 +1,6 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
+import mk.ukim.finki.wayzi.exception.LocationNotFoundException;
 import mk.ukim.finki.wayzi.model.domain.Location;
 import mk.ukim.finki.wayzi.repository.LocationRepository;
 import mk.ukim.finki.wayzi.service.domain.LocationService;
@@ -19,5 +20,11 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public List<Location> findAll() {
         return locationRepository.findAll();
+    }
+
+    @Override
+    public Location findById(Long id) {
+        return locationRepository.findById(id)
+                .orElseThrow(() -> new LocationNotFoundException(id));
     }
 }

@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.web;
+package mk.ukim.finki.wayzi.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.wayzi.service.application.LocationApplicationService;
@@ -16,6 +16,11 @@ public class LocationController {
     @GetMapping
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(locationApplicationService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(locationApplicationService.findById(id));
     }
 
 
