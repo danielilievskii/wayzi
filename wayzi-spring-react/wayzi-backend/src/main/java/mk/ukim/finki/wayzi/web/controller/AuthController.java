@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.web;
+package mk.ukim.finki.wayzi.web.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

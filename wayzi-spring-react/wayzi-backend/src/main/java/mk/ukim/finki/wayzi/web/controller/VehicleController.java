@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.web;
+package mk.ukim.finki.wayzi.web.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
