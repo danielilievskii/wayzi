@@ -1,9 +1,8 @@
-package mk.ukim.finki.wayzi.handler;
+package mk.ukim.finki.wayzi.model.exception.handler;
 
-import mk.ukim.finki.wayzi.exception.InvalidRideStatusException;
-import mk.ukim.finki.wayzi.exception.RideNotFoundException;
-import mk.ukim.finki.wayzi.exception.RideStopNotFoundException;
-import mk.ukim.finki.wayzi.exception.VehicleNotFoundException;
+import mk.ukim.finki.wayzi.model.exception.InvalidRideStatusException;
+import mk.ukim.finki.wayzi.model.exception.RideNotFoundException;
+import mk.ukim.finki.wayzi.model.exception.RideStopNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

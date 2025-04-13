@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.exception;
+package mk.ukim.finki.wayzi.model.exception;
 
 public class InvalidRideStatusException extends RuntimeException {
     public InvalidRideStatusException(String message) {

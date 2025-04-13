@@ -1,6 +1,6 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
-import mk.ukim.finki.wayzi.exception.LocationNotFoundException;
+import mk.ukim.finki.wayzi.model.exception.LocationNotFoundException;
 import mk.ukim.finki.wayzi.model.domain.Location;
 import mk.ukim.finki.wayzi.repository.LocationRepository;
 import mk.ukim.finki.wayzi.service.domain.LocationService;

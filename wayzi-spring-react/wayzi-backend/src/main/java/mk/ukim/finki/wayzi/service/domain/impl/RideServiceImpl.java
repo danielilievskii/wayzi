@@ -1,13 +1,12 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
 import mk.ukim.finki.wayzi.dto.CreateRideDto;
-import mk.ukim.finki.wayzi.dto.CreateRideStopDto;
 import mk.ukim.finki.wayzi.dto.UpdateRideDto;
 import mk.ukim.finki.wayzi.dto.UpdateRideStopDto;
-import mk.ukim.finki.wayzi.exception.AccessDeniedException;
-import mk.ukim.finki.wayzi.exception.InvalidRideStatusException;
-import mk.ukim.finki.wayzi.exception.RideNotFoundException;
-import mk.ukim.finki.wayzi.exception.RideStopNotFoundException;
+import mk.ukim.finki.wayzi.model.exception.AccessDeniedException;
+import mk.ukim.finki.wayzi.model.exception.InvalidRideStatusException;
+import mk.ukim.finki.wayzi.model.exception.RideNotFoundException;
+import mk.ukim.finki.wayzi.model.exception.RideStopNotFoundException;
 import mk.ukim.finki.wayzi.model.domain.Location;
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
 import mk.ukim.finki.wayzi.model.domain.ride.RideStop;

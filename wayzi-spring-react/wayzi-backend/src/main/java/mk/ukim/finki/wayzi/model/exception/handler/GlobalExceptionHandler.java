@@ -1,12 +1,8 @@
-package mk.ukim.finki.wayzi.handler;
+package mk.ukim.finki.wayzi.model.exception.handler;
 
-import mk.ukim.finki.wayzi.exception.AccessDeniedException;
-import mk.ukim.finki.wayzi.exception.AuthenticationException;
-import mk.ukim.finki.wayzi.exception.AuthenticationFailedException;
-import mk.ukim.finki.wayzi.exception.InvalidCredentialsException;
+import mk.ukim.finki.wayzi.model.exception.AccessDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

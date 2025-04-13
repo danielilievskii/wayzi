@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.exception;
+package mk.ukim.finki.wayzi.model.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
