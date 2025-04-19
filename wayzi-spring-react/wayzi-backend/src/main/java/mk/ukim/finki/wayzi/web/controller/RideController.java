@@ -1,6 +1,7 @@
 package mk.ukim.finki.wayzi.web.controller;
 
 import mk.ukim.finki.wayzi.dto.CreateRideDto;
+import mk.ukim.finki.wayzi.dto.RideFilterDto;
 import mk.ukim.finki.wayzi.dto.UpdateRideDto;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,11 @@ public class RideController {
     @GetMapping
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(rideApplicationService.findAll());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> findPage(@ModelAttribute RideFilterDto rideFilterDto) {
+        return ResponseEntity.ok(rideApplicationService.findPage(rideFilterDto));
     }
 
     @PostMapping("/add")

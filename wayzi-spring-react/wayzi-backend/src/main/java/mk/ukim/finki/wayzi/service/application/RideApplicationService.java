@@ -1,12 +1,7 @@
 package mk.ukim.finki.wayzi.service.application;
 
-import mk.ukim.finki.wayzi.dto.CreateRideDto;
-import mk.ukim.finki.wayzi.dto.DisplayRideDto;
-import mk.ukim.finki.wayzi.dto.UpdateRideDto;
-import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import org.springframework.data.domain.Page;
+import mk.ukim.finki.wayzi.dto.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface RideApplicationService {
@@ -15,6 +10,7 @@ public interface RideApplicationService {
     DisplayRideDto edit(Long id, UpdateRideDto updateRideDto);
 
     List<DisplayRideDto> findAll();
+    RidePageDto findPage(RideFilterDto rideFilterDto);
 
     DisplayRideDto findById(Long id);
     DisplayRideDto findByIdAndCheckOwnership(Long id);

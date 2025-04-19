@@ -1,8 +1,6 @@
 package mk.ukim.finki.wayzi.service.application.impl;
 
-import mk.ukim.finki.wayzi.dto.CreateRideDto;
-import mk.ukim.finki.wayzi.dto.DisplayRideDto;
-import mk.ukim.finki.wayzi.dto.UpdateRideDto;
+import mk.ukim.finki.wayzi.dto.*;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
 import mk.ukim.finki.wayzi.service.domain.RideService;
 import org.springframework.stereotype.Service;
@@ -37,6 +35,18 @@ public class RideApplicationServiceImpl implements RideApplicationService {
         return DisplayRideDto.from(
                 rideService.findAll()
         );
+    }
+
+    @Override
+    public RidePageDto findPage(RideFilterDto rideFilterDto) {
+        return RidePageDto.from(rideService.findPage(
+                rideFilterDto.departureLocationId(),
+                rideFilterDto.arrivalLocationId(),
+                rideFilterDto.date(),
+                rideFilterDto.passengersNum(),
+                rideFilterDto.pageNum(),
+                rideFilterDto.pageSize()
+        ));
     }
 
     @Override
