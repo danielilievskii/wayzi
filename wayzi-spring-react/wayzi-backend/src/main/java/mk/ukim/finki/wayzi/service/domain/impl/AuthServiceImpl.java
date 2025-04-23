@@ -184,8 +184,7 @@ public class AuthServiceImpl implements AuthService {
         cookie.setHttpOnly(true);
         cookie.setSecure(true); // Enable only in HTTPS environments
         cookie.setPath("/"); // Available across the application
-        cookie.setMaxAge(900); // 15 minutes expiration
-
+        cookie.setMaxAge(3600);
         response.addCookie(cookie);
     }
 

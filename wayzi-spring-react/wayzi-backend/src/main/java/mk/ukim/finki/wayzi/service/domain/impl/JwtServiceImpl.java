@@ -20,7 +20,7 @@ public class JwtServiceImpl implements JwtService {
     @Value("${jwt.secret.key}")
     private String JWT_SECRET_KEY;
 
-    private final long EXPIRATION_TIME = 900_000; // 15 minutes
+    private final long EXPIRATION_TIME = 3_600_000; // 1 hour
 
     @Override
     public String generateToken(UserDetails userDetails) {
