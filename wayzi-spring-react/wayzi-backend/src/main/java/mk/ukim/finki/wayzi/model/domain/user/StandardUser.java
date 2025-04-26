@@ -28,8 +28,6 @@ public class StandardUser extends User {
         this.role = Role.ROLE_STANDARD_USER;
     }
 
-    private String name;
-
     @Column(name = "phone_number")
     private String phoneNumber;
 

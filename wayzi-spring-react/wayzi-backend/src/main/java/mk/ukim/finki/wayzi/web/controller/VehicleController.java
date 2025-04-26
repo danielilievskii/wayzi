@@ -20,6 +20,11 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleApplicationService.findByIdAndCheckOwnership(id));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> findAllForAuthenticatedUser() {
+        return ResponseEntity.ok(vehicleApplicationService.findAllForAuthenticatedUser());
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> addVehicle(@Valid @RequestBody CreateVehicleDto createVehicleDto) {
         return ResponseEntity.ok(vehicleApplicationService.save(createVehicleDto));

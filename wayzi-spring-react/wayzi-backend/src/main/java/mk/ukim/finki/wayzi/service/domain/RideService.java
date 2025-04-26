@@ -15,10 +15,10 @@ public interface RideService {
 
     List<Ride> findAll();
     Page<Ride> findPage(Long departureLocationId, Long arrivalLocationId, LocalDate date, Integer passengersNum, Integer pageNum, Integer pageSize);
+    Page<Ride> findCurrentUserPublishedRidesPage(Long departureLocationId, Long arrivalLocationId, LocalDate date, Integer passengersNum, Integer pageNum, Integer pageSize);
 
     Ride findById(Long id);
     Ride findByIdAndCheckOwnership(Long id);
-    List<Ride> findAllForAuthenticatedUser();
     List<Ride> findAllForAuthenticatedUserByVehicleId(Long vehicleId);
 
     void confirmRide(Long id);

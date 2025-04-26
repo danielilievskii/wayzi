@@ -12,11 +12,12 @@ import java.util.List;
 
 public record DisplayRideDto(
         Long id,
+        String driverName,
         DisplayLocationDto departureLocation,
         LocalDateTime departureTime,
         DisplayLocationDto arrivalLocation,
         LocalDateTime arrivalTime,
-        DisplayVehicleDto vehicleDto,
+        DisplayVehicleDto vehicle,
         Integer availableSeats,
         Integer pricePerSeat,
         RideStatus rideStatus,
@@ -27,6 +28,7 @@ public record DisplayRideDto(
     ) {
         return new DisplayRideDto(
                 ride.getId(),
+                ride.getDriver().getName(),
                 DisplayLocationDto.from(ride.getDepartureLocation()),
                 ride.getDepartureTime(),
                 DisplayLocationDto.from(ride.getArrivalLocation()),

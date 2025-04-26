@@ -18,14 +18,24 @@ public class RideController {
         this.rideApplicationService = rideApplicationService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(rideApplicationService.findAll());
+//    @GetMapping
+//    public ResponseEntity<?> findAll() {
+//        return ResponseEntity.ok(rideApplicationService.findAll());
+//    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(rideApplicationService.findById(id));
     }
 
-    @GetMapping("/search")
+    @GetMapping
     public ResponseEntity<?> findPage(@ModelAttribute RideFilterDto rideFilterDto) {
         return ResponseEntity.ok(rideApplicationService.findPage(rideFilterDto));
+    }
+
+    @GetMapping("/published")
+    public ResponseEntity<?> findPublishedRidesPage(@ModelAttribute RideFilterDto rideFilterDto) {
+        return ResponseEntity.ok(rideApplicationService.findCurrentUserPublishedRidesPage(rideFilterDto));
     }
 
     @PostMapping("/add")
@@ -36,11 +46,6 @@ public class RideController {
     @PostMapping("/edit/{id}")
     public ResponseEntity<?> addRide(@PathVariable Long id, @RequestBody UpdateRideDto updateRideDto) {
         return ResponseEntity.ok(rideApplicationService.edit(id, updateRideDto));
-    }
-
-    @GetMapping("/published")
-    public ResponseEntity<?> findAllPublished() {
-        return ResponseEntity.ok(rideApplicationService.findAllForAuthenticatedUser());
     }
 
     @PostMapping("/confirm/{id}")

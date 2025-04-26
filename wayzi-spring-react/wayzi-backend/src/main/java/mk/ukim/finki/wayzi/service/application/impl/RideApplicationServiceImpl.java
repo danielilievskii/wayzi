@@ -50,6 +50,18 @@ public class RideApplicationServiceImpl implements RideApplicationService {
     }
 
     @Override
+    public RidePageDto findCurrentUserPublishedRidesPage(RideFilterDto rideFilterDto) {
+        return RidePageDto.from(rideService.findCurrentUserPublishedRidesPage(
+                rideFilterDto.departureLocationId(),
+                rideFilterDto.arrivalLocationId(),
+                rideFilterDto.date(),
+                rideFilterDto.passengersNum(),
+                rideFilterDto.pageNum(),
+                rideFilterDto.pageSize()
+        ));
+    }
+
+    @Override
     public DisplayRideDto findById(Long id) {
         return DisplayRideDto.from(
                 rideService.findById(id)
@@ -60,13 +72,6 @@ public class RideApplicationServiceImpl implements RideApplicationService {
     public DisplayRideDto findByIdAndCheckOwnership(Long id) {
         return DisplayRideDto.from(
                 rideService.findByIdAndCheckOwnership(id)
-        );
-    }
-
-    @Override
-    public List<DisplayRideDto> findAllForAuthenticatedUser() {
-        return DisplayRideDto.from(
-                rideService.findAllForAuthenticatedUser()
         );
     }
 

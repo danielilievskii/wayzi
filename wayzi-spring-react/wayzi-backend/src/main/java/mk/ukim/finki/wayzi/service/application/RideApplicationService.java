@@ -11,10 +11,11 @@ public interface RideApplicationService {
 
     List<DisplayRideDto> findAll();
     RidePageDto findPage(RideFilterDto rideFilterDto);
+    RidePageDto findCurrentUserPublishedRidesPage(RideFilterDto rideFilterDto);
+
 
     DisplayRideDto findById(Long id);
     DisplayRideDto findByIdAndCheckOwnership(Long id);
-    List<DisplayRideDto> findAllForAuthenticatedUser();
     List<DisplayRideDto> findAllForAuthenticatedUserByVehicleId(Long vehicleId);
 
     void confirmRide(Long id);

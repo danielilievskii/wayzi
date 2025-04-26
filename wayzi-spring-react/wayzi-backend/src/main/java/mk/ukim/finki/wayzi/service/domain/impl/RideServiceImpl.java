@@ -161,6 +161,26 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
+    public Page<Ride> findCurrentUserPublishedRidesPage(Long departureLocationId, Long arrivalLocationId, LocalDate date, Integer passengersNum, Integer pageNum, Integer pageSize) {
+        Long driverId = authService.getAuthenticatedUser().getId();
+
+        Specification<Ride> specification = Specification
+                .where(filterEquals(Ride.class, "driver.id", driverId))
+                .and(filterEquals(Ride.class, "departureLocation.id", departureLocationId))
+                .and(filterEquals(Ride.class, "arrivalLocation.id", arrivalLocationId))
+                .and(greaterThan(Ride.class, "availableSeats", passengersNum));
+
+        if(date != null) {
+            specification = specification.and(greaterThan(Ride.class, "departureTime", date.atStartOfDay()));
+        }
+
+        return this.rideRepository.findAll(
+                specification,
+                PageRequest.of(pageNum - 1, pageSize, Sort.by("departureTime").descending())
+        );
+    }
+
+    @Override
     public Ride findById(Long id) {
         return rideRepository.findById(id)
                 .orElseThrow(() -> new RideStopNotFoundException(id));
@@ -178,12 +198,6 @@ public class RideServiceImpl implements RideService {
         }
 
         return ride;
-    }
-
-    @Override
-    public List<Ride> findAllForAuthenticatedUser() {
-        Long driverId = authService.getAuthenticatedUser().getId();
-        return rideRepository.findAllByDriverId(driverId);
     }
 
     @Override
