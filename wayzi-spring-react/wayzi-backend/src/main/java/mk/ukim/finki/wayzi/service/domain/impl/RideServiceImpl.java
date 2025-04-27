@@ -156,7 +156,7 @@ public class RideServiceImpl implements RideService {
 
         return this.rideRepository.findAll(
                 specification,
-                PageRequest.of(pageNum - 1, pageSize, Sort.by("departureTime").descending())
+                PageRequest.of(pageNum - 1, pageSize, Sort.by("departureTime").ascending())
         );
     }
 
@@ -176,7 +176,7 @@ public class RideServiceImpl implements RideService {
 
         return this.rideRepository.findAll(
                 specification,
-                PageRequest.of(pageNum - 1, pageSize, Sort.by("departureTime").descending())
+                PageRequest.of(pageNum - 1, pageSize, Sort.by("departureTime").ascending())
         );
     }
 
