@@ -1,11 +1,7 @@
-package mk.ukim.finki.wayzi.dto;
+package mk.ukim.finki.wayzi.web.dto;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;

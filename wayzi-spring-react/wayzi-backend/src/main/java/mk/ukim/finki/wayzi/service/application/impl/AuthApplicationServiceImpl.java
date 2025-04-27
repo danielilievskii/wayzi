@@ -2,9 +2,9 @@ package mk.ukim.finki.wayzi.service.application.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import mk.ukim.finki.wayzi.dto.AuthUserDto;
-import mk.ukim.finki.wayzi.dto.SignInDto;
-import mk.ukim.finki.wayzi.dto.SignUpDto;
+import mk.ukim.finki.wayzi.web.dto.AuthUserDto;
+import mk.ukim.finki.wayzi.web.dto.SignInDto;
+import mk.ukim.finki.wayzi.web.dto.SignUpDto;
 import mk.ukim.finki.wayzi.service.application.AuthApplicationService;
 import mk.ukim.finki.wayzi.service.domain.AuthService;
 import org.springframework.stereotype.Service;

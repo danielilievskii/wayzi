@@ -2,7 +2,7 @@ package mk.ukim.finki.wayzi.web.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import mk.ukim.finki.wayzi.dto.CreateVehicleDto;
+import mk.ukim.finki.wayzi.web.dto.CreateVehicleDto;
 import mk.ukim.finki.wayzi.service.application.VehicleApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

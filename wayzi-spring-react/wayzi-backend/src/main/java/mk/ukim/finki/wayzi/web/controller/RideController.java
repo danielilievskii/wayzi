@@ -1,11 +1,10 @@
 package mk.ukim.finki.wayzi.web.controller;
 
-import mk.ukim.finki.wayzi.dto.CreateRideDto;
-import mk.ukim.finki.wayzi.dto.RideFilterDto;
-import mk.ukim.finki.wayzi.dto.UpdateRideDto;
+import mk.ukim.finki.wayzi.web.dto.CreateRideDto;
+import mk.ukim.finki.wayzi.web.dto.RideFilterDto;
+import mk.ukim.finki.wayzi.web.dto.UpdateRideDto;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

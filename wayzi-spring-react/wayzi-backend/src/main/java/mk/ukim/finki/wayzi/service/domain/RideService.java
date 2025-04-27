@@ -1,7 +1,7 @@
 package mk.ukim.finki.wayzi.service.domain;
 
-import mk.ukim.finki.wayzi.dto.CreateRideDto;
-import mk.ukim.finki.wayzi.dto.UpdateRideDto;
+import mk.ukim.finki.wayzi.web.dto.CreateRideDto;
+import mk.ukim.finki.wayzi.web.dto.UpdateRideDto;
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
 import org.springframework.data.domain.Page;
 

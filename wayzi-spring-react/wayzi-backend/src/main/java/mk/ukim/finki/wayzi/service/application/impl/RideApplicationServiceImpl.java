@@ -3,6 +3,7 @@ package mk.ukim.finki.wayzi.service.application.impl;
 import mk.ukim.finki.wayzi.dto.*;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
 import mk.ukim.finki.wayzi.service.domain.RideService;
+import mk.ukim.finki.wayzi.web.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

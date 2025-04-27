@@ -1,8 +1,7 @@
 package mk.ukim.finki.wayzi.service.application;
 
-import mk.ukim.finki.wayzi.dto.CreateVehicleDto;
-import mk.ukim.finki.wayzi.dto.DisplayVehicleDto;
-import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
+import mk.ukim.finki.wayzi.web.dto.CreateVehicleDto;
+import mk.ukim.finki.wayzi.web.dto.DisplayVehicleDto;
 
 import java.util.List;
 

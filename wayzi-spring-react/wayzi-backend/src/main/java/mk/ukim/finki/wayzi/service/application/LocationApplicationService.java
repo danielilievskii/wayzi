@@ -1,6 +1,6 @@
 package mk.ukim.finki.wayzi.service.application;
 
-import mk.ukim.finki.wayzi.dto.DisplayLocationDto;
+import mk.ukim.finki.wayzi.web.dto.DisplayLocationDto;
 
 import java.util.List;
 

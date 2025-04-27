@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.dto;
+package mk.ukim.finki.wayzi.web.dto;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;

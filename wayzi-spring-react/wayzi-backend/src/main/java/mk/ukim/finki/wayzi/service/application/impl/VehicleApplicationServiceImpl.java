@@ -1,8 +1,7 @@
 package mk.ukim.finki.wayzi.service.application.impl;
 
-import mk.ukim.finki.wayzi.dto.CreateVehicleDto;
-import mk.ukim.finki.wayzi.dto.DisplayVehicleDto;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
+import mk.ukim.finki.wayzi.web.dto.CreateVehicleDto;
+import mk.ukim.finki.wayzi.web.dto.DisplayVehicleDto;
 import mk.ukim.finki.wayzi.service.application.VehicleApplicationService;
 import mk.ukim.finki.wayzi.service.domain.VehicleService;
 import org.springframework.stereotype.Service;

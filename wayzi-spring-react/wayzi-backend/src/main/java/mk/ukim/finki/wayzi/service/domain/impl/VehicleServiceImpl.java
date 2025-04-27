@@ -1,6 +1,6 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
-import mk.ukim.finki.wayzi.dto.CreateVehicleDto;
+import mk.ukim.finki.wayzi.web.dto.CreateVehicleDto;
 import mk.ukim.finki.wayzi.model.exception.AccessDeniedException;
 import mk.ukim.finki.wayzi.model.exception.VehicleNotFoundException;
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;

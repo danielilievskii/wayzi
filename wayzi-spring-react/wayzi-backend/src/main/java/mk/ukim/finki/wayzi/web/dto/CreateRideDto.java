@@ -1,14 +1,18 @@
-package mk.ukim.finki.wayzi.dto;
+package mk.ukim.finki.wayzi.web.dto;
 
-import jakarta.validation.Valid;
+import mk.ukim.finki.wayzi.model.domain.Location;
+import mk.ukim.finki.wayzi.model.domain.ride.Ride;
+import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
+import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
+import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
+import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
-
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record UpdateRideDto(
+public record CreateRideDto(
         @NotNull(message = "Departure location is required")
         Long departureLocationId,
 
@@ -36,5 +40,19 @@ public record UpdateRideDto(
 
         @NotNull(message = "Ride stops cannot be null")
         @Valid
-        List<UpdateRideStopDto> rideStops
-) {}
+        List<CreateRideStopDto> rideStops
+) {
+    public Ride toEntity(Location departureLocation, Location arrivalLocation, StandardUser driver, Vehicle vehicle, RideStatus status) {
+        return new Ride(
+                departureLocation,
+                this.departureTime,
+                arrivalLocation,
+                this.arrivalTime,
+                driver,
+                vehicle,
+                this.availableSeats,
+                this.pricePerSeat,
+                status
+        );
+    }
+}

@@ -2,10 +2,9 @@ package mk.ukim.finki.wayzi.service.application;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import mk.ukim.finki.wayzi.dto.AuthUserDto;
-import mk.ukim.finki.wayzi.dto.SignInDto;
-import mk.ukim.finki.wayzi.dto.SignUpDto;
-import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.web.dto.AuthUserDto;
+import mk.ukim.finki.wayzi.web.dto.SignInDto;
+import mk.ukim.finki.wayzi.web.dto.SignUpDto;
 
 public interface AuthApplicationService {
     AuthUserDto signUp(SignUpDto signUpDto, HttpServletRequest request, HttpServletResponse response);

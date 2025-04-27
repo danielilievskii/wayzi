@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.dto;
+package mk.ukim.finki.wayzi.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

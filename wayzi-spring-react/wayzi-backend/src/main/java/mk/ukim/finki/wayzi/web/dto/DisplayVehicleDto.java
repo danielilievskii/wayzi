@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.dto;
+package mk.ukim.finki.wayzi.web.dto;
 
 import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
 import mk.ukim.finki.wayzi.model.enumeration.Color;

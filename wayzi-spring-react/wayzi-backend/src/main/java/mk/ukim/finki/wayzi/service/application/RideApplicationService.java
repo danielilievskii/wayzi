@@ -1,6 +1,7 @@
 package mk.ukim.finki.wayzi.service.application;
 
 import mk.ukim.finki.wayzi.dto.*;
+import mk.ukim.finki.wayzi.web.dto.*;
 
 import java.util.List;
 
