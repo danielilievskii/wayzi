@@ -1,9 +1,11 @@
 package mk.ukim.finki.wayzi.web.controller;
 
+import mk.ukim.finki.wayzi.service.application.RideStatusApplicationService;
 import mk.ukim.finki.wayzi.web.dto.CreateRideDto;
 import mk.ukim.finki.wayzi.web.dto.RideFilterDto;
 import mk.ukim.finki.wayzi.web.dto.UpdateRideDto;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
+import mk.ukim.finki.wayzi.web.dto.UpdateRideStatusDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class RideController {
 
     private final RideApplicationService rideApplicationService;
+    private final RideStatusApplicationService rideStatusApplicationService;
 
-    public RideController(RideApplicationService rideApplicationService) {
+    public RideController(RideApplicationService rideApplicationService, RideStatusApplicationService rideStatusApplicationService) {
         this.rideApplicationService = rideApplicationService;
+        this.rideStatusApplicationService = rideStatusApplicationService;
     }
 
 //    @GetMapping
@@ -47,21 +51,9 @@ public class RideController {
         return ResponseEntity.ok(rideApplicationService.edit(id, updateRideDto));
     }
 
-    @PostMapping("/confirm/{id}")
-    public ResponseEntity<?> confirmRide(@PathVariable Long id) {
-        rideApplicationService.confirmRide(id);
-        return ResponseEntity.ok().build();
+    @PostMapping("/update-status")
+    public ResponseEntity<?> updateRideStatus(@RequestBody UpdateRideStatusDto updateRideStatusDto) {        ;
+        return ResponseEntity.ok(rideStatusApplicationService.updateRideStatus(updateRideStatusDto));
     }
 
-    @PostMapping("/cancel/{id}")
-    public ResponseEntity<?> cancelRide(@PathVariable Long id) {
-        rideApplicationService.cancelRide(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/start/{id}")
-    public ResponseEntity<?> startRide(@PathVariable Long id) {
-        rideApplicationService.startRide(id);
-        return ResponseEntity.ok().build();
-    }
 }

@@ -206,58 +206,5 @@ public class RideServiceImpl implements RideService {
         return rideRepository.findAllByDriverIdAndVehicleId(driverId, vehicleId);
     }
 
-    @Override
-    public void confirmRide(Long id) {
-        Ride ride = findByIdAndCheckOwnership(id);
 
-        if (!ride.getStatus().equals(RideStatus.PENDING)) {
-            throw new InvalidRideStatusException("Only rides in the PENDING state can be confirmed.");
-        }
-
-        ride.setStatus(RideStatus.CONFIRMED);
-        rideRepository.save(ride);
-
-        // TODO: Notify passengers
-    }
-
-    @Override
-    public void cancelRide(Long id) {
-        Ride ride = findByIdAndCheckOwnership(id);
-
-        if (ride.getStatus().equals(RideStatus.FINISHED)) {
-            throw new InvalidRideStatusException("You can't cancel finished rides.");
-        }
-
-        if (ride.getStatus().equals(RideStatus.STARTED)) {
-            throw new InvalidRideStatusException("You can't cancel started rides.");
-        }
-
-        if (!ride.getStatus().equals(RideStatus.CONFIRMED)) {
-            // TODO: Penalties for the driver
-        }
-
-        ride.setStatus(RideStatus.CANCELLED);
-        rideRepository.save(ride);
-
-        // TODO: Notify passengers
-    }
-
-    @Override
-    public void startRide(Long id) {
-        Ride ride = findByIdAndCheckOwnership(id);
-
-        if (!ride.getStatus().equals(RideStatus.CONFIRMED)) {
-            throw new InvalidRideStatusException("The ride can only be started if it is in the CONFIRMED state.");
-        }
-
-        LocalDateTime currentTime = LocalDateTime.now();
-        if(currentTime.isBefore(ride.getDepartureTime())) {
-            throw new InvalidRideStatusException("The ride cannot start before the scheduled departure time.");
-        }
-
-        ride.setStatus(RideStatus.STARTED);
-        rideRepository.save(ride);
-
-        // TODO: Notify passengers
-    }
 }

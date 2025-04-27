@@ -1,6 +1,5 @@
 package mk.ukim.finki.wayzi.service.application.impl;
 
-import mk.ukim.finki.wayzi.dto.*;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
 import mk.ukim.finki.wayzi.service.domain.RideService;
 import mk.ukim.finki.wayzi.web.dto.*;
@@ -83,18 +82,4 @@ public class RideApplicationServiceImpl implements RideApplicationService {
         );
     }
 
-    @Override
-    public void confirmRide(Long id) {
-        rideService.confirmRide(id);
-    }
-
-    @Override
-    public void cancelRide(Long id) {
-        rideService.cancelRide(id);
-    }
-
-    @Override
-    public void startRide(Long id) {
-        rideService.startRide(id);
-    }
 }

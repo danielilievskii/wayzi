@@ -20,8 +20,4 @@ public interface RideService {
     Ride findById(Long id);
     Ride findByIdAndCheckOwnership(Long id);
     List<Ride> findAllForAuthenticatedUserByVehicleId(Long vehicleId);
-
-    void confirmRide(Long id);
-    void cancelRide(Long id);
-    void startRide(Long id);
 }
