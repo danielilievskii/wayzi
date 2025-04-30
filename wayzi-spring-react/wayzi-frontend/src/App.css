@@ -4,14 +4,22 @@
     box-sizing: border-box;
 }
 
-#root {
-    background-color: #E6E6E6;
-    height: 100vh;
-    overflow-y: auto;
-}
-
 html {
     scroll-behavior: smooth;
 }
 
+/*#9F5255, #DCBDC1, #E16A54, #7C444F */
+
+html, body, #root {
+    height: 100%;
+    background-color: #E6E6E6;
+}
+
+.app {
+    min-height: 100vh;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: 1rem;
+}
 
