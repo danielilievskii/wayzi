@@ -49,6 +49,8 @@ public class Ride {
     @OneToMany(mappedBy = "ride", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RideStop> rideStops;
 
+    @OneToMany(mappedBy = "ride", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RideBooking> rideBookings;
 
     public Ride(Location departureLocation,
                 LocalDateTime departureTime,

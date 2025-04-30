@@ -54,6 +54,22 @@
 			<version>1.18.36</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- ZXing core for QR code generation -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.5.1</version>
+		</dependency>
+
+		<!-- ZXing JavaSE helpers (for MatrixToImageWriter) -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>3.5.1</version>
+		</dependency>
+
+
 		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>

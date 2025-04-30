@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface RideService {
 
+    Ride save(Ride ride);
     Ride save(CreateRideDto createRideDto);
     Ride edit(Long id, UpdateRideDto updateRideDto);
 

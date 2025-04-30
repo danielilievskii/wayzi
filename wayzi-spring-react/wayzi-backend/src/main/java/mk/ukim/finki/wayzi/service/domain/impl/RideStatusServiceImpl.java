@@ -1,11 +1,14 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
+import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
 import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
 import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import mk.ukim.finki.wayzi.model.exception.InvalidRideStatusException;
 import mk.ukim.finki.wayzi.repository.RideRepository;
+import mk.ukim.finki.wayzi.service.domain.RideBookingService;
 import mk.ukim.finki.wayzi.service.domain.RideService;
 import mk.ukim.finki.wayzi.service.domain.RideStatusService;
 import org.springframework.stereotype.Service;
@@ -16,10 +19,12 @@ import java.time.LocalDateTime;
 public class RideStatusServiceImpl implements RideStatusService {
 
     private final RideService rideService;
+    private final RideBookingService rideBookingService;
     private final RideRepository rideRepository;
 
-    public RideStatusServiceImpl(RideService rideService, RideRepository rideRepository) {
+    public RideStatusServiceImpl(RideService rideService, RideBookingService rideBookingService, RideRepository rideRepository) {
         this.rideService = rideService;
+        this.rideBookingService = rideBookingService;
         this.rideRepository = rideRepository;
     }
 
@@ -43,22 +48,36 @@ public class RideStatusServiceImpl implements RideStatusService {
     @Override
     public Ride transitionTo(Long id, RideStatus newStatus) {
         Ride ride = rideService.findByIdAndCheckOwnership(id);
+        RideStatus currentStatus = ride.getStatus();
 
-        if(!canTransitionTo(ride.getStatus(), newStatus)) {
-            throw new InvalidRideStatusException("Transition from " + ride.getStatus().name() + " to " + newStatus.name() + " is not allowed.");
+        if(!canTransitionTo(currentStatus, newStatus)) {
+            throw new InvalidRideStatusException("Transition from " + currentStatus.name() + " to " + newStatus.name() + " is not allowed.");
         }
 
-        if (ride.getStatus().equals(RideStatus.CONFIRMED) && newStatus.equals(RideStatus.CANCELLED)) {
-            // TODO: Penalties for the driver
+        if (newStatus == RideStatus.CANCELLED) {
+            cancelAllRideBookings(ride);
+
+            if(currentStatus == RideStatus.CONFIRMED) {
+                // TODO: Penalties for the driver
+            }
         }
 
-        if (ride.getStatus().equals(RideStatus.CONFIRMED) && newStatus.equals(RideStatus.STARTED)) {
+        if (currentStatus == RideStatus.CONFIRMED && newStatus == RideStatus.STARTED) {
             validateRideCanStart(ride);
         }
 
         //TODO: Notify passengers of status change (publish event)
 
         ride.setStatus(newStatus);
-        return rideRepository.save(ride);
+        return rideService.save(ride);
+    }
+
+    public void cancelAllRideBookings(Ride ride) {
+        for(RideBooking rideBooking : ride.getRideBookings()) {
+            if(rideBooking.getBookingStatus() == RideBookingStatus.CONFIRMED) {
+                rideBooking.setBookingStatus(RideBookingStatus.CANCELLED);
+                rideBookingService.save(rideBooking);
+            }
+        }
     }
 }

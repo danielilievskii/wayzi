@@ -56,12 +56,18 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
+    public Ride save(Ride ride) {
+        return rideRepository.save(ride);
+    }
+
+    @Override
     public Ride save(CreateRideDto createRideDto) {
         // Check if the user is authenticated (will be delegated to Spring Security)
         StandardUser authenticatedUser = authService.getAuthenticatedStandardUser();
 
         // Check if the user owns the vehicle
         Vehicle vehicle = vehicleService.findByIdAndCheckOwnership(createRideDto.vehicleId());
+
         Location departureLocation = locationService.findById(createRideDto.departureLocationId());
         Location arrivalLocaiton = locationService.findById(createRideDto.arrivalLocationId());
 
