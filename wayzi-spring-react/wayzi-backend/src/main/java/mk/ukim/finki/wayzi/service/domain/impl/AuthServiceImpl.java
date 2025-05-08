@@ -16,6 +16,7 @@ import mk.ukim.finki.wayzi.repository.UserRepository;
 import mk.ukim.finki.wayzi.service.domain.AuthService;
 import mk.ukim.finki.wayzi.service.domain.JwtService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -104,7 +105,7 @@ public class AuthServiceImpl implements AuthService {
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             throw new AuthenticationException("User is not authenticated");
         }
 

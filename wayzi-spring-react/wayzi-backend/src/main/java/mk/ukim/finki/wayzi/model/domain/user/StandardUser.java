@@ -34,6 +34,10 @@ public class StandardUser extends User {
     @Column(name = "phone_number_verified")
     private Boolean isPhoneNumberVerified;
 
+    @Lob
+    @Column(name = "profile_pic", columnDefinition = "LONGBLOB")
+    private byte[] profilePic;
+
     @JsonIgnore
     @OneToMany(mappedBy = "owner", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     List<Vehicle> vehicles;
