@@ -55,11 +55,14 @@ public class RideStatusServiceImpl implements RideStatusService {
         }
 
         if (newStatus == RideStatus.CANCELLED) {
-            cancelAllRideBookings(ride);
+            updateRideBookings(ride, RideBookingStatus.CANCELLED);
 
             if(currentStatus == RideStatus.CONFIRMED) {
                 // TODO: Penalties for the driver
             }
+
+        } else if (newStatus == RideStatus.FINISHED) {
+            updateRideBookings(ride, RideBookingStatus.ARCHIVED);
         }
 
         if (currentStatus == RideStatus.CONFIRMED && newStatus == RideStatus.STARTED) {
@@ -72,10 +75,10 @@ public class RideStatusServiceImpl implements RideStatusService {
         return rideService.save(ride);
     }
 
-    public void cancelAllRideBookings(Ride ride) {
+    public void updateRideBookings(Ride ride, RideBookingStatus bookingStatus) {
         for(RideBooking rideBooking : ride.getRideBookings()) {
             if(rideBooking.getBookingStatus() == RideBookingStatus.CONFIRMED) {
-                rideBooking.setBookingStatus(RideBookingStatus.CANCELLED);
+                rideBooking.setBookingStatus(bookingStatus);
                 rideBookingService.save(rideBooking);
             }
         }

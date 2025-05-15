@@ -3,6 +3,8 @@ package mk.ukim.finki.wayzi.service.application.impl;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
 import mk.ukim.finki.wayzi.service.domain.RideService;
 import mk.ukim.finki.wayzi.web.dto.*;
+import mk.ukim.finki.wayzi.web.dto.ride.PublishedRideFilterDto;
+import mk.ukim.finki.wayzi.web.dto.ride.RideDetailsDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,20 +52,17 @@ public class RideApplicationServiceImpl implements RideApplicationService {
     }
 
     @Override
-    public RidePageDto findCurrentUserPublishedRidesPage(RideFilterDto rideFilterDto) {
-        return RidePageDto.from(rideService.findCurrentUserPublishedRidesPage(
-                rideFilterDto.departureLocationId(),
-                rideFilterDto.arrivalLocationId(),
-                rideFilterDto.date(),
-                rideFilterDto.passengersNum(),
-                rideFilterDto.pageNum(),
-                rideFilterDto.pageSize()
+    public RidePageDto findPublishedRidesPageForUser(PublishedRideFilterDto publishedRideFilterDto) {
+        return RidePageDto.from(rideService.findPublishedRidesPageForUser(
+                publishedRideFilterDto.status(),
+                publishedRideFilterDto.pageNum(),
+                publishedRideFilterDto.pageSize()
         ));
     }
 
     @Override
-    public DisplayRideDto findById(Long id) {
-        return DisplayRideDto.from(
+    public RideDetailsDto findById(Long id) {
+        return RideDetailsDto.from(
                 rideService.findById(id)
         );
     }

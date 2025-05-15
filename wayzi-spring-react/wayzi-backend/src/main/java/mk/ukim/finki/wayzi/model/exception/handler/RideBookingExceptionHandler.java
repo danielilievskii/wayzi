@@ -24,4 +24,8 @@ public class RideBookingExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    @ExceptionHandler(PassengerCheckInNotAllowedException.class)
+    public ResponseEntity<String> handlePassengerCheckInNotAllowedExceptionException(PassengerCheckInNotAllowedException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 }

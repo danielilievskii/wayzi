@@ -1,5 +1,6 @@
 package mk.ukim.finki.wayzi.service.domain;
 
+import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import mk.ukim.finki.wayzi.web.dto.CreateRideDto;
 import mk.ukim.finki.wayzi.web.dto.UpdateRideDto;
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
@@ -16,7 +17,7 @@ public interface RideService {
 
     List<Ride> findAll();
     Page<Ride> findPage(Long departureLocationId, Long arrivalLocationId, LocalDate date, Integer passengersNum, Integer pageNum, Integer pageSize);
-    Page<Ride> findCurrentUserPublishedRidesPage(Long departureLocationId, Long arrivalLocationId, LocalDate date, Integer passengersNum, Integer pageNum, Integer pageSize);
+    Page<Ride> findPublishedRidesPageForUser(RideStatus status, Integer pageNum, Integer pageSize);
 
     Ride findById(Long id);
     Ride findByIdAndCheckOwnership(Long id);

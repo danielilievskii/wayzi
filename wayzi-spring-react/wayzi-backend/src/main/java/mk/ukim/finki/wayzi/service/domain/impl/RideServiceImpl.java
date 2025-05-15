@@ -35,8 +35,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static mk.ukim.finki.wayzi.specifications.FieldFilterSpecification.filterEquals;
-import static mk.ukim.finki.wayzi.specifications.FieldFilterSpecification.greaterThan;
+import static mk.ukim.finki.wayzi.specifications.FieldFilterSpecification.*;
 
 @Service
 public class RideServiceImpl implements RideService {
@@ -167,17 +166,14 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public Page<Ride> findCurrentUserPublishedRidesPage(Long departureLocationId, Long arrivalLocationId, LocalDate date, Integer passengersNum, Integer pageNum, Integer pageSize) {
+    public Page<Ride> findPublishedRidesPageForUser(RideStatus status, Integer pageNum, Integer pageSize) {
         Long driverId = authService.getAuthenticatedUser().getId();
 
         Specification<Ride> specification = Specification
-                .where(filterEquals(Ride.class, "driver.id", driverId))
-                .and(filterEquals(Ride.class, "departureLocation.id", departureLocationId))
-                .and(filterEquals(Ride.class, "arrivalLocation.id", arrivalLocationId))
-                .and(greaterThan(Ride.class, "availableSeats", passengersNum));
+                .where(filterEquals(Ride.class, "driver.id", driverId));
 
-        if(date != null) {
-            specification = specification.and(greaterThan(Ride.class, "departureTime", date.atStartOfDay()));
+        if (status != null) {
+            specification = specification.and(filterEqualsV(Ride.class, "status", status));
         }
 
         return this.rideRepository.findAll(

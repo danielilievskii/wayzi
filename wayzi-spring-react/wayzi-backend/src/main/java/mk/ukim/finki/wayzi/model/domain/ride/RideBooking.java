@@ -40,6 +40,8 @@ public class RideBooking {
 
     private Integer totalPrice;
 
+    private String message;
+
     @Column(name = "qr_code_url", length = 1000)
     private String qrCodeUrl;
 
@@ -50,6 +52,8 @@ public class RideBooking {
     private boolean riderAbsenceReport;
 
     public RideBooking(
+            Ride ride,
+            StandardUser booker,
             PaymentMethod paymentMethod,
             RideBookingStatus bookingStatus,
             CheckInStatus checkInStatus,
@@ -60,6 +64,8 @@ public class RideBooking {
             boolean driverAbsenceReport,
             boolean riderAbsenceReport
     ) {
+        this.ride = ride;
+        this.booker = booker;
         this.paymentMethod = paymentMethod;
         this.bookingStatus = bookingStatus;
         this.checkInStatus = checkInStatus;

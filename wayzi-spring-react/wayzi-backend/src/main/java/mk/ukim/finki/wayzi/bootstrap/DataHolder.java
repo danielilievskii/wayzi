@@ -3,13 +3,12 @@ package mk.ukim.finki.wayzi.bootstrap;
 import jakarta.annotation.PostConstruct;
 import mk.ukim.finki.wayzi.model.domain.Location;
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
+import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
 import mk.ukim.finki.wayzi.model.domain.ride.RideStop;
 import mk.ukim.finki.wayzi.model.domain.user.AdminUser;
 import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
 import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
-import mk.ukim.finki.wayzi.model.enumeration.Color;
-import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
-import mk.ukim.finki.wayzi.model.enumeration.VehicleType;
+import mk.ukim.finki.wayzi.model.enumeration.*;
 import mk.ukim.finki.wayzi.repository.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,6 +25,7 @@ public class DataHolder {
     public static List<Location> locations = null;
     public static List<Ride> rides = null;
     public static List<RideStop> rideStops = null;
+    public static List<RideBooking> rideBookings = null;
 
     private final AdminUserRepository adminUserRepository;
     private final StandardUserRepository standardUserRepository;
@@ -34,8 +34,9 @@ public class DataHolder {
     private final PasswordEncoder passwordEncoder;
     private final RideRepository rideRepository;
     private final RideStopRepository rideStopRepository;
+    private final RideBookingRepository rideBookingRepository;
 
-    public DataHolder(AdminUserRepository adminUserRepository, StandardUserRepository standardUserRepository, VehicleRepository vehicleRepository, LocationRepository locationRepository, PasswordEncoder passwordEncoder, RideRepository rideRepository, RideStopRepository rideStopRepository) {
+    public DataHolder(AdminUserRepository adminUserRepository, StandardUserRepository standardUserRepository, VehicleRepository vehicleRepository, LocationRepository locationRepository, PasswordEncoder passwordEncoder, RideRepository rideRepository, RideStopRepository rideStopRepository, RideBookingRepository rideBookingRepository) {
         this.adminUserRepository = adminUserRepository;
         this.standardUserRepository = standardUserRepository;
         this.vehicleRepository = vehicleRepository;
@@ -43,6 +44,7 @@ public class DataHolder {
         this.passwordEncoder = passwordEncoder;
         this.rideRepository = rideRepository;
         this.rideStopRepository = rideStopRepository;
+        this.rideBookingRepository = rideBookingRepository;
     }
 
     @PostConstruct
@@ -156,6 +158,7 @@ public class DataHolder {
 
         rides = new ArrayList<>();
         if(this.rideRepository.count() == 0) {
+            rides.add(new Ride(locations.get(1), LocalDateTime.now(), locations.get(2), LocalDateTime.now().plusHours(4).plusMinutes(30), adminUsers.get(0), vehicles.get(0), 4, 200, RideStatus.CONFIRMED));
             rides.add(new Ride(locations.get(0), LocalDateTime.now(), locations.get(1), LocalDateTime.now().plusHours(4).plusMinutes(30), standardUsers.get(0), vehicles.get(0), 4, 200, RideStatus.STARTED));
             rides.add(new Ride(locations.get(14), LocalDateTime.now().plusHours(30), locations.get(21), LocalDateTime.now().plusHours(31).plusMinutes(30), standardUsers.get(0), vehicles.get(0), 4, 200, RideStatus.CONFIRMED));
             rides.add(new Ride(locations.get(15), LocalDateTime.now().plusHours(100), locations.get(30), LocalDateTime.now().plusHours(100).plusMinutes(30), standardUsers.get(0), vehicles.get(0), 4, 200, RideStatus.PENDING));
@@ -168,6 +171,14 @@ public class DataHolder {
             rideStops.add(new RideStop(rides.get(0), locations.get(10), LocalDateTime.now().plusHours(1), 1));
             rideStops.add(new RideStop(rides.get(0), locations.get(31), LocalDateTime.now().plusHours(2), 2));
             this.rideStopRepository.saveAll(rideStops);
+        }
+
+        rideBookings = new ArrayList<>();
+        if(this.rideBookingRepository.count() == 0) {
+            rideBookings.add(new RideBooking(rides.get(0), standardUsers.get(0), PaymentMethod.CASH, RideBookingStatus.CONFIRMED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
+            rideBookings.add(new RideBooking(rides.get(1), standardUsers.get(0), PaymentMethod.CASH, RideBookingStatus.ARCHIVED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
+            rideBookings.add(new RideBooking(rides.get(2), standardUsers.get(0), PaymentMethod.CASH, RideBookingStatus.CANCELLED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
+            this.rideBookingRepository.saveAll(rideBookings);
         }
 
     }

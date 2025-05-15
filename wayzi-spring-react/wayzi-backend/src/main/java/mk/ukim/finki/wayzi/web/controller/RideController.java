@@ -6,6 +6,7 @@ import mk.ukim.finki.wayzi.web.dto.RideFilterDto;
 import mk.ukim.finki.wayzi.web.dto.UpdateRideDto;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
 import mk.ukim.finki.wayzi.web.dto.UpdateRideStatusDto;
+import mk.ukim.finki.wayzi.web.dto.ride.PublishedRideFilterDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +38,8 @@ public class RideController {
     }
 
     @GetMapping("/published")
-    public ResponseEntity<?> findPublishedRidesPage(@ModelAttribute RideFilterDto rideFilterDto) {
-        return ResponseEntity.ok(rideApplicationService.findCurrentUserPublishedRidesPage(rideFilterDto));
+    public ResponseEntity<?> findPublishedRidesPage(@ModelAttribute PublishedRideFilterDto publishedRideFilterDto) {
+        return ResponseEntity.ok(rideApplicationService.findPublishedRidesPageForUser(publishedRideFilterDto));
     }
 
     @PostMapping("/add")

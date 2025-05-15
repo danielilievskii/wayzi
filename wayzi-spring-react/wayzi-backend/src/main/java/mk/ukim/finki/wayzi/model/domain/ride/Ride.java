@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import mk.ukim.finki.wayzi.model.domain.Location;
 import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
 import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
+import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 
 import java.time.LocalDateTime;
@@ -86,6 +87,12 @@ public class Ride {
         this.pricePerSeat = pricePerSeat;
         this.status = status;
         this.rideStops = new ArrayList<>();
+    }
+
+    public List<RideBooking> getActiveRideBookings() {
+        return this.rideBookings.stream()
+                .filter(rideBooking -> !rideBooking.getBookingStatus().equals(RideBookingStatus.CANCELLED))
+                .toList();
     }
 }
 
