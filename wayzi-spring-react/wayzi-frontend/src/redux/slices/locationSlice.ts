@@ -30,7 +30,7 @@ export const fetchLocations = createAsyncThunk(
             const res = await axiosInstance.get('/locations');
             return res.data as Location[];
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to fetch locations');
+            return rejectWithValue(err.response?.data || 'Failed to fetch locations');
         }
     }
 )

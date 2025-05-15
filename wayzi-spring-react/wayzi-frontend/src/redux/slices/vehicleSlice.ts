@@ -30,7 +30,7 @@ export const fetchVehicles = createAsyncThunk(
             const res = await axiosInstance.get('/vehicle/all');
             return res.data as Vehicle[];
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to fetch vehicles');
+            return rejectWithValue(err.response?.data || 'Failed to fetch vehicles');
         }
     }
 )
@@ -43,7 +43,7 @@ export const createVehicle = createAsyncThunk(
             const res = await axiosInstance.post('/vehicle/add', vehicleData);
             return res.data as Vehicle;
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to create vehicle');
+            return rejectWithValue(err.response?.data || 'Failed to create vehicle');
         }
     }
 );
@@ -59,7 +59,7 @@ export const editVehicle = createAsyncThunk(
             const res = await axiosInstance.post(`/vehicle/edit/${id}`, data);
             return res.data as Vehicle;
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to update vehicle');
+            return rejectWithValue(err.response?.data || 'Failed to update vehicle');
         }
     }
 );
@@ -72,7 +72,7 @@ export const deleteVehicle = createAsyncThunk(
             await axiosInstance.delete(`/vehicle/delete/${id}`);
             return id;
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to delete vehicle');
+            return rejectWithValue(err.response?.data || 'Failed to delete vehicle');
         }
     }
 );

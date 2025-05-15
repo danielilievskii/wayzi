@@ -11,7 +11,7 @@ interface PublishedRidesStates {
     totalItems: number;
     currentPage: number;
 
-    filter: FilterSchemaType | null;
+    filter: {status: string | null};
     pagination: PaginationSchemaType;
 
     loading: boolean;
@@ -25,12 +25,7 @@ const initialState: PublishedRidesStates = {
     currentPage: 0,
 
     filter: {
-        departureLocationId: null,
-        arrivalLocationId: null,
-        date: new Date().toISOString().split('T')[0],
-        passengersNum: null,
-        departureLocationName: "",
-        arrivalLocationName: "",
+        status: null,
     },
 
     pagination: {pageNum: 1, pageSize: 10},
@@ -43,15 +38,16 @@ export const fetchPublishedRides = createAsyncThunk<RidesResponse, void, {reject
     'ridesPublished/fetchAll',
     async (filterData, {rejectWithValue}) => {
         try {
+            console.log(filterData);
             const res = await axiosInstance.get('/rides/published', {
                 params: filterData
             });
-            console.log("TUKA")
-            console.log(res.data)
+            console.log(res.data);
             return res.data as RidesResponse;
 
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to fetch published rides');
+            console.log(err)
+            return rejectWithValue(err.response?.data || 'Failed to fetch published rides');
         }
     }
 )
@@ -64,7 +60,7 @@ export const updateRideStatus = createAsyncThunk<Ride, Partial<Ride>, { rejectVa
             const res = await axiosInstance.post('/rides/update-status', statusData);
             return res.data;
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to update ride status');
+            return rejectWithValue(err.response?.data || 'Failed to update ride status');
         }
     }
 );
@@ -77,7 +73,7 @@ export const createRide = createAsyncThunk<Ride, Partial<Ride>, { rejectValue: s
             const res = await axiosInstance.post('/rides/add', rideData);
             return res.data;
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to create ride');
+            return rejectWithValue(err.response?.data || 'Failed to create ride');
         }
     }
 );
@@ -90,7 +86,7 @@ export const editRide = createAsyncThunk<Ride, { id: number; data: Partial<Ride>
             const res = await axiosInstance.put(`/rides/edit/${id}`, data);
             return res.data;
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to update ride');
+            return rejectWithValue(err.response?.data || 'Failed to update ride');
         }
     }
 );
@@ -103,7 +99,7 @@ export const deleteRide = createAsyncThunk<number, number, { rejectValue: string
             await axiosInstance.delete(`/rides/delete/${id}`);
             return id;
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to delete ride');
+            return rejectWithValue(err.response?.data || 'Failed to delete ride');
         }
     }
 );

@@ -1,0 +1,43 @@
+@import "/public/assets/css/colors.css";
+
+.application-filters {
+    gap: 15px;
+    border-radius: 8px;
+    background-color: white;
+}
+
+/*#2A4E87, #3E6BAA, #618ECF, #7CB1FF*/
+.application-filters span {
+    padding: 8px 12px;
+    border-radius: 5px;
+    /*color: rgba(1,38,90,0.9);*/
+    color: var(--blue-dark-main);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Icon Styles */
+.application-filters span i {
+    margin-right: 5px;
+}
+
+/* Hover Effect */
+.application-filters span:hover {
+    background-color: var(--blue-dark-main);
+    color: white;
+}
+
+.application-filters span:hover i {
+    color: inherit; /* Makes the icon inherit the color from the parent span */
+}
+
+/* Selected State */
+.application-filters span.selected {
+    background-color: var(--blue-dark-main);
+    color: white;
+}
+
+.application-filters span.selected i {
+    color: inherit; /* Ensures icon color matches the selected state */
+}

@@ -1,0 +1,96 @@
+.form-control {
+    border-radius: 10px;
+}
+
+.confirmation-bar {
+    position: fixed;
+    top: 85px;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    z-index: 20;
+}
+
+.confirmation-bar-buttons {
+    display: flex;
+    justify-content: right;
+    gap: 10px;
+    margin-right: 60px
+}
+.confirmation-bar .confirmation-bar-buttons button {
+    padding: 5px 20px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    transition: 0.1s;
+}
+.confirmation-bar .confirmation-bar-buttons .cancel-changes {
+    background-color: #8D8D8B;
+}
+
+.confirmation-bar .confirmation-bar-buttons .cancel-changes:hover {
+    background-color: #9B9A99;
+}
+
+.confirmation-bar .confirmation-bar-buttons .save-changes {
+    background-color: #0866FF;
+
+}
+.confirmation-bar .confirmation-bar-buttons .save-changes:hover {
+    background-color: dodgerblue;
+}
+
+/*VEHICLE FORMS*/
+
+.color-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    cursor: pointer;
+}
+.color-btn.active {
+    border: 3px solid cornflowerblue !important;
+}
+
+.radio-btn {
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 15px 10px;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    background-color: white;
+    border: 1px solid lightgrey;
+}
+
+.radio-btn:hover {
+    background-color: lightgrey;
+}
+
+.radio-btn.active {
+    border: 1px solid cornflowerblue !important;
+}
+.radio-btn.active:hover{
+    border: 1px solid lightgrey !important;
+}
+
+.radio-btn i {
+    font-size: 1.6rem;
+}
+
+.radio-btn h5 {
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}

@@ -10,9 +10,14 @@ html {
 
 /*#9F5255, #DCBDC1, #E16A54, #7C444F */
 
+/*#2A4E87, #3E6BAA, #618ECF, #618ECF*/
+
 html, body, #root {
-    height: 100%;
+    min-height: 100vh;
+    /*background-color: white;*/
     background-color: #E6E6E6;
+    /*background: linear-gradient(135deg, #E6E6E6, #1E3A8A);*/
+    /*background: linear-gradient(135deg, #E6E6E6, #003366);*/
 }
 
 .app {

@@ -1,5 +1,8 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import axiosInstance from "../axios/axiosInstance.ts";
+import {downloadProfilePic} from "../redux/slices/profilePicSlice.ts";
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "../redux/store.ts";
 
 interface User {
     id: number;
@@ -17,6 +20,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -30,6 +34,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
         fetchUser();
     }, []);
+
+    useEffect(() => {
+        if (currentUser?.id) {
+            dispatch(downloadProfilePic(currentUser.id));
+        }
+    }, [currentUser, dispatch]);
 
     return (
         <UserContext.Provider value={{ currentUser, setCurrentUser }}>

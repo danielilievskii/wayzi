@@ -3,16 +3,19 @@ import {Navigate, Route, Router, Routes} from 'react-router-dom'
 import Roles from "../enumerations/Roles.ts";
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-import SignInPage from "../pages/auth/SignInPage.tsx";
-import {HomePage} from "../pages/HomePage.tsx";
-import {RidesBookedPage} from "../pages/rides/RidesBookedPage.tsx";
-import {RidesPublishedPage} from "../pages/rides/RidesPublishedPage.tsx";
-import {RidesPage} from "../pages/rides/RidesPage.tsx";
-import {ProfilePage} from "../pages/ProfilePage.tsx";
-import {AddVehicleForm} from "../pages/vehicles/AddVehicleForm.tsx";
-import {EditVehicleForm} from "../pages/vehicles/EditVehicleForm.tsx";
-import {RideDetails} from "../pages/rides/RideDetails.tsx";
-import {PublishRideForm} from "../pages/rides/PublishRideForm.tsx";
+import SignInPage from "../ui/pages/SignInPage/SignInPage.tsx";
+import {HomePage} from "../ui/pages/HomePage/HomePage.tsx";
+import {RideBookingsPage} from "../ui/pages/RideBookingsPage/RideBookingsPage.tsx";
+import {PublishedRidesPage} from "../ui/pages/PublishedRidesPage/PublishedRidesPage.tsx";
+import {RidesPage} from "../ui/pages/RidesPage/RidesPage.tsx";
+import {ProfilePage} from "../ui/pages/ProfilePage/ProfilePage.tsx";
+import {AddVehicleForm} from "../ui/pages/FormPages/AddVehicleForm.tsx";
+import {EditVehicleForm} from "../ui/pages/FormPages/EditVehicleForm.tsx";
+import {RideDetailsPage} from "../ui/pages/RideDetailsPage/RideDetailsPage.tsx";
+import {PublishRideForm} from "../ui/pages/FormPages/PublishRideForm.tsx";
+import {BookRideForm} from "../ui/pages/FormPages/BookRideForm.tsx";
+import {RideBookingDetailsPage} from "../ui/pages/RideBookingDetailsPage/RideBookingDetailsPage.tsx";
+import {RideBookingCheckInPage} from "../ui/pages/RideBookingCheckInPage/RideBookingCheckInPage.tsx";
 
 export const PrivateRoutes = [
 
@@ -78,11 +81,19 @@ const RoutesConfig = () => {
             <Route path="/" element={<HomePage />}></Route>
             <Route path="/profile" element={<ProfilePage />}></Route>
             <Route path="/signin" element={<SignInPage/>}></Route>
-            <Route path="/rides" element={<RidesPage/>}></Route>
-            <Route path="/rides/details/:ride_id" element={<RideDetails/>}></Route>
-            <Route path="/rides/booked" element={<RidesBookedPage/>}></Route>
 
-            <Route path="/rides/published" element={<RidesPublishedPage/>}></Route>
+            <Route path="/rides" element={<RidesPage/>}></Route>
+            <Route path="/rides/:rideId" element={<RideDetailsPage/>}></Route>
+            <Route path="/rides/:ride_id/book" element={<BookRideForm/>}></Route>
+
+
+            <Route path="/rides/bookings" element={<RideBookingsPage/>}></Route>
+            <Route path="/rides/bookings/:rideBookingId" element={<RideBookingDetailsPage/>}></Route>
+            <Route path="/rides/bookings/:rideBookingId/check-in" element={<RideBookingCheckInPage/>}></Route>
+
+
+
+            <Route path="/rides/published" element={<PublishedRidesPage/>}></Route>
             <Route path="/rides/publish" element={<PublishRideForm/>}></Route>
 
             <Route path="/vehicles/add" element={<AddVehicleForm/>}></Route>

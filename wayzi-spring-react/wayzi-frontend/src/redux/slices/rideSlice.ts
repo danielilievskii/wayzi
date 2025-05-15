@@ -17,6 +17,7 @@ export interface RideStop {
 export interface Ride {
     id: string;
     driverName: string
+    driverId: string
     departureLocation: Location;
     departureTime: string;
     arrivalLocation: Location;
@@ -69,7 +70,7 @@ export interface RidesResponse {
 }
 
 // Fetch all rides
-export const fetchFilteredRides = createAsyncThunk<RidesResponse, void, { rejectValue: string }>(
+export const fetchRides = createAsyncThunk<RidesResponse, void, { rejectValue: string }>(
     'rides/fetchFiltered',
     async (filterData, { rejectWithValue }) => {
         try {
@@ -78,7 +79,7 @@ export const fetchFilteredRides = createAsyncThunk<RidesResponse, void, { reject
             });
             return res.data;
         } catch (err: any) {
-            return rejectWithValue(err.response?.data?.message || 'Failed to fetch rides');
+            return rejectWithValue(err.response?.data || 'Failed to fetch rides');
         }
     }
 );
@@ -99,18 +100,18 @@ const rideSlice = createSlice({
     extraReducers: (builder) => {
         builder
             // FILTER RIDES
-            .addCase(fetchFilteredRides.pending, (state) => {
+            .addCase(fetchRides.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchFilteredRides.fulfilled, (state, action: PayloadAction<RidesResponse>) => {
+            .addCase(fetchRides.fulfilled, (state, action: PayloadAction<RidesResponse>) => {
                 state.loading = false;
                 state.rides = action.payload.rides;
                 state.totalItems = action.payload.totalItems;
                 state.totalPages = action.payload.totalPages;
                 state.currentPage = action.payload.currentPage;
             })
-            .addCase(fetchFilteredRides.rejected, (state, action) => {
+            .addCase(fetchRides.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || 'Failed to fetch rides';
             })

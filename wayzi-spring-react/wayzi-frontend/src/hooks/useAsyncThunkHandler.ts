@@ -2,7 +2,7 @@ import {useState} from "react";
 import {AppDispatch} from "../redux/store.ts";
 
 export const useAsyncThunkHandler = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -12,9 +12,6 @@ export const useAsyncThunkHandler = () => {
         data: any,
         onSuccess?: (result: T) => void
     ) => {
-        setLoading(true);
-        setError(null);
-        setSuccess(false);
 
         const resultAction = await dispatchFn(thunk(data));
         setLoading(false);
@@ -27,5 +24,5 @@ export const useAsyncThunkHandler = () => {
         }
     };
 
-    return { handleThunk, loading, success, error };
+    return {handleThunk, loading, success, error};
 };

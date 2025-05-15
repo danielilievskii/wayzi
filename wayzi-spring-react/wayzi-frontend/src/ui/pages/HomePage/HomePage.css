@@ -1,0 +1,53 @@
+.landing-pic {
+    height: 500px;
+    background-image: url("/public/assets/images/landing-pic2.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.landing-page {
+    background-color: white;
+    height: 100vh;
+    overflow-y: hidden;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: 1rem;
+    padding-top: 100px;
+    /*padding-top: 95px;*/
+}
+
+.landing-page-card {
+    font-size: 0.8rem;
+    background: linear-gradient(135deg, #2A4E87, #3E6BAA, #618ECF, #7CB1FF);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    z-index: 1;
+    height: 100%;
+}
+
+.landing-page-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,  #7CB1FF, #618ECF, #3E6BAA, #2A4E87);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: inherit;
+    z-index: -1;
+}
+
+.landing-page-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.landing-page-card:hover::before {
+    opacity: 1;
+}
