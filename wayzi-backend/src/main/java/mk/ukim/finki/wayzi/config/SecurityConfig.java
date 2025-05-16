@@ -57,7 +57,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(
                                 "/api/auth/**",
-                                "/api/locations/**"
+                                "/api/locations/**",
+                                "/api/rides",
+                                "/api/rides/{id}",
+                                "/api/locations/**",
+                                "/api/user/{id}/download-profile-pic",
+                                "/api/routes/**"
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 )
