@@ -4,7 +4,6 @@ import mk.ukim.finki.wayzi.web.dto.CreateVehicleDto;
 import mk.ukim.finki.wayzi.model.exception.AccessDeniedException;
 import mk.ukim.finki.wayzi.model.exception.VehicleNotFoundException;
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
 import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
 import mk.ukim.finki.wayzi.repository.VehicleRepository;
@@ -50,14 +49,14 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Vehicle> findAllForAuthenticatedUser() {
+    public List<Vehicle> findAllForUser() {
         Long userId = authService.getAuthenticatedUser().getId();
         return vehicleRepository.findAllByOwnerId(userId);
     }
 
     @Override
     public Vehicle save(CreateVehicleDto createVehicleDto) {
-        StandardUser user = authService.getAuthenticatedStandardUser();
+        User user = authService.getAuthenticatedUser();
         Vehicle vehicle = createVehicleDto.toEntity(user);
 
         return vehicleRepository.save(vehicle);
@@ -66,7 +65,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public Vehicle update(Long id, CreateVehicleDto createVehicleDto) {
         Vehicle vehicle = findByIdAndCheckOwnership(id);
-        List<Ride> rides = rideService.findAllForAuthenticatedUserByVehicleId(id);
+        List<Ride> rides = rideService.findAllByVehicleIdForUser(id);
 
         if(rides.isEmpty()) {
             vehicle.setType(createVehicleDto.type());
@@ -86,7 +85,7 @@ public class VehicleServiceImpl implements VehicleService {
     public void delete(Long id) {
         Vehicle vehicle = findByIdAndCheckOwnership(id);
 
-        List<Ride> rides = rideService.findAllForAuthenticatedUserByVehicleId(id);
+        List<Ride> rides = rideService.findAllByVehicleIdForUser(id);
         if(rides.isEmpty()) {
             vehicleRepository.delete(vehicle);
         } else {

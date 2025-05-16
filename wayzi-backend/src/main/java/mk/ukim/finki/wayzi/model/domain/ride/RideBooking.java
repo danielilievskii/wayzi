@@ -3,7 +3,7 @@ package mk.ukim.finki.wayzi.model.domain.ride;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
+import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.enumeration.CheckInStatus;
 import mk.ukim.finki.wayzi.model.enumeration.PaymentMethod;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
@@ -25,7 +25,7 @@ public class RideBooking {
 
     @ManyToOne
     @JoinColumn(name = "booker_id")
-    private StandardUser booker;
+    private User booker;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
@@ -53,7 +53,7 @@ public class RideBooking {
 
     public RideBooking(
             Ride ride,
-            StandardUser booker,
+            User booker,
             PaymentMethod paymentMethod,
             RideBookingStatus bookingStatus,
             CheckInStatus checkInStatus,

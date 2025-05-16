@@ -21,5 +21,5 @@ public interface RideService {
 
     Ride findById(Long id);
     Ride findByIdAndCheckOwnership(Long id);
-    List<Ride> findAllForAuthenticatedUserByVehicleId(Long vehicleId);
+    List<Ride> findAllByVehicleIdForUser(Long vehicleId);
 }

@@ -75,9 +75,9 @@ public class RideApplicationServiceImpl implements RideApplicationService {
     }
 
     @Override
-    public List<DisplayRideDto> findAllForAuthenticatedUserByVehicleId(Long vehicleId) {
+    public List<DisplayRideDto> findAllByVehicleIdForUser(Long vehicleId) {
         return DisplayRideDto.from(
-                rideService.findAllForAuthenticatedUserByVehicleId(vehicleId)
+                rideService.findAllByVehicleIdForUser(vehicleId)
         );
     }
 

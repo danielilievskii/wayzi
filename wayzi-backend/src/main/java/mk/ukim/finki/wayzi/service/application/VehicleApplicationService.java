@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface VehicleApplicationService {
     DisplayVehicleDto findByIdAndCheckOwnership(Long id);
-    List<DisplayVehicleDto> findAllForAuthenticatedUser();
+    List<DisplayVehicleDto> findAllForUser();
     DisplayVehicleDto save(CreateVehicleDto vehicle);
     DisplayVehicleDto update(Long id, CreateVehicleDto vehicle);
     void delete(Long id);

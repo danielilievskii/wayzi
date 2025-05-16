@@ -10,9 +10,9 @@ import mk.ukim.finki.wayzi.model.enumeration.Role;
 @Data
 @NoArgsConstructor
 @Table(name = "admin")
-public class AdminUser extends StandardUser {
+public class Admin extends User {
 
-    public AdminUser(String email, String password, String name) {
+    public Admin(String email, String password, String name) {
         super(email, password, name);
         this.isEmailVerified = true;
         this.role = Role.ROLE_ADMIN_USER;

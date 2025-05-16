@@ -9,9 +9,7 @@ import mk.ukim.finki.wayzi.model.exception.AuthenticationException;
 import mk.ukim.finki.wayzi.model.exception.AuthenticationFailedException;
 import mk.ukim.finki.wayzi.model.exception.InvalidCredentialsException;
 import mk.ukim.finki.wayzi.model.exception.UserAlreadyExistsException;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
 import mk.ukim.finki.wayzi.model.domain.user.User;
-import mk.ukim.finki.wayzi.repository.StandardUserRepository;
 import mk.ukim.finki.wayzi.repository.UserRepository;
 import mk.ukim.finki.wayzi.service.domain.AuthService;
 import mk.ukim.finki.wayzi.service.domain.JwtService;
@@ -30,18 +28,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
-    private final CustomUserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final StandardUserRepository standardUserRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthServiceImpl(@Lazy AuthenticationManager authenticationManager, CustomUserDetailsService userDetailsService, JwtService jwtService, UserRepository userRepository, StandardUserRepository standardUserRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(@Lazy AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
-        this.standardUserRepository = standardUserRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -51,10 +45,10 @@ public class AuthServiceImpl implements AuthService {
             throw new UserAlreadyExistsException("A user with this email already exists.");
         }
 
-        StandardUser standardUser = standardUserRepository.save(signUpDto.toEntity(passwordEncoder));
-        authenticateAndSetJwt(request, response, standardUser);
+        User user = userRepository.save(signUpDto.toEntity(passwordEncoder));
+        authenticateAndSetJwt(request, response, user);
 
-        return standardUser;
+        return user;
     }
 
     @Override
@@ -64,10 +58,12 @@ public class AuthServiceImpl implements AuthService {
                     new UsernamePasswordAuthenticationToken(signInDto.email(), signInDto.password())
             );
 
-            StandardUser standardUser = standardUserRepository.findByEmail(signInDto.email());
-            authenticateAndSetJwt(request, response, standardUser);
+            User user = userRepository.findByEmail(signInDto.email())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            return standardUser;
+            authenticateAndSetJwt(request, response, user);
+
+            return user;
 
         } catch (org.springframework.security.core.AuthenticationException e) {
             throw new InvalidCredentialsException("Invalid email or password.");
@@ -85,7 +81,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User getCurrentUser(HttpServletRequest request) {
         String jwt = getJwtFromCookies(request);
-
         if (jwt == null) {
             throw new AuthenticationException("Not authenticated");
         }
@@ -95,10 +90,8 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthenticationException("Invalid token");
         }
 
-        User user = userRepository.findByEmail(userEmail)
+        return userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        return user;
     }
 
     @Override
@@ -114,20 +107,6 @@ public class AuthServiceImpl implements AuthService {
 
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    @Override
-    public StandardUser getAuthenticatedStandardUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new AuthenticationException("User is not authenticated");
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-
-        return standardUserRepository.findByEmail(username);
     }
 
     private void authenticateAndSetJwt(HttpServletRequest request, HttpServletResponse response, User user) {

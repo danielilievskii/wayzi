@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mk.ukim.finki.wayzi.model.domain.Location;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
+import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
@@ -34,7 +34,7 @@ public class Ride {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "driver_id")
-    private StandardUser driver;
+    private User driver;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id")
@@ -72,7 +72,7 @@ public class Ride {
                 LocalDateTime departureTime,
                 Location arrivalLocation,
                 LocalDateTime arrivalTime,
-                StandardUser driver,
+                User driver,
                 Vehicle vehicle,
                 Integer availableSeats,
                 int pricePerSeat,

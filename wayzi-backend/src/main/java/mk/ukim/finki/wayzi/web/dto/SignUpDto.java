@@ -4,8 +4,7 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import mk.ukim.finki.wayzi.model.domain.user.AdminUser;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
+import mk.ukim.finki.wayzi.model.domain.user.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public record SignUpDto(
@@ -24,8 +23,8 @@ public record SignUpDto(
 
 ) {
 
-    public StandardUser toEntity(PasswordEncoder passwordEncoder) {
-        return new StandardUser(
+    public User toEntity(PasswordEncoder passwordEncoder) {
+        return new User(
                 email,
                 passwordEncoder.encode(password),
                 name

@@ -5,8 +5,8 @@ import mk.ukim.finki.wayzi.model.domain.Location;
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
 import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
 import mk.ukim.finki.wayzi.model.domain.ride.RideStop;
-import mk.ukim.finki.wayzi.model.domain.user.AdminUser;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
+import mk.ukim.finki.wayzi.model.domain.user.Admin;
+import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
 import mk.ukim.finki.wayzi.model.enumeration.*;
 import mk.ukim.finki.wayzi.repository.*;
@@ -19,16 +19,16 @@ import java.util.List;
 
 @Component
 public class DataHolder {
-    public static List<AdminUser> adminUsers = null;
-    public static List<StandardUser> standardUsers = null;
+    public static List<Admin> admins = null;
+    public static List<User> users = null;
     public static List<Vehicle> vehicles = null;
     public static List<Location> locations = null;
     public static List<Ride> rides = null;
     public static List<RideStop> rideStops = null;
     public static List<RideBooking> rideBookings = null;
 
-    private final AdminUserRepository adminUserRepository;
-    private final StandardUserRepository standardUserRepository;
+    private final AdminRepository adminRepository;
+    private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
     private final LocationRepository locationRepository;
     private final PasswordEncoder passwordEncoder;
@@ -36,9 +36,9 @@ public class DataHolder {
     private final RideStopRepository rideStopRepository;
     private final RideBookingRepository rideBookingRepository;
 
-    public DataHolder(AdminUserRepository adminUserRepository, StandardUserRepository standardUserRepository, VehicleRepository vehicleRepository, LocationRepository locationRepository, PasswordEncoder passwordEncoder, RideRepository rideRepository, RideStopRepository rideStopRepository, RideBookingRepository rideBookingRepository) {
-        this.adminUserRepository = adminUserRepository;
-        this.standardUserRepository = standardUserRepository;
+    public DataHolder(AdminRepository adminRepository, UserRepository userRepository, VehicleRepository vehicleRepository, LocationRepository locationRepository, PasswordEncoder passwordEncoder, RideRepository rideRepository, RideStopRepository rideStopRepository, RideBookingRepository rideBookingRepository) {
+        this.adminRepository = adminRepository;
+        this.userRepository = userRepository;
         this.vehicleRepository = vehicleRepository;
         this.locationRepository = locationRepository;
         this.passwordEncoder = passwordEncoder;
@@ -49,22 +49,22 @@ public class DataHolder {
 
     @PostConstruct
     public void init() {
-        standardUsers = new ArrayList<>();
-        if(this.standardUserRepository.count() == 0) {
-            standardUsers.add(new StandardUser("daniel@gmail.com", passwordEncoder.encode("12345"), "Daniel Ilievski"));
-            standardUserRepository.saveAll(standardUsers);
+        users = new ArrayList<>();
+        if(this.userRepository.count() == 0) {
+            users.add(new User("daniel@gmail.com", passwordEncoder.encode("12345"), "Daniel Ilievski"));
+            userRepository.saveAll(users);
         }
 
-        adminUsers = new ArrayList<>();
-        if(this.adminUserRepository.count() == 0) {
-            adminUsers.add(new AdminUser("admin@admin.com", passwordEncoder.encode("admin"), "Admin"));
-            adminUserRepository.saveAll(adminUsers);
+        admins = new ArrayList<>();
+        if(this.adminRepository.count() == 0) {
+            admins.add(new Admin("admin@admin.com", passwordEncoder.encode("admin"), "Admin"));
+            adminRepository.saveAll(admins);
         }
 
         vehicles = new ArrayList<>();
         if(this.vehicleRepository.count() == 0) {
-            vehicles.add(new Vehicle("Volkswagen", "Golf", Color.BLACK, VehicleType.AUTOMOBILE,  5, standardUsers.get(0)));
-            vehicles.add(new Vehicle("Audi", "A3", Color.BLUE, VehicleType.AUTOMOBILE, 3, standardUsers.get(0)));
+            vehicles.add(new Vehicle("Volkswagen", "Golf", Color.BLACK, VehicleType.AUTOMOBILE,  5, users.get(0)));
+            vehicles.add(new Vehicle("Audi", "A3", Color.BLUE, VehicleType.AUTOMOBILE, 3, users.get(0)));
 
             this.vehicleRepository.saveAll(vehicles);
         }
@@ -158,11 +158,11 @@ public class DataHolder {
 
         rides = new ArrayList<>();
         if(this.rideRepository.count() == 0) {
-            rides.add(new Ride(locations.get(1), LocalDateTime.now(), locations.get(2), LocalDateTime.now().plusHours(4).plusMinutes(30), adminUsers.get(0), vehicles.get(0), 4, 200, RideStatus.CONFIRMED));
-            rides.add(new Ride(locations.get(0), LocalDateTime.now(), locations.get(1), LocalDateTime.now().plusHours(4).plusMinutes(30), standardUsers.get(0), vehicles.get(0), 4, 200, RideStatus.STARTED));
-            rides.add(new Ride(locations.get(14), LocalDateTime.now().plusHours(30), locations.get(21), LocalDateTime.now().plusHours(31).plusMinutes(30), standardUsers.get(0), vehicles.get(0), 4, 200, RideStatus.CONFIRMED));
-            rides.add(new Ride(locations.get(15), LocalDateTime.now().plusHours(100), locations.get(30), LocalDateTime.now().plusHours(100).plusMinutes(30), standardUsers.get(0), vehicles.get(0), 4, 200, RideStatus.PENDING));
-            rides.add(new Ride(locations.get(20), LocalDateTime.now().plusHours(1), locations.get(12), LocalDateTime.now().plusHours(4), standardUsers.get(0), vehicles.get(1), 2, 150, RideStatus.PENDING));
+            rides.add(new Ride(locations.get(1), LocalDateTime.now(), locations.get(2), LocalDateTime.now().plusHours(4).plusMinutes(30), admins.get(0), vehicles.get(0), 4, 200, RideStatus.CONFIRMED));
+            rides.add(new Ride(locations.get(0), LocalDateTime.now(), locations.get(1), LocalDateTime.now().plusHours(4).plusMinutes(30), users.get(0), vehicles.get(0), 4, 200, RideStatus.STARTED));
+            rides.add(new Ride(locations.get(14), LocalDateTime.now().plusHours(30), locations.get(21), LocalDateTime.now().plusHours(31).plusMinutes(30), users.get(0), vehicles.get(0), 4, 200, RideStatus.CONFIRMED));
+            rides.add(new Ride(locations.get(15), LocalDateTime.now().plusHours(100), locations.get(30), LocalDateTime.now().plusHours(100).plusMinutes(30), users.get(0), vehicles.get(0), 4, 200, RideStatus.PENDING));
+            rides.add(new Ride(locations.get(20), LocalDateTime.now().plusHours(1), locations.get(12), LocalDateTime.now().plusHours(4), users.get(0), vehicles.get(1), 2, 150, RideStatus.PENDING));
             this.rideRepository.saveAll(rides);
         }
 
@@ -175,9 +175,9 @@ public class DataHolder {
 
         rideBookings = new ArrayList<>();
         if(this.rideBookingRepository.count() == 0) {
-            rideBookings.add(new RideBooking(rides.get(0), standardUsers.get(0), PaymentMethod.CASH, RideBookingStatus.CONFIRMED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
-            rideBookings.add(new RideBooking(rides.get(1), standardUsers.get(0), PaymentMethod.CASH, RideBookingStatus.ARCHIVED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
-            rideBookings.add(new RideBooking(rides.get(2), standardUsers.get(0), PaymentMethod.CASH, RideBookingStatus.CANCELLED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
+            rideBookings.add(new RideBooking(rides.get(0), users.get(0), PaymentMethod.CASH, RideBookingStatus.CONFIRMED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
+            rideBookings.add(new RideBooking(rides.get(1), users.get(0), PaymentMethod.CASH, RideBookingStatus.ARCHIVED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
+            rideBookings.add(new RideBooking(rides.get(2), users.get(0), PaymentMethod.CASH, RideBookingStatus.CANCELLED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
             this.rideBookingRepository.saveAll(rideBookings);
         }
 

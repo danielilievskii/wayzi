@@ -4,9 +4,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.enumeration.VehicleType;
 import mk.ukim.finki.wayzi.model.enumeration.Color;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
 import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
 
 public record CreateVehicleDto (
@@ -28,7 +28,7 @@ public record CreateVehicleDto (
         @Min(value = 1, message = "Capacity must be greater than 0")
         Integer capacity
 ) {
-    public Vehicle toEntity(StandardUser owner) {
+    public Vehicle toEntity(User owner) {
         return new Vehicle(
                 this.brand,
                 this.model,

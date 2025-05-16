@@ -2,7 +2,6 @@ package mk.ukim.finki.wayzi.service.domain.impl;
 
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
 import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
 import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.enumeration.CheckInStatus;
 import mk.ukim.finki.wayzi.model.enumeration.PaymentMethod;
@@ -34,15 +33,13 @@ public class RideBookingServiceImpl implements RideBookingService {
     private final RideBookingRepository rideBookingRepository;
     private final RideRepository rideRepository;
     private final QRCodeService qrCodeService;
-    private final HandlerExceptionResolver handlerExceptionResolver;
 
-    public RideBookingServiceImpl(RideService rideService, AuthService authService, RideBookingRepository rideBookingRepository, RideRepository rideRepository, QRCodeService qrCodeService, HandlerExceptionResolver handlerExceptionResolver) {
+    public RideBookingServiceImpl(RideService rideService, AuthService authService, RideBookingRepository rideBookingRepository, RideRepository rideRepository, QRCodeService qrCodeService) {
         this.rideService = rideService;
         this.authService = authService;
         this.rideBookingRepository = rideBookingRepository;
         this.rideRepository = rideRepository;
         this.qrCodeService = qrCodeService;
-        this.handlerExceptionResolver = handlerExceptionResolver;
     }
 
     @Override
@@ -103,9 +100,9 @@ public class RideBookingServiceImpl implements RideBookingService {
     @Override
     public RideBooking bookRide(Long rideId, PaymentMethod paymentMethod, Integer bookedSeats, String message) {
         Ride ride = rideService.findById(rideId);
-        StandardUser currentUser = authService.getAuthenticatedStandardUser();
+        User user = authService.getAuthenticatedUser();
 
-        validateBookingRequest(ride, currentUser, bookedSeats);
+        validateBookingRequest(ride, user, bookedSeats);
         ride.setAvailableSeats(ride.getAvailableSeats() - bookedSeats);
         rideRepository.save(ride);
 
@@ -114,7 +111,7 @@ public class RideBookingServiceImpl implements RideBookingService {
 
         RideBooking rideBooking = new RideBooking();
         rideBooking.setRide(ride);
-        rideBooking.setBooker(currentUser);
+        rideBooking.setBooker(user);
         rideBooking.setPaymentMethod(paymentMethod);
         rideBooking.setBookingStatus(RideBookingStatus.CONFIRMED);
         rideBooking.setCheckInStatus(CheckInStatus.NOT_CHECKED_IN);
@@ -134,7 +131,7 @@ public class RideBookingServiceImpl implements RideBookingService {
     }
 
 
-    private void validateBookingRequest(Ride ride, StandardUser user, Integer bookedSeats) {
+    private void validateBookingRequest(Ride ride, User user, Integer bookedSeats) {
         if (isDriverBookingOwnRide(ride.getDriver(), user)) {
             throw new RideBookingNotAllowedException("You cannot book your own ride.");
         }
@@ -148,7 +145,7 @@ public class RideBookingServiceImpl implements RideBookingService {
         }
     }
 
-    private boolean hasPassengerAlreadyBooked(Ride ride, StandardUser user) {
+    private boolean hasPassengerAlreadyBooked(Ride ride, User user) {
         for(RideBooking rideBooking : ride.getActiveRideBookings()) {
             if(rideBooking.getBooker().getId() == user.getId()) {
                 return true;
@@ -157,7 +154,7 @@ public class RideBookingServiceImpl implements RideBookingService {
         return false;
     }
 
-    private boolean isDriverBookingOwnRide(StandardUser driver, StandardUser booker) {
+    private boolean isDriverBookingOwnRide(User driver, User booker) {
         return driver.getId() == booker.getId();
     }
 

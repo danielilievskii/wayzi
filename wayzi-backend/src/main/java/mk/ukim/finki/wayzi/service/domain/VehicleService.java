@@ -9,7 +9,7 @@ public interface VehicleService {
     Vehicle findById(Long id);
     Vehicle findByIdAndCheckOwnership(Long id);
 
-    List<Vehicle> findAllForAuthenticatedUser();
+    List<Vehicle> findAllForUser();
     Vehicle save(CreateVehicleDto vehicle);
     Vehicle update(Long id, CreateVehicleDto vehicle);
     void delete(Long id);

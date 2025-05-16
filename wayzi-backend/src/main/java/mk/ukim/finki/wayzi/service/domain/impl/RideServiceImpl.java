@@ -10,7 +10,6 @@ import mk.ukim.finki.wayzi.model.exception.RideStopNotFoundException;
 import mk.ukim.finki.wayzi.model.domain.Location;
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
 import mk.ukim.finki.wayzi.model.domain.ride.RideStop;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
 import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
@@ -28,7 +27,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -62,7 +60,7 @@ public class RideServiceImpl implements RideService {
     @Override
     public Ride save(CreateRideDto createRideDto) {
         // Check if the user is authenticated (will be delegated to Spring Security)
-        StandardUser authenticatedUser = authService.getAuthenticatedStandardUser();
+        User user = authService.getAuthenticatedUser();
 
         // Check if the user owns the vehicle
         Vehicle vehicle = vehicleService.findByIdAndCheckOwnership(createRideDto.vehicleId());
@@ -70,7 +68,7 @@ public class RideServiceImpl implements RideService {
         Location departureLocation = locationService.findById(createRideDto.departureLocationId());
         Location arrivalLocaiton = locationService.findById(createRideDto.arrivalLocationId());
 
-        Ride ride = createRideDto.toEntity(departureLocation, arrivalLocaiton, authenticatedUser, vehicle, RideStatus.PENDING);
+        Ride ride = createRideDto.toEntity(departureLocation, arrivalLocaiton, user, vehicle, RideStatus.PENDING);
 
         List<RideStop> rideStops = new ArrayList<>();
         createRideDto.rideStops().forEach(stopDTO -> {
@@ -203,7 +201,7 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public List<Ride> findAllForAuthenticatedUserByVehicleId(Long vehicleId) {
+    public List<Ride> findAllByVehicleIdForUser(Long vehicleId) {
         Long driverId = authService.getAuthenticatedUser().getId();
         return rideRepository.findAllByDriverIdAndVehicleId(driverId, vehicleId);
     }

@@ -2,7 +2,7 @@ package mk.ukim.finki.wayzi.web.dto;
 
 import mk.ukim.finki.wayzi.model.domain.Location;
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
+import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -42,7 +42,7 @@ public record CreateRideDto(
         @Valid
         List<CreateRideStopDto> rideStops
 ) {
-    public Ride toEntity(Location departureLocation, Location arrivalLocation, StandardUser driver, Vehicle vehicle, RideStatus status) {
+    public Ride toEntity(Location departureLocation, Location arrivalLocation, User driver, Vehicle vehicle, RideStatus status) {
         return new Ride(
                 departureLocation,
                 this.departureTime,

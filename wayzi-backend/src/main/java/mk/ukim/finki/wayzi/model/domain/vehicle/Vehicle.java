@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.enumeration.Color;
 import mk.ukim.finki.wayzi.model.enumeration.VehicleType;
-import mk.ukim.finki.wayzi.model.domain.user.StandardUser;
 
 @Data
 @NoArgsConstructor
@@ -31,7 +31,7 @@ public class Vehicle {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
-    private StandardUser owner;
+    private User owner;
 
     public Vehicle(String brand, String model, Color color, VehicleType type, int capacity) {
         this.brand = brand;
@@ -39,10 +39,9 @@ public class Vehicle {
         this.color = color;
         this.type = type;
         this.capacity = capacity;
-
     }
 
-    public Vehicle(String brand, String model, Color color, VehicleType type, int capacity, StandardUser user) {
+    public Vehicle(String brand, String model, Color color, VehicleType type, int capacity, User user) {
         this.brand = brand;
         this.model = model;
         this.color = color;
@@ -54,7 +53,4 @@ public class Vehicle {
     public String getName() {
         return this.brand + " " + this.model;
     }
-
-
-
 }

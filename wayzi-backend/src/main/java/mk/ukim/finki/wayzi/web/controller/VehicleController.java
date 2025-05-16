@@ -22,7 +22,7 @@ public class VehicleController {
 
     @GetMapping("/all")
     public ResponseEntity<?> findAllForAuthenticatedUser() {
-        return ResponseEntity.ok(vehicleApplicationService.findAllForAuthenticatedUser());
+        return ResponseEntity.ok(vehicleApplicationService.findAllForUser());
     }
 
     @PostMapping("/add")

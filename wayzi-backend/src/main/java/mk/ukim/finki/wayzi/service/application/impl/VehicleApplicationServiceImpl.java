@@ -23,8 +23,8 @@ public class VehicleApplicationServiceImpl implements VehicleApplicationService 
     }
 
     @Override
-    public List<DisplayVehicleDto> findAllForAuthenticatedUser() {
-        return DisplayVehicleDto.from(vehicleService.findAllForAuthenticatedUser());
+    public List<DisplayVehicleDto> findAllForUser() {
+        return DisplayVehicleDto.from(vehicleService.findAllForUser());
     }
 
     @Override
