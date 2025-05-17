@@ -1,25 +1,20 @@
-
 import {useMap} from "react-leaflet";
 import {useEffect} from "react";
 import L from 'leaflet';
-import axiosInstance from "../../../../axios/axiosInstance.ts";
 import {RideDetails} from "../../../../redux/slices/rideDetailsSlice.ts";
+import rideRepository from "../../../../repository/rideRepository.ts";
 
-export default function MapContent({ride} : {ride: RideDetails}) {
+export default function MapContent({ride}: { ride: RideDetails }) {
     const map = useMap();
 
     useEffect(() => {
-        if(!ride) return;
+        if (!ride) return;
 
         const coordinates: [number, number][] = [];
 
         const start: [number, number] = [
             ride.departureLocation.latitude,
             ride.departureLocation.longitude,
-        ];
-        const end: [number, number] = [
-            ride.arrivalLocation.latitude,
-            ride.arrivalLocation.longitude,
         ];
 
         L.marker(start)
@@ -39,39 +34,35 @@ export default function MapContent({ride} : {ride: RideDetails}) {
             coordinates.push(stopCoords);
         });
 
-
+        const end: [number, number] = [
+            ride.arrivalLocation.latitude,
+            ride.arrivalLocation.longitude,
+        ];
         L.marker(end)
             .addTo(map)
             .bindPopup(`Arrival: ${ride.arrivalLocation.displayName}`);
 
         coordinates.push(end);
-
         map.fitBounds(coordinates);
 
-        const fetchRoutes = async () => {
-            for (let i = 0; i < coordinates.length - 1; i++) {
-                const [startLat, startLng] = coordinates[i];
-                const [endLat, endLng] = coordinates[i + 1];
-                try {
-                    const res = await axiosInstance.get(`/routes/directions`, {
-                        params: { startLat, startLng, endLat, endLng },
-                    });
 
-                    const routeCoords = res.data.features[0].geometry.coordinates.map(
-                        ([lng, lat]: [number, number]) => [lat, lng]
-                    );
-                    L.polyline(routeCoords, {
-                        color: "#08C2FF",
-                        weight: 5,
-                    }).addTo(map);
-                } catch (e) {
-                    console.error("Failed to fetch route", e);
-                }
+        const fetchRoute = async () => {
+            try {
+                const response = await rideRepository.findRouteCoordinatesById(ride.id);
+                const route = response.data;
+
+                L.polyline(route, {
+                    color: "#08C2FF",
+                    weight: 5,
+                }).addTo(map);
+
+            } catch (error) {
+                console.error("Failed to fetch and render route:", error);
             }
         };
 
-        fetchRoutes()
-    }, [ride, map]);
+        fetchRoute()
+    }, [map]);
 
     return null;
 }
