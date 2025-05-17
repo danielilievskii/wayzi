@@ -1,7 +1,8 @@
 import axiosInstance from "../../../axios/axiosInstance.ts";
-import {useContext, useState} from "react";
+import {useState} from "react";
 import {useNavigate} from "react-router";
-import {UserContext, useUser} from "../../../context/UserContext.tsx";
+import {useUser} from "../../../context/UserContext.tsx";
+import {useLocation} from "react-router-dom";
 
 interface SignInData {
     email: string;
@@ -16,6 +17,8 @@ function SignInPage() {
     const [error, setError] = useState<string | null>(null);
 
     const navigate = useNavigate()
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -30,8 +33,7 @@ function SignInPage() {
             
             console.log("Login successful:", response.data);
             setCurrentUser(response.data);
-
-            navigate("/")
+            navigate(from, { replace: true });
         } catch (err) {
             console.error("Login failed:", err);
             setError("Invalid credentials. Please try again.");

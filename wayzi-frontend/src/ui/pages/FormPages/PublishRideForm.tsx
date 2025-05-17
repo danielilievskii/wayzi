@@ -1,4 +1,3 @@
-import {useUser} from "../../../context/UserContext.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store.ts";
 import {useEffect, useState} from "react";
@@ -10,13 +9,10 @@ import {createRide} from "../../../redux/slices/publishedRideSlice.ts";
 import {useNavigate} from "react-router";
 import {PublishRideSchema, PublishRideSchemaType} from "../../../schemas/publishRideSchema.ts";
 import {fetchVehicles} from "../../../redux/slices/vehicleSlice.ts";
-import {Autocomplete, TextField} from "@mui/material";
-import {string} from "zod";
+
 
 
 export const PublishRideForm = () => {
-    const {currentUser} = useUser()
-
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 

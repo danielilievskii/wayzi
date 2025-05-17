@@ -35,7 +35,7 @@ export const Vehicles = () => {
         <div className="floating-card shadow-sm p-3">
             <h5 className="mb-3">Vehicles</h5>
             <div className="rounded border-dashed border-gray-500 p-3 mb-2 text-center cursor-pointer">
-                <Link className="text-reset text-decoration-none" to={`/vehicles/add`}> + Add vehicle </Link>
+                <Link className="text-reset text-decoration-none" to={`/profile/vehicles/add`}> + Add vehicle </Link>
             </div>
 
             {vehicles?.map((vehicle: Vehicle) => (
@@ -48,7 +48,7 @@ export const Vehicles = () => {
                             <span>- {vehicle.color} </span>
                         </div>
                         <div className="d-flex gap-3">
-                            <Link className="text-reset text-decoration-none " to={`/vehicles/edit/${vehicle.id}`}>
+                            <Link className="text-reset text-decoration-none " to={`/profile/vehicles/edit/${vehicle.id}`}>
                                 <i className="fa-solid fa-pen-to-square action-button"></i>
                             </Link>
                             <button type="submit"

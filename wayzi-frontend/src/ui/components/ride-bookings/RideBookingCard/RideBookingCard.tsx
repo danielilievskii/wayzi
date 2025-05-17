@@ -1,10 +1,6 @@
-import {fetchRides, Ride} from "../../../../redux/slices/rideSlice.ts";
 import {Link} from "react-router-dom";
 import "../../../styles/rides.css"
 import {formatDateTime} from "../../../../utils/dateUtils.ts";
-
-import {QRCodeSVG} from "qrcode.react";
-
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../../redux/store.ts";
 import {useAsyncThunkHandler} from "../../../../hooks/useAsyncThunkHandler.ts";
@@ -20,7 +16,7 @@ export const RideBookingCard = (props) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const { pictures } = useSelector((state: RootState) => state.profilePics);
-    const [profilePic, setProfilePic] = useState(pictures[rideBooking.driverId] || "/assets/default-profile-pic.png");
+    const [profilePic, setProfilePic] = useState(pictures[rideBooking.driverId] || "/assets/images/default-profile-pic.png");
 
     useEffect(() => {
         if (pictures[rideBooking.driverId]) {
@@ -41,11 +37,6 @@ export const RideBookingCard = (props) => {
         })
 
     }
-
-    const onClick = () => {
-        console.log("Ride card clicked");
-    }
-
 
     return (
         <div key={rideBooking.rideBookingId}>

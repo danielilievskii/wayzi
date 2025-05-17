@@ -14,12 +14,14 @@ interface User {
 interface UserContextType {
     currentUser: User | null;
     setCurrentUser: (user: User | null) => void;
+    loading: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
@@ -30,6 +32,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             } catch (err) {
                 console.log(err);
             }
+            setLoading(false)
         }
 
         fetchUser();
@@ -42,7 +45,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }, [currentUser, dispatch]);
 
     return (
-        <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+        <UserContext.Provider value={{ currentUser, setCurrentUser, loading }}>
             {children}
         </UserContext.Provider>
     );
