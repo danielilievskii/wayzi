@@ -68,6 +68,11 @@ public class RideApplicationServiceImpl implements RideApplicationService {
     }
 
     @Override
+    public List<List<Double>> findRouteCoordinatesById(Long id) {
+        return rideService.findRouteCoordinatesById(id);
+    }
+
+    @Override
     public DisplayRideDto findByIdAndCheckOwnership(Long id) {
         return DisplayRideDto.from(
                 rideService.findByIdAndCheckOwnership(id)

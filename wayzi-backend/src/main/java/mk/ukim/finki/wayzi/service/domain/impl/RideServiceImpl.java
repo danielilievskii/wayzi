@@ -1,10 +1,10 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
+import mk.ukim.finki.wayzi.service.domain.*;
 import mk.ukim.finki.wayzi.web.dto.CreateRideDto;
 import mk.ukim.finki.wayzi.web.dto.UpdateRideDto;
 import mk.ukim.finki.wayzi.web.dto.UpdateRideStopDto;
 import mk.ukim.finki.wayzi.model.exception.AccessDeniedException;
-import mk.ukim.finki.wayzi.model.exception.InvalidRideStatusException;
 import mk.ukim.finki.wayzi.model.exception.RideNotFoundException;
 import mk.ukim.finki.wayzi.model.exception.RideStopNotFoundException;
 import mk.ukim.finki.wayzi.model.domain.Location;
@@ -15,10 +15,6 @@ import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import mk.ukim.finki.wayzi.repository.RideRepository;
 import mk.ukim.finki.wayzi.repository.RideStopRepository;
-import mk.ukim.finki.wayzi.service.domain.AuthService;
-import mk.ukim.finki.wayzi.service.domain.LocationService;
-import mk.ukim.finki.wayzi.service.domain.RideService;
-import mk.ukim.finki.wayzi.service.domain.VehicleService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,13 +39,15 @@ public class RideServiceImpl implements RideService {
     private final VehicleService vehicleService;
     private final LocationService locationService;
     private final RideStopRepository rideStopRepository;
+    private final RouteCoordinatesService routeCoordinatesService;
 
-    public RideServiceImpl(RideRepository rideRepository, AuthService authService, @Lazy VehicleService vehicleService, LocationService locationService, RideStopRepository rideStopRepository) {
+    public RideServiceImpl(RideRepository rideRepository, AuthService authService, @Lazy VehicleService vehicleService, LocationService locationService, RideStopRepository rideStopRepository, RouteCoordinatesService routeCoordinatesService) {
         this.rideRepository = rideRepository;
         this.authService = authService;
         this.vehicleService = vehicleService;
         this.locationService = locationService;
         this.rideStopRepository = rideStopRepository;
+        this.routeCoordinatesService = routeCoordinatesService;
     }
 
     @Override
@@ -59,7 +57,6 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public Ride save(CreateRideDto createRideDto) {
-        // Check if the user is authenticated (will be delegated to Spring Security)
         User user = authService.getAuthenticatedUser();
 
         // Check if the user owns the vehicle
@@ -70,17 +67,32 @@ public class RideServiceImpl implements RideService {
 
         Ride ride = createRideDto.toEntity(departureLocation, arrivalLocaiton, user, vehicle, RideStatus.PENDING);
 
-        List<RideStop> rideStops = new ArrayList<>();
-        createRideDto.rideStops().forEach(stopDTO -> {
-            Location location = locationService.findById(stopDTO.locationId());
-            RideStop stop = stopDTO.toEntity(ride, location);
+        List<Location> locations = new ArrayList<>();
+        locations.add(departureLocation);
 
-            rideStops.add(stop);
-        });
+        List<RideStop> rideStops = buildRideStops(createRideDto, ride, locations);
         ride.setRideStops(rideStops);
+
+        locations.add(arrivalLocaiton);
+
+        List<List<Double>> routeCoordinates = routeCoordinatesService.fetchCoordinates(locations);
+        ride.setRouteCoordinates(routeCoordinates);
 
         return rideRepository.save(ride);
     }
+
+    private List<RideStop> buildRideStops(CreateRideDto dto, Ride ride, List<Location> locations) {
+        return dto.rideStops().stream()
+                .map(stopDTO -> {
+                    Location location = locationService.findById(stopDTO.locationId());
+                    locations.add(location);
+
+                    return stopDTO.toEntity(ride, location);
+                })
+                .collect(Collectors.toList());
+    }
+
+
 
     @Override
     public Ride edit(Long id, UpdateRideDto updateRideDto) {
@@ -184,6 +196,11 @@ public class RideServiceImpl implements RideService {
     public Ride findById(Long id) {
         return rideRepository.findById(id)
                 .orElseThrow(() -> new RideStopNotFoundException(id));
+    }
+
+    @Override
+    public List<List<Double>> findRouteCoordinatesById(Long id) {
+        return findById(id).getRouteCoordinates();
     }
 
     @Override

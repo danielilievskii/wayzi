@@ -3,6 +3,7 @@ package mk.ukim.finki.wayzi.model.domain.ride;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mk.ukim.finki.wayzi.converter.RouteCoordinatesConverter;
 import mk.ukim.finki.wayzi.model.domain.Location;
 import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
@@ -46,6 +47,10 @@ public class Ride {
 
     @Enumerated(EnumType.STRING)
     private RideStatus status;
+
+    @Lob
+    @Convert(converter = RouteCoordinatesConverter.class)
+    private List<List<Double>> routeCoordinates;
 
     @OneToMany(mappedBy = "ride", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RideStop> rideStops;

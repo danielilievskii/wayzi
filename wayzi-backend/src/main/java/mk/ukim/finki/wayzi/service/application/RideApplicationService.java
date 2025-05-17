@@ -19,6 +19,7 @@ public interface RideApplicationService {
     RidePageDto findPublishedRidesPageForUser(PublishedRideFilterDto publishedRideFilterDto);
 
     RideDetailsDto findById(Long id);
+    List<List<Double>> findRouteCoordinatesById(Long id);
 
     DisplayRideDto findByIdAndCheckOwnership(Long id);
 

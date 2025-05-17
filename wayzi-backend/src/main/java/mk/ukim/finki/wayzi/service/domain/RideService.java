@@ -20,6 +20,8 @@ public interface RideService {
     Page<Ride> findPublishedRidesPageForUser(RideStatus status, Integer pageNum, Integer pageSize);
 
     Ride findById(Long id);
+    List<List<Double>> findRouteCoordinatesById(Long id);
+
     Ride findByIdAndCheckOwnership(Long id);
     List<Ride> findAllByVehicleIdForUser(Long vehicleId);
 }

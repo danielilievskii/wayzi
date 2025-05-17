@@ -7,8 +7,11 @@ import mk.ukim.finki.wayzi.web.dto.UpdateRideDto;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
 import mk.ukim.finki.wayzi.web.dto.UpdateRideStatusDto;
 import mk.ukim.finki.wayzi.web.dto.ride.PublishedRideFilterDto;
+import mk.ukim.finki.wayzi.web.dto.ride.RideDetailsDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/rides")
@@ -28,8 +31,13 @@ public class RideController {
 //    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable Long id) {
+    public ResponseEntity<RideDetailsDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(rideApplicationService.findById(id));
+    }
+
+    @GetMapping("/{id}/route")
+    public ResponseEntity<List<List<Double>>> findRouteCoordinatesById(@PathVariable Long id) {
+        return ResponseEntity.ok(rideApplicationService.findRouteCoordinatesById(id));
     }
 
     @GetMapping
