@@ -18,6 +18,7 @@ import defaultProfilePic from "../../../../public/assets/images/default-profile-
 
 export const RideDetailsPage = () => {
     const {currentUser} = useUser()
+    const navigate = useNavigate();
 
     const dispatch = useDispatch<AppDispatch>();
     const {handleThunk, loading, success, error} = useAsyncThunkHandler();
@@ -258,11 +259,16 @@ export const RideDetailsPage = () => {
                                 <div className="text-muted mb-3">
                                     {renderStatusMessage(ride.rideStatus)}
                                 </div>
-                                <Link to={`/rides/${ride.id}/book`}>
-                                    <button className="btn btn-info text-white fw-bold w-100">
-                                        Book Now
-                                    </button>
-                                </Link>
+                                {(ride.rideStatus === "PENDING" || ride.rideStatus === "CONFIRMED") && (
+                                    <>
+                                        <button
+                                            className="btn btn-info text-white fw-bold w-100"
+                                            onClick={() => navigate(`/rides/${ride.id}/book`)}
+                                        >
+                                            Book Now
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

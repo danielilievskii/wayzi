@@ -136,6 +136,10 @@ public class RideBookingServiceImpl implements RideBookingService {
             throw new RideBookingNotAllowedException("You cannot book your own ride.");
         }
 
+        if (!ride.getStatus().name().equals("PENDING") && !ride.getStatus().name().equals("CONFIRMED")) {
+            throw new RideBookingNotAllowedException("You cannot book this ride.");
+        }
+
         if(hasPassengerAlreadyBooked(ride, user)) {
             throw new RideBookingNotAllowedException("You already have an active booking for this ride.");
         }
