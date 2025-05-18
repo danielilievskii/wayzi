@@ -1,7 +1,9 @@
 package mk.ukim.finki.wayzi.model.exception.handler;
 
 import mk.ukim.finki.wayzi.model.exception.AccessDeniedException;
-import mk.ukim.finki.wayzi.model.exception.NotFoundException;
+import mk.ukim.finki.wayzi.model.exception.base.BadRequestException;
+import mk.ukim.finki.wayzi.model.exception.base.EntityAlreadyExistsException;
+import mk.ukim.finki.wayzi.model.exception.base.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,9 +16,19 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> handleEntityNotFoundException(NotFoundException ex) {
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    public ResponseEntity<String> handleEntityNotFoundException(EntityAlreadyExistsException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
