@@ -2,8 +2,8 @@ package mk.ukim.finki.wayzi.service.application.impl;
 
 import mk.ukim.finki.wayzi.service.application.RideStatusApplicationService;
 import mk.ukim.finki.wayzi.service.domain.RideStatusService;
-import mk.ukim.finki.wayzi.web.dto.DisplayRideDto;
-import mk.ukim.finki.wayzi.web.dto.UpdateRideStatusDto;
+import mk.ukim.finki.wayzi.web.dto.ride.DisplayRideDto;
+import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideStatusDto;
 import org.springframework.stereotype.Service;
 
 @Service

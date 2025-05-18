@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.web.dto;
+package mk.ukim.finki.wayzi.web.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

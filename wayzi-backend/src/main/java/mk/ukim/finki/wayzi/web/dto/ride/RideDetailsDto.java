@@ -2,9 +2,8 @@ package mk.ukim.finki.wayzi.web.dto.ride;
 
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
-import mk.ukim.finki.wayzi.web.dto.DisplayLocationDto;
-import mk.ukim.finki.wayzi.web.dto.DisplayRideStopDto;
-import mk.ukim.finki.wayzi.web.dto.DisplayVehicleDto;
+import mk.ukim.finki.wayzi.web.dto.location.DisplayLocationDto;
+import mk.ukim.finki.wayzi.web.dto.vehicle.DisplayVehicleDto;
 import mk.ukim.finki.wayzi.web.dto.ridebooking.RideBookingUserDetailsDto;
 
 import java.time.LocalDateTime;

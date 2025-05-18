@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.web.dto;
+package mk.ukim.finki.wayzi.web.dto.vehicle;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;

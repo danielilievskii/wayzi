@@ -1,9 +1,9 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
 import mk.ukim.finki.wayzi.service.domain.*;
-import mk.ukim.finki.wayzi.web.dto.CreateRideDto;
-import mk.ukim.finki.wayzi.web.dto.UpdateRideDto;
-import mk.ukim.finki.wayzi.web.dto.UpdateRideStopDto;
+import mk.ukim.finki.wayzi.web.dto.ride.CreateRideDto;
+import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideDto;
+import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideStopDto;
 import mk.ukim.finki.wayzi.model.exception.AccessDeniedException;
 import mk.ukim.finki.wayzi.model.exception.RideNotFoundException;
 import mk.ukim.finki.wayzi.model.exception.RideStopNotFoundException;

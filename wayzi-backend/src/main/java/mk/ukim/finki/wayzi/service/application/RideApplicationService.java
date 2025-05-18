@@ -1,8 +1,6 @@
 package mk.ukim.finki.wayzi.service.application;
 
-import mk.ukim.finki.wayzi.web.dto.*;
-import mk.ukim.finki.wayzi.web.dto.ride.PublishedRideFilterDto;
-import mk.ukim.finki.wayzi.web.dto.ride.RideDetailsDto;
+import mk.ukim.finki.wayzi.web.dto.ride.*;
 
 import java.util.List;
 

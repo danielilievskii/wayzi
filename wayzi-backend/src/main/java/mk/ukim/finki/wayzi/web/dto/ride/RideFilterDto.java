@@ -1,9 +1,6 @@
-package mk.ukim.finki.wayzi.web.dto;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
+package mk.ukim.finki.wayzi.web.dto.ride;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public record RideFilterDto (
         Long departureLocationId,

@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.web.dto;
+package mk.ukim.finki.wayzi.web.dto.location;
 
 import mk.ukim.finki.wayzi.model.domain.Location;
 

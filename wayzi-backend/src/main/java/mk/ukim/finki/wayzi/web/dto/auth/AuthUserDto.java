@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.web.dto;
+package mk.ukim.finki.wayzi.web.dto.auth;
 
 import mk.ukim.finki.wayzi.model.domain.user.User;
 

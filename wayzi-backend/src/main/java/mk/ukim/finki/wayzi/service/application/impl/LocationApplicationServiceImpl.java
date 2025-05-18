@@ -1,6 +1,6 @@
 package mk.ukim.finki.wayzi.service.application.impl;
 
-import mk.ukim.finki.wayzi.web.dto.DisplayLocationDto;
+import mk.ukim.finki.wayzi.web.dto.location.DisplayLocationDto;
 import mk.ukim.finki.wayzi.service.application.LocationApplicationService;
 import mk.ukim.finki.wayzi.service.domain.LocationService;
 import org.springframework.stereotype.Service;

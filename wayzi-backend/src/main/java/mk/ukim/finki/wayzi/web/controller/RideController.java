@@ -1,11 +1,11 @@
 package mk.ukim.finki.wayzi.web.controller;
 
 import mk.ukim.finki.wayzi.service.application.RideStatusApplicationService;
-import mk.ukim.finki.wayzi.web.dto.CreateRideDto;
-import mk.ukim.finki.wayzi.web.dto.RideFilterDto;
-import mk.ukim.finki.wayzi.web.dto.UpdateRideDto;
+import mk.ukim.finki.wayzi.web.dto.ride.CreateRideDto;
+import mk.ukim.finki.wayzi.web.dto.ride.RideFilterDto;
+import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideDto;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
-import mk.ukim.finki.wayzi.web.dto.UpdateRideStatusDto;
+import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideStatusDto;
 import mk.ukim.finki.wayzi.web.dto.ride.PublishedRideFilterDto;
 import mk.ukim.finki.wayzi.web.dto.ride.RideDetailsDto;
 import org.springframework.http.ResponseEntity;

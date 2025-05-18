@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.web.dto;
+package mk.ukim.finki.wayzi.web.dto.ride;
 
 import mk.ukim.finki.wayzi.model.domain.ride.Ride;
 import org.springframework.data.domain.Page;
