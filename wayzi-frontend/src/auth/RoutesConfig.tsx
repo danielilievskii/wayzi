@@ -17,6 +17,9 @@ import {RideBookingDetailsPage} from "../ui/pages/RideBookingDetailsPage/RideBoo
 import {RideBookingCheckInPage} from "../ui/pages/RideBookingCheckInPage/RideBookingCheckInPage.tsx";
 import {useUser} from "../context/UserContext.tsx";
 import {ProtectedRoute} from "../ui/components/auth/ProtectedRoute/ProtectedRoute.tsx";
+import SignUpPage from "../ui/pages/SignUpPage/SignUpPage.tsx";
+import {EmailSentPage} from "../ui/pages/EmailSentPage/EmailSentPage.tsx";
+import {EmailVerificationPage} from "../ui/pages/EmailVerificationPage/EmailVerificationPage.tsx";
 
 export const AllRoutes = [
     {
@@ -31,7 +34,37 @@ export const AllRoutes = [
     },
     {
         component: SignInPage,
-        path: '/signin',
+        path: '/login',
+        permission: [
+            Roles.ADMIN_USER,
+            Roles.STANDARD_USER,
+            Roles.GUEST
+        ],
+        isProtected: false,
+    },
+    {
+        component: SignUpPage,
+        path: '/register',
+        permission: [
+            Roles.ADMIN_USER,
+            Roles.STANDARD_USER,
+            Roles.GUEST
+        ],
+        isProtected: false,
+    },
+    {
+        component: EmailSentPage,
+        path: '/email-sent',
+        permission: [
+            Roles.ADMIN_USER,
+            Roles.STANDARD_USER,
+            Roles.GUEST
+        ],
+        isProtected: false,
+    },
+    {
+        component: EmailVerificationPage,
+        path: '/verify-email',
         permission: [
             Roles.ADMIN_USER,
             Roles.STANDARD_USER,
@@ -143,25 +176,8 @@ export const AllRoutes = [
 ]
 
 
-
-// const filterRoutes = (roleParam: string) => {
-//     return AllRoutes.filter(route => {
-//         return (
-//             route.permission.includes(roleParam)
-//         );
-//     });
-// };
-
 const RoutesConfig = () => {
-    const {currentUser, loading} = useUser()
-
-    // const [role, setRole] = useState(Roles.GUEST);
-    //
-    // useEffect(() => {
-    //     if (currentUser) {
-    //         setRole(currentUser.role);
-    //     }
-    // }, [currentUser]);
+    const {loading} = useUser()
 
     if (loading) return <div>Loading...</div>;
 
@@ -169,7 +185,6 @@ const RoutesConfig = () => {
         <Routes>
             {AllRoutes.map((route) => {
                 const Component = route.component;
-                console.log(route.path)
 
                 return (
                     <Route

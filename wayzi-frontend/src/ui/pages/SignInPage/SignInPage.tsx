@@ -1,4 +1,3 @@
-import axiosInstance from "../../../axios/axiosInstance.ts";
 import {useState} from "react";
 import {useNavigate} from "react-router";
 import {useUser} from "../../../context/UserContext.tsx";
@@ -10,7 +9,7 @@ interface SignInData {
 }
 
 function SignInPage() {
-    const { setCurrentUser } = useUser()
+    const { signIn } = useUser()
 
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -20,7 +19,8 @@ function SignInPage() {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    //TODO: Refactor this to use react-hook-form
+    const onSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const signInData: SignInData = {
@@ -28,15 +28,11 @@ function SignInPage() {
             password,
         };
 
-        try {
-            const response = await axiosInstance.post("/auth/signin", signInData);
-            
-            console.log("Login successful:", response.data);
-            setCurrentUser(response.data);
+        const result = await signIn(signInData)
+        if(result.error) {
+            setError(result.error)
+        } else {
             navigate(from, { replace: true });
-        } catch (err) {
-            console.error("Login failed:", err);
-            setError("Invalid credentials. Please try again.");
         }
     };
 
@@ -49,7 +45,7 @@ function SignInPage() {
                             <div className="floating-card p-5">
                                 <h5 className="text-center fw-bold text-uppercase mb-4">Login</h5>
                                 <div className="card-body">
-                                    <form onSubmit={handleSubmit} method="post">
+                                    <form onSubmit={onSignIn} method="post">
                                         <div className="mb-3 input-group">
                                             <span className="input-group-text"><i className="fa-solid fa-envelope"></i></span>
                                             <input
@@ -78,12 +74,12 @@ function SignInPage() {
                                             />
                                         </div>
 
-                                        {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                                        {error && <div className="alert alert-danger border-0" role="alert">{error}</div>}
 
                                         <button type="submit" className="btn btn-primary w-100">Sign in</button>
 
                                         <p className="mt-3 text-center">
-                                            Don't have an account? <a className="fw-bold text-dark">Create here</a>
+                                            Don't have an account? <a className="fw-bold text-dark cursor-pointer" onClick={() => navigate("/register")}>Create here</a>
                                         </p>
                                     </form>
                                 </div>

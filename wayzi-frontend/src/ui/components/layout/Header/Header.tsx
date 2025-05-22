@@ -1,13 +1,12 @@
+import './Header.css';
 import { Link } from 'react-router-dom';
 import {useUser} from "../../../../context/UserContext.tsx";
-import './Header.css';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../redux/store.ts";
-import {useEffect, useState} from "react"; // Adjust this path to your context
- // Adjust this path to your context
+import {useEffect, useState} from "react";
 
 export const Header = () => {
-    const { currentUser } = useUser();
+    const { currentUser, signOut } = useUser();
     const currentUserId = String(currentUser?.id);
 
     const { pictures } = useSelector((state: RootState) => state.profilePics);
@@ -18,6 +17,10 @@ export const Header = () => {
             setProfilePic(pictures[currentUserId]);
         }
     }, [pictures, currentUserId]);
+
+    const onSignOut = () => {
+        signOut()
+    }
 
     return (
         <nav className="fixed-top navbar navbar-expand-lg" style={{ zIndex: 1 }}>
@@ -102,7 +105,7 @@ export const Header = () => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/logout">
+                                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/" onClick={onSignOut}>
                                                 <i className="fa-solid fa-arrow-right-from-bracket"></i>
                                                 <span>Log out</span>
                                             </Link>
@@ -111,12 +114,12 @@ export const Header = () => {
                                 ) : (
                                     <>
                                         <li>
-                                            <Link className="dropdown-item" to="/signin">
+                                            <Link className="dropdown-item" to="/login">
                                                 Log in
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link className="dropdown-item" to="/signup">
+                                            <Link className="dropdown-item" to="/register">
                                                 Create account
                                             </Link>
                                         </li>
@@ -147,12 +150,12 @@ export const Header = () => {
                         ) : (
                             <>
                                 <li className="nav-item d-lg-none">
-                                    <Link className="nav-link" to="/signin">
+                                    <Link className="nav-link" to="/login">
                                         Log in
                                     </Link>
                                 </li>
                                 <li className="nav-item d-lg-none">
-                                    <Link className="nav-link" to="/signup">
+                                    <Link className="nav-link" to="/register">
                                         Create account
                                     </Link>
                                 </li>

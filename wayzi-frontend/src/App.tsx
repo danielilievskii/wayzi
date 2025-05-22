@@ -9,18 +9,18 @@ import Header from "./ui/components/layout/Header/Header.tsx";
 
 function App() {
 
-  return (
-    <>
-        <UserProvider>
+    return (
+        <>
             <BrowserRouter>
-                <Header />
-                <div className="app">
-                    <RoutesConfig />
-                </div>
+                <UserProvider>
+                    <Header/>
+                    <div className="app">
+                        <RoutesConfig/>
+                    </div>
+                </UserProvider>
             </BrowserRouter>
-        </UserProvider>
-    </>
-  )
+        </>
+    )
 }
 
 export default App

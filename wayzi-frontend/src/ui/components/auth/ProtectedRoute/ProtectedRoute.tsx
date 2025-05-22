@@ -10,7 +10,7 @@ export const ProtectedRoute = ({ element }: { element: JSX.Element })  => {
     console.log("ProtectedRoute mounted for path:", location.pathname);
 
     if (!currentUser && !loading) {
-        return <Navigate to="/signin" replace state={{ from: location }}/>;
+        return <Navigate to="/login" replace state={{ from: location }}/>;
     }
 
     return element

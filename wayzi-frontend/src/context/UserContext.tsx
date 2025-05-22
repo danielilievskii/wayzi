@@ -1,8 +1,10 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
-import axiosInstance from "../axios/axiosInstance.ts";
 import {downloadProfilePic} from "../redux/slices/profilePicSlice.ts";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../redux/store.ts";
+import userRepository from "../repository/userRepository.ts";
+import {useNavigate} from "react-router";
+import {SignUpSchemaType} from "../schemas/signUpSchema.ts";
 
 interface User {
     id: number;
@@ -15,27 +17,68 @@ interface UserContextType {
     currentUser: User | null;
     setCurrentUser: (user: User | null) => void;
     loading: boolean;
+    signIn: (data: any) => any;
+    signUp: (data: SignUpSchemaType) => any;
+    signOut: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
+export const UserProvider = ({children}: { children: ReactNode }) => {
+    const navigate = useNavigate();
+
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const dispatch = useDispatch<AppDispatch>();
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const response = await axiosInstance.get("/auth/me");
-                setCurrentUser(response.data);
-            } catch (err) {
-                console.log(err);
-            }
-            setLoading(false)
-        }
+    const signUp = (data: SignUpSchemaType) => {
+        return userRepository.signUp(data)
+            .then(() => {})
+            .catch((error) => {
+                console.log(error);
 
-        fetchUser();
+                return {
+                    error: error?.response?.data || "An unexpected error occurred."
+                };
+            });
+    };
+
+    const signIn = (data: any) => {
+        return userRepository.signIn(data)
+            .then((response) => {
+                setCurrentUser(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+
+                return {
+                    error: error?.response?.data || "Invalid credentials. Please try again."
+                };
+            });
+    };
+
+    const signOut = () => {
+        return userRepository.signOut()
+            .then(() => {
+                setCurrentUser(null);
+                navigate("/")
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    };
+
+    useEffect(() => {
+        userRepository.me()
+            .then(response => {
+                setCurrentUser(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, []);
 
     useEffect(() => {
@@ -45,7 +88,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }, [currentUser, dispatch]);
 
     return (
-        <UserContext.Provider value={{ currentUser, setCurrentUser, loading }}>
+        <UserContext.Provider value={{currentUser, setCurrentUser, loading, signIn, signUp, signOut}}>
             {children}
         </UserContext.Provider>
     );
