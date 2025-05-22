@@ -13,8 +13,7 @@ import mk.ukim.finki.wayzi.model.enumeration.Role;
 public class Admin extends User {
 
     public Admin(String email, String password, String name) {
-        super(email, password, name);
-        this.isEmailVerified = true;
+        super(email, password, name, true);
         this.role = Role.ROLE_ADMIN_USER;
     }
 

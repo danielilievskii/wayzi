@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthService {
     User signUp(SignUpDto signUpDto, HttpServletRequest request, HttpServletResponse response);
+    void verifyEmail(String token);
+
     User signIn(SignInDto signInDto, HttpServletRequest request, HttpServletResponse response);
     void signOut(HttpServletResponse response);
 

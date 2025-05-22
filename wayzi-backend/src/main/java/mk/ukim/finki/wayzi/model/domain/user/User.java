@@ -67,9 +67,29 @@ public class User implements UserDetails {
         return this.password;
     }
 
-    public User(String email, String password, String name) {
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEmailVerified;
+    }
+
+    public User(String email, String password, String name, Boolean emailVerified) {
         this.email = email;
-        this.isEmailVerified = false;
+        this.isEmailVerified = emailVerified;
         this.password = password;
         this.name = name;
 

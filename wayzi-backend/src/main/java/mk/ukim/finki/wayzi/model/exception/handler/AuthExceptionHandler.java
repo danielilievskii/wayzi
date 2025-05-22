@@ -1,9 +1,6 @@
 package mk.ukim.finki.wayzi.model.exception.handler;
 
-import mk.ukim.finki.wayzi.model.exception.AuthenticationException;
-import mk.ukim.finki.wayzi.model.exception.AuthenticationFailedException;
-import mk.ukim.finki.wayzi.model.exception.InvalidCredentialsException;
-import mk.ukim.finki.wayzi.model.exception.UserAlreadyExistsException;
+import mk.ukim.finki.wayzi.model.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,5 +40,10 @@ public class AuthExceptionHandler {
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<String> handleSignatureException(SignatureException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid JWT token");
+    }
+
+    @ExceptionHandler(EmailAlreadyVerifiedException.class)
+    public ResponseEntity<String> handleEmailAlreadyVerifiedException(EmailAlreadyVerifiedException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 }

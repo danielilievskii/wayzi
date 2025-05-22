@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:text="${title}">Email</title>
+  <style th:insert="~{fragments/email-styles :: styles}"></style>
+</head>
+<body>
+<div th:replace="~{fragments/email-header :: header}"></div>
+
+<div class="content" th:replace="~{${bodyContent}}"></div>
+
+<div th:replace="~{fragments/email-footer :: footer}"></div>
+</body>
+</html>

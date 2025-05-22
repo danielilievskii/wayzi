@@ -51,7 +51,7 @@ public class DataHolder {
     public void init() {
         users = new ArrayList<>();
         if(this.userRepository.count() == 0) {
-            users.add(new User("daniel@gmail.com", passwordEncoder.encode("12345"), "Daniel Ilievski"));
+            users.add(new User("daniel@gmail.com", passwordEncoder.encode("12345"), "Daniel Ilievski", true));
             userRepository.saveAll(users);
         }
 

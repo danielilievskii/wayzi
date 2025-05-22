@@ -24,6 +24,11 @@ public class AuthApplicationServiceImpl implements AuthApplicationService {
     }
 
     @Override
+    public void verifyEmail(String token) {
+        authService.verifyEmail(token);
+    }
+
+    @Override
     public AuthUserDto signIn(SignInDto signInDto, HttpServletRequest request, HttpServletResponse response) {
         return AuthUserDto.from(authService.signIn(signInDto, request, response));
     }

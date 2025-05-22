@@ -1,0 +1,20 @@
+<div>
+    <p>Hello, <span th:text="${name}">User</span>!</p>
+
+    <p>Your Wayzi account requires email verification. To activate your account and gain full access, please verify your email address by clicking the button below:</p>
+
+    <p style="text-align: center;">
+        <a class="button" th:href="${verificationUrl}">Verify my email</a>
+    </p>
+
+    <p style="word-break: break-all; font-size: 14px; text-align: center;">
+        <span>Or paste this link into your browser:</span>
+        <br />
+        <span th:text="${verificationUrl}">https://example.com/verify</span>
+    </p>
+
+    <br />
+    <p>This verification link will expire in 30 minutes. If you did not create an account with us, please disregard this email.</p>
+
+    <p><strong>Note:</strong> You will not be able to fully use your account until your email is verified.</p>
+</div>

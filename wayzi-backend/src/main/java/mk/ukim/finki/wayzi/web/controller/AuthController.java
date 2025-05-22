@@ -26,6 +26,12 @@ public class AuthController {
         return ResponseEntity.ok(authApplicationService.signUp(signUpDto, request, response));
     }
 
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam("token") String token) {
+        authApplicationService.verifyEmail(token);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@Valid @RequestBody SignInDto signInDto,
                                     HttpServletRequest request,

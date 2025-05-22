@@ -3,6 +3,7 @@ package mk.ukim.finki.wayzi.service.domain.impl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import mk.ukim.finki.wayzi.service.domain.VerificationTokenService;
 import mk.ukim.finki.wayzi.web.dto.auth.SignInDto;
 import mk.ukim.finki.wayzi.web.dto.auth.SignUpDto;
 import mk.ukim.finki.wayzi.model.exception.AuthenticationException;
@@ -31,24 +32,33 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationTokenService verificationTokenService;
 
-    public AuthServiceImpl(@Lazy AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(@Lazy AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository, PasswordEncoder passwordEncoder, VerificationTokenService verificationTokenService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.verificationTokenService = verificationTokenService;
     }
 
     @Override
     public User signUp(SignUpDto signUpDto, HttpServletRequest request, HttpServletResponse response) {
         if (userRepository.existsByEmail(signUpDto.email())) {
-            throw new UserAlreadyExistsException("A user with this email already exists.");
+            throw new UserAlreadyExistsException("User with this email already exists.");
         }
 
-        User user = userRepository.save(signUpDto.toEntity(passwordEncoder));
-        authenticateAndSetJwt(request, response, user);
+        User user = new User(signUpDto.email(), passwordEncoder.encode(signUpDto.password()), signUpDto.name(), false);
+        userRepository.save(user);
+
+        verificationTokenService.createVerificationToken(user);
 
         return user;
+    }
+
+    @Override
+    public void verifyEmail(String token) {
+        verificationTokenService.validateToken(token);
     }
 
     @Override

@@ -4,8 +4,7 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import mk.ukim.finki.wayzi.model.domain.user.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 public record SignUpDto(
         @NotEmpty(message = "Name is required")
@@ -22,14 +21,6 @@ public record SignUpDto(
         String confirmPassword
 
 ) {
-
-    public User toEntity(PasswordEncoder passwordEncoder) {
-        return new User(
-                email,
-                passwordEncoder.encode(password),
-                name
-        );
-    }
 
     @AssertTrue(message = "Passwords must match")
     public boolean isPasswordMatch() {
