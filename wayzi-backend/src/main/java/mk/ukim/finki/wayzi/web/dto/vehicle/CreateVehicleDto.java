@@ -4,10 +4,10 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.model.domain.User;
 import mk.ukim.finki.wayzi.model.enumeration.VehicleType;
 import mk.ukim.finki.wayzi.model.enumeration.Color;
-import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
+import mk.ukim.finki.wayzi.model.domain.Vehicle;
 
 public record CreateVehicleDto (
         @NotEmpty(message = "Brand is required")

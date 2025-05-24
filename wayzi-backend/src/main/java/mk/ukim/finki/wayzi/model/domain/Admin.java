@@ -1,4 +1,4 @@
-package mk.ukim.finki.wayzi.model.domain.user;
+package mk.ukim.finki.wayzi.model.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

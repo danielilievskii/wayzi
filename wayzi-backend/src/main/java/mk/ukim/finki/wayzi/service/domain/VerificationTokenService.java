@@ -1,7 +1,7 @@
 package mk.ukim.finki.wayzi.service.domain;
 
-import mk.ukim.finki.wayzi.model.VerificationToken;
-import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.model.domain.VerificationToken;
+import mk.ukim.finki.wayzi.model.domain.User;
 
 public interface VerificationTokenService {
     VerificationToken createVerificationToken(User user);

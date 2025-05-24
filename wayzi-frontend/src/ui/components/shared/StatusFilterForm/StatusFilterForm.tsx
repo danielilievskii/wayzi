@@ -35,7 +35,10 @@ export const StatusFilterForm = (props) => {
                             setSelectedFilter(filter.value)
                             onFilterSwitch(filter.value)
                         }}
-                    ><i className={`fa-solid ${filter.icon}`}></i> {filter.label}</span>
+                    >
+                        {/*<i className={`fa-solid ${filter.icon}`}></i>*/}
+                        {filter.label}
+                    </span>
                 ))
             }
         </div>

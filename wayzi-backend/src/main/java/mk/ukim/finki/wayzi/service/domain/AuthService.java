@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mk.ukim.finki.wayzi.web.dto.auth.SignInDto;
 import mk.ukim.finki.wayzi.web.dto.auth.SignUpDto;
-import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.model.domain.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthService {
@@ -21,5 +21,4 @@ public interface AuthService {
     void addJwtCookie(HttpServletResponse response, String jwt);
     void invalidateJwtCookie(HttpServletResponse response);
     void setAuthentication(UserDetails userDetails, HttpServletRequest request);
-    void clearAuthentication();
 }

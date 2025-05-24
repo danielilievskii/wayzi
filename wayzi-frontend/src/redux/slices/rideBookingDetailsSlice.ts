@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axiosInstance from "../../axios/axiosInstance";
 import {RideBooking} from "./rideBookingSlice.ts";
+import rideBookingRepository from "../../repository/rideBookingRepository.ts";
 
 
 export interface RideBookingDetailsState {
@@ -11,20 +11,21 @@ export interface RideBookingDetailsState {
 
 const initialState: RideBookingDetailsState = {
     rideBooking: null,
-    loading: false,
+    loading: true,
     error: null,
 };
 
-export const fetchRideBookingDetails = createAsyncThunk<RideBooking, void, { rejectValue: string }>(
-    'rides/fetchRideBookingDetails',
+export const fetchBookingDetailsForBooker = createAsyncThunk<RideBooking, string, { rejectValue: string }>(
+    'rides/fetchBookingDetailsForBooker',
     async (id, { rejectWithValue }) => {
-        try {
-            const res = await axiosInstance.get('/rides/bookings/' + id);
-            return res.data as RideBooking;
-        } catch (err: any) {
-            console.log(err)
-            return rejectWithValue(err.response?.data || 'Failed to fetch ride details');
-        }
+
+        return rideBookingRepository.getBookingDetailsForBooker(id)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to fetch ride booking details.');
+            })
     }
 );
 
@@ -34,17 +35,14 @@ const rideBookingDetailsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchRideBookingDetails.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(fetchRideBookingDetails.fulfilled, (state, action: PayloadAction<RideBooking>) => {
+            .addCase(fetchBookingDetailsForBooker.pending, () => {})
+            .addCase(fetchBookingDetailsForBooker.fulfilled, (state, action: PayloadAction<RideBooking>) => {
                 state.loading = false;
                 state.rideBooking = action.payload;
             })
-            .addCase(fetchRideBookingDetails.rejected, (state, action) => {
+            .addCase(fetchBookingDetailsForBooker.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload || 'Failed to fetch ride boooking rides';
+                state.error = action.payload || 'Something went wrong.';
             })
 
     },

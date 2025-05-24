@@ -1,6 +1,6 @@
 package mk.ukim.finki.wayzi.web.dto.ridebooking;
 
-import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
+import mk.ukim.finki.wayzi.model.domain.RideBooking;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

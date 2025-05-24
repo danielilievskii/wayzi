@@ -3,15 +3,14 @@ import {AppDispatch, RootState} from "../../../../redux/store.ts";
 import {useEffect} from "react";
 import {deleteVehicle, fetchVehicles, Vehicle} from "../../../../redux/slices/vehicleSlice.ts";
 import { Link } from "react-router";
-import {useAsyncThunkHandler} from "../../../../hooks/useAsyncThunkHandler.ts";
 import {getVehicleIcon} from "../../../../utils/vehicleUtils.ts";
 import "./Vehicles.css"
 
 export const Vehicles = () => {
     const dispatch = useDispatch<AppDispatch>()
     const vehicles = useSelector((state: RootState) => state.vehicle.vehicles)
+    const {deleteVehicleError, deleteVehicleLoading} = useSelector((state: RootState) => state.vehicle)
 
-    const { handleThunk, loading, success, error } = useAsyncThunkHandler();
 
     useEffect(() => {
         if(vehicles.length == 0) {
@@ -20,14 +19,12 @@ export const Vehicles = () => {
 
     }, [dispatch]);
 
+    const onDelete = async (id: string) => {
+        const resultAction = await dispatch(deleteVehicle(id));
 
-    const onDelete = (id: number) => {
-
-        console.log(id)
-        handleThunk(dispatch, deleteVehicle, id, () => {
-
-            // TODO: Success notification
-        })
+        if (deleteVehicle.fulfilled.match(resultAction)) {
+            dispatch(fetchVehicles())
+        }
     }
 
 
@@ -61,7 +58,7 @@ export const Vehicles = () => {
                 </div>
             ))}
 
-            {error && <p>${error}</p>}
+            {deleteVehicleError && <p className="text-danger mt-3">{deleteVehicleError}</p>}
         </div>
     )
 }

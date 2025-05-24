@@ -1,6 +1,6 @@
 package mk.ukim.finki.wayzi.service.domain;
 
-import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
+import mk.ukim.finki.wayzi.model.domain.RideBooking;
 import mk.ukim.finki.wayzi.model.enumeration.PaymentMethod;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
 import org.springframework.data.domain.Page;

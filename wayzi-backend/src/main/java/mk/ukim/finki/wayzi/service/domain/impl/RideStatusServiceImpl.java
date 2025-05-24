@@ -1,7 +1,7 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
-import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
+import mk.ukim.finki.wayzi.model.domain.Ride;
+import mk.ukim.finki.wayzi.model.domain.RideBooking;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import mk.ukim.finki.wayzi.model.exception.InvalidRideStatusException;

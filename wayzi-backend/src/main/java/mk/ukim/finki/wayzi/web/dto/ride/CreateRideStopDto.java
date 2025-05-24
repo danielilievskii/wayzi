@@ -2,8 +2,8 @@ package mk.ukim.finki.wayzi.web.dto.ride;
 
 import jakarta.validation.constraints.NotNull;
 import mk.ukim.finki.wayzi.model.domain.Location;
-import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import mk.ukim.finki.wayzi.model.domain.ride.RideStop;
+import mk.ukim.finki.wayzi.model.domain.Ride;
+import mk.ukim.finki.wayzi.model.domain.RideStop;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;

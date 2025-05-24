@@ -1,10 +1,7 @@
 package mk.ukim.finki.wayzi.web.controller;
 
 import mk.ukim.finki.wayzi.service.application.RideBookingApplicationService;
-import mk.ukim.finki.wayzi.web.dto.ridebooking.CreateRideBookingDto;
-import mk.ukim.finki.wayzi.web.dto.ridebooking.RideBookingCheckInDto;
-import mk.ukim.finki.wayzi.web.dto.ridebooking.RideBookingDetailsDto;
-import mk.ukim.finki.wayzi.web.dto.ridebooking.RideBookingFilterDto;
+import mk.ukim.finki.wayzi.web.dto.ridebooking.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +16,12 @@ public class RideBookingController {
     }
 
     @GetMapping("/rides/bookings")
-    public ResponseEntity<?> findPage(@ModelAttribute RideBookingFilterDto filterDto) {
+    public ResponseEntity<RideBookingPageDto> findPage(@ModelAttribute RideBookingFilterDto filterDto) {
         return ResponseEntity.ok(rideBookingApplicationService.findPageForUser(filterDto));
     }
 
     @PostMapping("/rides/{rideId}/book")
-    public ResponseEntity<?> bookRide(
+    public ResponseEntity<RideBookingDetailsDto> bookRide(
             @PathVariable Long rideId,
             @RequestBody CreateRideBookingDto rideBookingDto) {
 
@@ -32,15 +29,15 @@ public class RideBookingController {
 
     }
 
+    @PutMapping("/rides/bookings/{rideBookingId}/cancel")
+    public ResponseEntity<Void> cancelRideBooking(@PathVariable Long rideBookingId) {
+        rideBookingApplicationService.cancelRideBooking(rideBookingId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/rides/bookings/{rideBookingId}")
     public ResponseEntity<RideBookingDetailsDto> getBookingDetailsForBooker(@PathVariable Long rideBookingId) {
         return ResponseEntity.ok(rideBookingApplicationService.getBookingDetailsForBooker(rideBookingId));
-    }
-
-    @PostMapping("/rides/bookings/{rideBookingId}/cancel")
-    public ResponseEntity<?> cancelRideBooking(@PathVariable Long rideBookingId) {
-        rideBookingApplicationService.cancelRideBooking(rideBookingId);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/rides/bookings/{rideBookingId}/check-in")
@@ -48,7 +45,7 @@ public class RideBookingController {
         return ResponseEntity.ok(rideBookingApplicationService.getBookingCheckInDetailsForDriver(rideBookingId));
     }
 
-    @PostMapping("/rides/bookings/{rideBookingId}/check-in")
+    @PutMapping("/rides/bookings/{rideBookingId}/check-in")
     public ResponseEntity<RideBookingCheckInDto> checkInPassenger(@PathVariable Long rideBookingId) {
         return ResponseEntity.ok(rideBookingApplicationService.checkInPassenger(rideBookingId));
     }

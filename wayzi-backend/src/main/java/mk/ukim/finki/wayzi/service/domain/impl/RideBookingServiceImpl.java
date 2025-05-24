@@ -1,8 +1,8 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
-import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
-import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.model.domain.Ride;
+import mk.ukim.finki.wayzi.model.domain.RideBooking;
+import mk.ukim.finki.wayzi.model.domain.User;
 import mk.ukim.finki.wayzi.model.enumeration.CheckInStatus;
 import mk.ukim.finki.wayzi.model.enumeration.PaymentMethod;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
@@ -18,10 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static mk.ukim.finki.wayzi.specifications.FieldFilterSpecification.*;
 

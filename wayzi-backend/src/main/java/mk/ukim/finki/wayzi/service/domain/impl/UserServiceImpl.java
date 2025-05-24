@@ -1,7 +1,7 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
 
-import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.model.domain.User;
 import mk.ukim.finki.wayzi.model.exception.ProfilePictureNotFoundException;
 import mk.ukim.finki.wayzi.repository.UserRepository;
 import mk.ukim.finki.wayzi.service.domain.AuthService;

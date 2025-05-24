@@ -1,8 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axiosInstance from "../../axios/axiosInstance.ts";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import vehicleRepository from "../../repository/vehicleRepository.ts";
+import {VehicleSchemaType} from "../../schemas/vehicleSchema.ts";
 
 export interface Vehicle {
-    id: number;
+    id: string;
     brand: string;
     model: string;
     color: string;
@@ -14,66 +15,86 @@ interface VehicleState {
     vehicles: Vehicle[];
     loading: boolean;
     error: string | null;
+
+    createVehicleLoading: boolean;
+    createVehicleError: string | null;
+
+    editVehicleLoading: boolean;
+    editVehicleError: string | null;
+
+    deleteVehicleLoading: boolean;
+    deleteVehicleError: string | null;
 }
 
 const initialState: VehicleState = {
     vehicles: [],
-    loading: false,
+    loading: true,
     error: null,
+
+    createVehicleLoading: false,
+    createVehicleError: null,
+
+    editVehicleLoading: false,
+    editVehicleError: null,
+
+    deleteVehicleLoading: false,
+    deleteVehicleError: null,
 };
 
 
 export const fetchVehicles = createAsyncThunk(
-    'profile/fetchAll',
+    'vehicles/fetchVehicles',
     async (_, {rejectWithValue}) => {
-        try {
-            const res = await axiosInstance.get('/vehicle/all');
-            return res.data as Vehicle[];
-        } catch (err: any) {
-            return rejectWithValue(err.response?.data || 'Failed to fetch vehicles');
-        }
+        return vehicleRepository.findAll()
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to fetch vehicles.');
+            })
+
     }
 )
 
-// Async thunk to create a profile
 export const createVehicle = createAsyncThunk(
-    'profile/create',
-    async (vehicleData: Omit<Vehicle, 'id'>, { rejectWithValue }) => {
-        try {
-            const res = await axiosInstance.post('/vehicle/add', vehicleData);
-            return res.data as Vehicle;
-        } catch (err: any) {
-            return rejectWithValue(err.response?.data || 'Failed to create vehicle');
-        }
+    'vehicles/createVehicle',
+    async (data: VehicleSchemaType, {rejectWithValue}) => {
+        return vehicleRepository.add(data)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to create vehicle.');
+            })
     }
 );
 
-// Async thunk to edit a profile
 export const editVehicle = createAsyncThunk(
-    'profile/edit',
+    'vehicles/editVehicle',
     async (
-        { id, data }: { id: number; data: Partial<Omit<Vehicle, 'id'>> },
-        { rejectWithValue }
+        {id, data}: { id: string; data: VehicleSchemaType },
+        {rejectWithValue}
     ) => {
-        try {
-            const res = await axiosInstance.post(`/vehicle/edit/${id}`, data);
-            return res.data as Vehicle;
-        } catch (err: any) {
-            return rejectWithValue(err.response?.data || 'Failed to update vehicle');
-        }
+        return vehicleRepository.edit(data, id)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to edit vehicle.');
+            })
     }
 );
 
-// Async thunk to delete a profile
 export const deleteVehicle = createAsyncThunk(
-    'profile/delete',
-    async (id: number, { rejectWithValue }) => {
-        try {
-            await axiosInstance.delete(`/vehicle/delete/${id}`);
-            return id;
-        } catch (err: any) {
-            return rejectWithValue(err.response?.data || 'Failed to delete vehicle');
-        }
+    'vehicles/deleteVehicle',
+    async (id: string, {rejectWithValue}) => {
+        return vehicleRepository.delete(id)
+            .then(() => {
+                return id;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to delete vehicle.');
+            })
     }
 );
 
@@ -84,10 +105,7 @@ const vehicleSlice = createSlice({
     extraReducers: (builder) => {
         builder
             //FETCH VEHICLES
-            .addCase(fetchVehicles.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
+            .addCase(fetchVehicles.pending, () => {})
             .addCase(fetchVehicles.fulfilled, (state, action: PayloadAction<Vehicle[]>) => {
                 state.loading = false;
                 state.vehicles = action.payload;
@@ -99,47 +117,38 @@ const vehicleSlice = createSlice({
 
             // CREATE VEHICLE
             .addCase(createVehicle.pending, (state) => {
-                state.loading = true;
-                state.error = null;
+                state.createVehicleLoading = true;
             })
-            .addCase(createVehicle.fulfilled, (state, action: PayloadAction<Vehicle>) => {
-                state.loading = false;
-                state.vehicles.push(action.payload);
+            .addCase(createVehicle.fulfilled, (state) => {
+                state.createVehicleLoading = false;
             })
             .addCase(createVehicle.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload as string;
+                state.createVehicleLoading = false;
+                state.createVehicleError = action.payload as string;
             })
 
             // EDIT VEHICLE
             .addCase(editVehicle.pending, (state) => {
-                state.loading = true;
-                state.error = null;
+                state.editVehicleLoading = true;
             })
-            .addCase(editVehicle.fulfilled, (state, action: PayloadAction<Vehicle>) => {
-                state.loading = false;
-                const index = state.vehicles.findIndex(v => v.id === action.payload.id);
-                if (index !== -1) {
-                    state.vehicles[index] = action.payload;
-                }
+            .addCase(editVehicle.fulfilled, (state) => {
+                state.editVehicleLoading = false
             })
             .addCase(editVehicle.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload as string;
+                state.editVehicleLoading = false;
+                state.editVehicleError = action.payload as string;
             })
 
             // DELETE VEHICLE
             .addCase(deleteVehicle.pending, (state) => {
-                state.loading = true;
-                state.error = null;
+                state.deleteVehicleLoading = true;
             })
-            .addCase(deleteVehicle.fulfilled, (state, action: PayloadAction<number>) => {
-                state.loading = false;
-                state.vehicles = state.vehicles.filter(v => v.id !== action.payload);
+            .addCase(deleteVehicle.fulfilled, (state) => {
+                state.deleteVehicleLoading = false;
             })
             .addCase(deleteVehicle.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload as string;
+                state.deleteVehicleLoading = false;
+                state.deleteVehicleError = action.payload as string;
             });
     }
 });

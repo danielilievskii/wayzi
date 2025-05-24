@@ -1,21 +1,17 @@
-import {useUser} from "../../../context/UserContext.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store.ts";
 import {useEffect, useState} from "react";
 import {fetchLocations} from "../../../redux/slices/locationSlice.ts";
-import {Controller, useFieldArray, useForm} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
-import {createRide} from "../../../redux/slices/publishedRideSlice.ts";
 import {useNavigate, useParams} from "react-router";
 import {BookRideSchema, BookRideSchemaType} from "../../../schemas/bookRideSchema.ts";
-import {VehicleSchemaType} from "../../../schemas/vehicleSchema.ts";
 import {paymentMethods} from "../../../constants/paymentMethods.ts";
-import {createRideBooking, fetchRideBooking, fetchRideBookings} from "../../../redux/slices/rideBookingSlice.ts";
+import {createRideBooking} from "../../../redux/slices/rideBookingSlice.ts";
+
 
 
 export const BookRideForm = () => {
-    const {currentUser} = useUser()
     const {ride_id} = useParams()
 
     const navigate = useNavigate();
@@ -25,16 +21,12 @@ export const BookRideForm = () => {
 
 
     const locations = useSelector((state: RootState) => state.location.locations)
-    const [stopInput, setDepartureInput] = useState<string>("");
-    const [stopSuggestions, toggleDepartureSuggestions] = useState<boolean>(false);
 
 
     const {register, control, handleSubmit, setValue, reset, formState: {errors}} = useForm<BookRideSchemaType>({
         resolver: zodResolver(BookRideSchema),
     });
 
-
-    const {handleThunk, loading, success, error} = useAsyncThunkHandler();
 
     useEffect(() => {
         if (locations.length == 0) {
@@ -43,16 +35,15 @@ export const BookRideForm = () => {
 
     }, [dispatch]);
 
+    const {createRideBookingError, createRideBookingLoading} = useSelector((state: RootState) => state.rideBookings)
 
-    const onSubmit = (data: BookRideSchemaType) => {
-        handleThunk(dispatch, createRideBooking, { id: ride_id, data }, () => {
+    const onSubmit = async (data: BookRideSchemaType) => {
+        const resultAction = await dispatch(createRideBooking({ id: String(ride_id), data }));
 
-            handleThunk(dispatch, fetchRideBookings, null, () => {
-                navigate("/rides/bookings")
-                reset();
-            })
-
-        });
+        if(createRideBooking.fulfilled.match(resultAction)) {
+            navigate("/rides/bookings")
+            reset();
+        }
     };
 
     return (
@@ -113,12 +104,12 @@ export const BookRideForm = () => {
 
                 <div className="modal-buttons d-flex justify-content-end gap-2">
                     <div className="cancel-btn">Cancel</div>
-                    <button className="submit-btn">Submit</button>
+                    <button className="submit-btn" disabled={createRideBookingLoading}>Submit</button>
                 </div>
 
-                {error && (
+                {createRideBookingError && (
                     <div className="alert alert-danger mt-4 border-0" role="alert">
-                        {error}
+                        {createRideBookingError}
                     </div>
                 )}
             </form>

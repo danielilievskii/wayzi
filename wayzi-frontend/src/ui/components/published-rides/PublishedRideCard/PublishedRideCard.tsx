@@ -1,27 +1,27 @@
-import {fetchRides, Ride} from "../../../../redux/slices/rideSlice.ts";
 import {Link} from "react-router-dom";
 import "../../../styles/rides.css"
 import {formatDateTime} from "../../../../utils/dateUtils.ts";
-import {useAsyncThunkHandler} from "../../../../hooks/useAsyncThunkHandler.ts";
-import {updateRideStatus} from "../../../../redux/slices/publishedRideSlice.ts";
-import {useDispatch} from "react-redux";
-import {AppDispatch} from "../../../../redux/store.ts";
-// import { formatDateTime } from "../../utils/dateUtils.ts/";
+import {updateRideStatus} from "../../../../redux/slices/rideSlice.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../../../redux/store.ts";
+
+import {fetchPublishedRides} from "../../../../redux/slices/publishedRideSlice.ts";
 
 export const PublishedRideCard = (props) => {
     const {ride} = props
-    const {handleThunk, loading, success, error} = useAsyncThunkHandler();
     const dispatch = useDispatch<AppDispatch>();
 
-    const updateStatus = (status: string) => {
-        handleThunk(dispatch, updateRideStatus, {id: ride.id, newStatus: status}, () => {
-            alert("STATUS CHANGED")
-        })
+    const {updateRideStatusError, updateRideStatusLoading} = useSelector((state: RootState) => state.rides)
+    const publishedRidesState = useSelector((state: RootState) => state.publishedRides);
+    const {filter, pagination} = publishedRidesState
 
-    }
+    const updateStatus = async (status: string) => {
+        const resultAction = await dispatch(updateRideStatus({id: ride.id, newStatus: status}));
 
-    const onClick = () => {
-        console.log("Ride card clicked");
+        if (updateRideStatus.fulfilled.match(resultAction)) {
+            dispatch(fetchPublishedRides({...filter, ...pagination}))
+        }
+
     }
 
     return (
@@ -116,83 +116,35 @@ export const PublishedRideCard = (props) => {
 
                                         </p>
                                     </div>
-
                                 </div>
-
-                            </div>
-
-                            <div className="col-md-4 fw-semibold">
-                                <div className="dropdown text-end">
-                                    <button className="btn btn-light border-0" type="button" id="rideMenuButton"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i className="fa-solid fa-ellipsis-vertical"></i>
-                                    </button>
-                                    <ul className="dropdown-menu" aria-labelledby="rideMenuButton">
-                                        {/*Edit Ride (Disabled if status is CONFIRMED)*/}
-                                        <li>
-                                            <button className="dropdown-item"
-                                                    onClick={onClick}
-                                                    disabled={ride.rideStatus == 'CONFIRMED'}>
-                                                Edit ride
-                                            </button>
-                                        </li>
-
-                                        {/*Confirm Ride (Only visible if status is PENDING)*/}
-                                        {ride.rideStatus == 'PENDING' && (
-                                            <button
-                                                className="dropdown-item"
-                                                onClick={onClick}
-                                            >
-                                                Confirm ride
-                                            </button>
-                                        )}
-
-                                        {/*Start Ride (Only visible if status is CONFIRMED)*/}
-                                        {ride.rideStatus == 'CONFIRMED' && (
-                                            <button className="dropdown-item"
-                                                    onClick={onClick}>
-                                                Start ride
-                                            </button>
-                                        )}
-
-                                        {/*Finish Ride (Only visible if status is STARTED)*/}
-                                        {ride.rideStatus == 'STARTED' && (
-                                            <button className="dropdown-item"
-                                                    onClick={onClick}>
-                                                Finish ride
-                                            </button>
-                                        )}
-
-                                        {/*Cancel Ride (Always visible)*/}
-                                        <li>
-                                            <button
-                                                className="dropdown-item text-danger"
-                                                onClick={onClick}
-                                            >
-                                                Cancel ride
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-
                             </div>
                         </div>
                     </div>
                 </Link>
             </div>
             <div className="d-flex justify-content-evenly rounded p-2 row-gap-2 bg-white">
+
                 {ride.rideStatus == 'PENDING' && (
-                    <div className="col-md-3">
-                        <button
-                            onClick={() => {
-                                updateStatus("CONFIRMED")
-                            }
-                            }
-                            className="btn btn-light p-2 fw-bold w-100"
-                        >
-                            Confirm
-                        </button>
-                    </div>
+                    <>
+                        <div className="col-md-3">
+                            <button
+                                onClick={() => {
+                                    updateStatus("CONFIRMED")
+                                }
+                                }
+                                className="btn btn-light p-2 fw-bold w-100"
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                        <div className="col-md-3">
+                            <button
+                                className={`btn btn-light p-2 fw-bold w-100`}>Edit
+                                ride
+                            </button>
+                        </div>
+                    </>
+
                 )}
 
                 {ride.rideStatus == 'CONFIRMED' && (
@@ -221,14 +173,14 @@ export const PublishedRideCard = (props) => {
                     </div>
                 )}
 
-                {(ride.rideStatus != 'FINISHED' && ride.rideStatus != 'CANCELLED') && (
+                <div className="col-md-3">
+                    <button
+                        className={`btn btn-light p-2 fw-bold w-100`}>View passengers
+                    </button>
+                </div>
+
+                {(ride.rideStatus == 'PENDING' || ride.rideStatus == 'CONFIRMED') && (
                     <>
-                        <div className="col-md-3">
-                            <button
-                                className={`btn btn-light p-2 fw-bold w-100 ${ride.rideStatus !== 'PENDING' ? 'disabled' : ''}`}>Edit
-                                ride
-                            </button>
-                        </div>
                         <div className="col-md-3">
                             <button
                                 onClick={() => {
@@ -236,21 +188,6 @@ export const PublishedRideCard = (props) => {
                                 }}
                                 className="btn btn-light p-2 color-danger text-danger fw-bold w-100">
                                 Cancel ride
-                            </button>
-                        </div>
-                    </>
-                )}
-
-                {ride.rideStatus == 'FINISHED' && (
-                    <>
-                        <div className="col-md-4">
-                            <button
-                                className={`btn btn-light p-2 fw-bold w-100`}>Rate passengers
-                            </button>
-                        </div>
-                        <div className="col-md-4">
-                            <button className="btn btn-light p-2 color-danger text-danger fw-bold w-100">Report passenger
-                                abscense
                             </button>
                         </div>
                     </>

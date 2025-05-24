@@ -3,6 +3,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import axiosInstance from "../../axios/axiosInstance.ts";
 import {Location} from "./locationSlice.ts";
 import {BookRideSchemaType} from "../../schemas/bookRideSchema.ts";
+import rideBookingRepository from "../../repository/rideBookingRepository.ts";
 
 
 
@@ -39,6 +40,12 @@ interface RideBookingsState {
 
     loading: boolean;
     error: string | null;
+
+    createRideBookingLoading: boolean;
+    createRideBookingError: string | null;
+
+    cancelRideBookingLoading: boolean;
+    cancelRideBookingError: string | null;
 }
 
 const initialState: RideBookingsState = {
@@ -55,6 +62,12 @@ const initialState: RideBookingsState = {
 
     loading: false,
     error: null,
+
+    createRideBookingLoading: false,
+    createRideBookingError: null,
+
+    cancelRideBookingLoading: false,
+    cancelRideBookingError: null,
 }
 
 
@@ -65,62 +78,45 @@ export interface RideBookingsResponse {
     currentPage: number;
 }
 
-export const fetchRideBooking = createAsyncThunk<RideBooking, void, {rejectValue: string}> (
-    'rideBookings/fetchById',
-    async (rideBookingId, {rejectWithValue}) => {
-        try {
-            const res = await axiosInstance.get('/rides/bookings/' + rideBookingId);
-            return res.data as RideBooking;
-
-        } catch (err: any) {
-            return rejectWithValue(err.response?.data || 'Failed to fetch booked rides');
-        }
-    }
-)
-
-export const fetchRideBookings = createAsyncThunk<RideBookingsResponse, any, {rejectValue: string}> (
+export const fetchRideBookings = createAsyncThunk<RideBookingsResponse, {}, {rejectValue: string}> (
     'rideBookings/fetchAll',
     async (filterData, {rejectWithValue}) => {
-        try {
-            console.log(filterData)
-            const res = await axiosInstance.get('/rides/bookings', {
-                params: filterData
-            });
-            console.log(res.data)
-            return res.data as RideBookingsResponse;
-
-        } catch (err: any) {
-            return rejectWithValue(err.response?.data || 'Failed to fetch booked rides');
-        }
+        return rideBookingRepository.findPage(filterData)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to fetch published rides.');
+            })
     }
 )
 
-export const cancelRideBooking = createAsyncThunk<void, number, { rejectValue: string }>(
-    'rideBookings/cancelRideBooking',
-    async (id, { rejectWithValue }) => {
-        try {
-
-            const res = await axiosInstance.post('/rides/bookings/' + id + '/cancel');
-            return res.data;
-        } catch (err: any) {
-            return rejectWithValue(err.response?.data || 'Failed to cancel ride booking');
-        }
-    }
-);
-
-export const createRideBooking = createAsyncThunk<RideBooking, { id: number; data: BookRideSchemaType }, { rejectValue: string }>(
+export const createRideBooking = createAsyncThunk<RideBooking, { id: string; data: BookRideSchemaType }, { rejectValue: string }>(
     'rideBookings/createRideBooking',
     async ({id, data}, { rejectWithValue }) => {
-        try {
-            const res = await axiosInstance.post(`/rides/${id}/book`, data);
-            return res.data;
-        } catch (err: any) {
-            console.log(err.response)
-            return rejectWithValue(err.response?.data || 'Failed to create ride');
-        }
+        return rideBookingRepository.createRideBooking(id, data)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to create ride booking.');
+            })
     }
 );
 
+export const cancelRideBooking = createAsyncThunk<void, string, { rejectValue: string }>(
+    'rideBookings/cancelRideBooking',
+    async (id, { rejectWithValue }) => {
+
+        return rideBookingRepository.cancelRideBooking(id)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to cancel ride booking.');
+            })
+    }
+);
 
 
 const rideBookingSlice = createSlice({
@@ -136,19 +132,6 @@ const rideBookingSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchRideBooking.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(fetchRideBooking.fulfilled, (state, action: PayloadAction<RideBooking>) => {
-                state.loading = false;
-                state.rideBookings = {...state.rideBookings, ...action.payload};
-            })
-            .addCase(fetchRideBooking.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload || 'Failed to fetch ride boooking rides';
-            })
-
             .addCase(fetchRideBookings.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -166,27 +149,25 @@ const rideBookingSlice = createSlice({
             })
 
             .addCase(createRideBooking.pending, (state) => {
-                state.loading = true;
-                state.error = null;
+                state.createRideBookingLoading = true;
             })
-            .addCase(createRideBooking.fulfilled, (state, action: PayloadAction<RideBooking>) => {
-                state.loading = false;
+            .addCase(createRideBooking.fulfilled, (state) => {
+                state.createRideBookingLoading = false;
             })
             .addCase(createRideBooking.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload || 'Something went wrong';
+                state.createRideBookingLoading = false;
+                state.createRideBookingError = action.payload || 'Something went wrong';
             })
 
             .addCase(cancelRideBooking.pending, (state) => {
-                state.loading = true;
-                state.error = null;
+                state.cancelRideBookingLoading = true;
             })
             .addCase(cancelRideBooking.fulfilled, (state) => {
-                state.loading = false;
+                state.cancelRideBookingLoading = false;
             })
             .addCase(cancelRideBooking.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload || 'Something went wrong';
+                state.cancelRideBookingLoading = false;
+                state.cancelRideBookingError = action.payload || 'Something went wrong';
             })
 
     }

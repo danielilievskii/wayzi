@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../../axios/axiosInstance";
 import {RideBooking} from "./rideBookingSlice.ts";
+import rideBookingRepository from "../../repository/rideBookingRepository.ts";
 
 interface RideBookingCheckIn {
     rideBookingId: string;
@@ -33,25 +34,27 @@ const initialState: RideBookingCheckInState = {
 export const fetchRideBookingCheckInDetails = createAsyncThunk<RideBookingCheckIn, string, { rejectValue: string }>(
     'rides/fetchRideBookingCheckInDetails',
     async (id, { rejectWithValue }) => {
-        try {
-            const response = await axiosInstance.get('/rides/bookings/' + id + '/check-in');
-            return response.data as RideBookingCheckIn;
-        } catch (err: any) {
-            console.log(err)
-            return rejectWithValue(err.response?.data);
-        }
+
+        return rideBookingRepository.getBookingCheckInDetailsForDriver(id)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to fetch ride booking details.');
+            });
     }
 );
 
 export const checkInPassenger = createAsyncThunk<RideBookingCheckIn, string, { rejectValue: string }>(
     'rides/checkInPassenger',
     async (id, { rejectWithValue }) => {
-        try {
-            const response = await axiosInstance.post('/rides/bookings/' + id + '/check-in');
-            return response.data as RideBookingCheckIn;
-        } catch (err: any) {
-            return rejectWithValue(err.response?.data);
-        }
+        return rideBookingRepository.checkInPassenger(id)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to check-in passenger.');
+            });
     }
 );
 
@@ -76,7 +79,6 @@ const rideBookingCheckInSlice = createSlice({
             })
             .addCase(checkInPassenger.fulfilled, (state, action: PayloadAction<RideBookingCheckIn>) => {
                 state.loadingCheckIn = false;
-                state.rideBooking = action.payload;
             })
             .addCase(checkInPassenger.rejected, (state, action) => {
                 state.loadingCheckIn = false;

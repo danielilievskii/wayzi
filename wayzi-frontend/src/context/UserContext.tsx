@@ -2,7 +2,7 @@ import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {downloadProfilePic} from "../redux/slices/profilePicSlice.ts";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../redux/store.ts";
-import userRepository from "../repository/userRepository.ts";
+import authRepository from "../repository/authRepository.ts";
 import {useNavigate} from "react-router";
 import {SignUpSchemaType} from "../schemas/signUpSchema.ts";
 
@@ -32,7 +32,7 @@ export const UserProvider = ({children}: { children: ReactNode }) => {
     const dispatch = useDispatch<AppDispatch>();
 
     const signUp = (data: SignUpSchemaType) => {
-        return userRepository.signUp(data)
+        return authRepository.signUp(data)
             .then(() => {})
             .catch((error) => {
                 console.log(error);
@@ -44,7 +44,7 @@ export const UserProvider = ({children}: { children: ReactNode }) => {
     };
 
     const signIn = (data: any) => {
-        return userRepository.signIn(data)
+        return authRepository.signIn(data)
             .then((response) => {
                 setCurrentUser(response.data);
             })
@@ -58,7 +58,7 @@ export const UserProvider = ({children}: { children: ReactNode }) => {
     };
 
     const signOut = () => {
-        return userRepository.signOut()
+        return authRepository.signOut()
             .then(() => {
                 setCurrentUser(null);
                 navigate("/")
@@ -69,7 +69,7 @@ export const UserProvider = ({children}: { children: ReactNode }) => {
     };
 
     useEffect(() => {
-        userRepository.me()
+        authRepository.me()
             .then(response => {
                 setCurrentUser(response.data);
             })

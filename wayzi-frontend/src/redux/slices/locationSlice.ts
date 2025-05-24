@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axiosInstance from "../../axios/axiosInstance.ts";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import locationRepository from "../../repository/locationRepository.ts";
 
 export interface Location {
     id: number;
@@ -18,7 +18,7 @@ interface LocationState {
 
 const initialState: LocationState = {
     locations: [],
-    loading: false,
+    loading: true,
     error: null,
 };
 
@@ -26,12 +26,13 @@ const initialState: LocationState = {
 export const fetchLocations = createAsyncThunk(
     'locations/fetchAll',
     async (_, {rejectWithValue}) => {
-        try {
-            const res = await axiosInstance.get('/locations');
-            return res.data as Location[];
-        } catch (err: any) {
-            return rejectWithValue(err.response?.data || 'Failed to fetch locations');
-        }
+        return locationRepository.findAll()
+            .then((res) => {
+                return res.data as Location[];
+            })
+            .catch((err) => {
+                return rejectWithValue(err.response?.data || 'Failed to fetch locations');
+            });
     }
 )
 
@@ -42,11 +43,8 @@ const locationSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            //FETCH VEHICLES
-            .addCase(fetchLocations.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
+            //FETCH LOCATIONS
+            .addCase(fetchLocations.pending, () => {})
             .addCase(fetchLocations.fulfilled, (state, action: PayloadAction<Location[]>) => {
                 state.loading = false;
                 state.locations = action.payload;

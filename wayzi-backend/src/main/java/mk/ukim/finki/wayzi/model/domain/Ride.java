@@ -1,12 +1,9 @@
-package mk.ukim.finki.wayzi.model.domain.ride;
+package mk.ukim.finki.wayzi.model.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mk.ukim.finki.wayzi.converter.RouteCoordinatesConverter;
-import mk.ukim.finki.wayzi.model.domain.Location;
-import mk.ukim.finki.wayzi.model.domain.user.User;
-import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 

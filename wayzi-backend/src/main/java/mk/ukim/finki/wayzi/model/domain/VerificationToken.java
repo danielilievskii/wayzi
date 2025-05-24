@@ -1,11 +1,10 @@
-package mk.ukim.finki.wayzi.model;
+package mk.ukim.finki.wayzi.model.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mk.ukim.finki.wayzi.model.domain.user.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

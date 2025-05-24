@@ -1,8 +1,6 @@
 package mk.ukim.finki.wayzi.repository;
 
-import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import mk.ukim.finki.wayzi.model.domain.Ride;
 
 import java.util.List;
 

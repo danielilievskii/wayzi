@@ -18,17 +18,16 @@ public class UserController {
         this.userApplicaitonService = userApplicaitonService;
     }
 
-
     @PostMapping("/submit-profile-pic")
-    public ResponseEntity<?> submitProfilePic(
+    public ResponseEntity<Void> submitProfilePic(
             @RequestParam("file") MultipartFile profilePic) {
 
         userApplicaitonService.submitProfilePic(profilePic);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/download-profile-pic")
-    public ResponseEntity<?> downloadProfilePic(@PathVariable("id") Long id) {
+    public ResponseEntity<Resource> downloadProfilePic(@PathVariable("id") Long id) {
         Resource resource = userApplicaitonService.loadProfilePicAsResource(id);
 
         return ResponseEntity.ok()

@@ -1,19 +1,20 @@
 import defaultProfilePic from "../../../../../public/assets/images/default-profile-pic.png";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../../../../redux/store.ts";
-import {checkInPassenger} from "../../../../redux/slices/rideBookingCheckInSlice.ts";
+import {checkInPassenger, fetchRideBookingCheckInDetails} from "../../../../redux/slices/rideBookingCheckInSlice.ts";
 
 export const CheckIn = (props) => {
 
     const {rideBooking, errorCheckIn, loadingCheckIn} = props
     const dispatch = useDispatch<AppDispatch>()
 
-    const handleCheckIn = () => {
-        dispatch(checkInPassenger(rideBooking.rideBookingId))
+    const handleCheckIn = async ()  => {
+        const resultAction = await dispatch(checkInPassenger(rideBooking.rideBookingId))
+
+        if(checkInPassenger.fulfilled.match(resultAction)) {
+            dispatch(fetchRideBookingCheckInDetails(rideBooking.rideBookingId))
+        }
     }
-
-
-
 
     return (
         <div className="row justify-content-center">

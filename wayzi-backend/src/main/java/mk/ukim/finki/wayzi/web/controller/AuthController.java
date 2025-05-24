@@ -3,6 +3,7 @@ package mk.ukim.finki.wayzi.web.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import mk.ukim.finki.wayzi.web.dto.auth.AuthUserDto;
 import mk.ukim.finki.wayzi.web.dto.auth.SignInDto;
 import mk.ukim.finki.wayzi.web.dto.auth.SignUpDto;
 import mk.ukim.finki.wayzi.service.application.AuthApplicationService;
@@ -18,38 +19,35 @@ public class AuthController {
         this.authApplicationService = authApplicationService;
     }
 
-
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpDto signUpDto,
+    public ResponseEntity<AuthUserDto> signUp(@Valid @RequestBody SignUpDto signUpDto,
                                     HttpServletRequest request,
                                     HttpServletResponse response) {
         return ResponseEntity.ok(authApplicationService.signUp(signUpDto, request, response));
     }
 
+    @PostMapping("/signin")
+    public ResponseEntity<AuthUserDto> signIn(@Valid @RequestBody SignInDto signInDto,
+                                              HttpServletRequest request,
+                                              HttpServletResponse response) {
+        return ResponseEntity.ok(authApplicationService.signIn(signInDto, request, response));
+    }
+
+    @PostMapping("/signout")
+    public ResponseEntity<Void> signOut(HttpServletResponse response) {
+        authApplicationService.signOut(response);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/verify-email")
-    public ResponseEntity<?> verifyEmail(@RequestParam("token") String token) {
+    public ResponseEntity<Void> verifyEmail(@RequestParam("token") String token) {
         authApplicationService.verifyEmail(token);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@Valid @RequestBody SignInDto signInDto,
-                                    HttpServletRequest request,
-                                    HttpServletResponse response) {
-        return ResponseEntity.ok(authApplicationService.signIn(signInDto, request, response));
-    }
-
-    @GetMapping("/signout")
-    public ResponseEntity<?> signOut(HttpServletResponse response) {
-        authApplicationService.signOut(response);
-        return ResponseEntity.ok("Logged out successfully");
-    }
-
     @GetMapping("/me")
-    public ResponseEntity<?> getAuthenticatedUser() {
+    public ResponseEntity<AuthUserDto> getAuthenticatedUser() {
         return ResponseEntity.ok(authApplicationService.getAuthenticatedUser());
     }
-
-
 }
 

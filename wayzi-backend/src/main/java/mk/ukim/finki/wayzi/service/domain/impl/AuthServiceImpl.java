@@ -10,7 +10,7 @@ import mk.ukim.finki.wayzi.model.exception.AuthenticationException;
 import mk.ukim.finki.wayzi.model.exception.AuthenticationFailedException;
 import mk.ukim.finki.wayzi.model.exception.InvalidCredentialsException;
 import mk.ukim.finki.wayzi.model.exception.UserAlreadyExistsException;
-import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.model.domain.User;
 import mk.ukim.finki.wayzi.repository.UserRepository;
 import mk.ukim.finki.wayzi.service.domain.AuthService;
 import mk.ukim.finki.wayzi.service.domain.JwtService;
@@ -57,11 +57,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void verifyEmail(String token) {
-        verificationTokenService.validateToken(token);
-    }
-
-    @Override
     public User signIn(SignInDto signInDto, HttpServletRequest request, HttpServletResponse response) {
         try {
             authenticationManager.authenticate(
@@ -71,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
             User user = userRepository.findByEmail(signInDto.email())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            authenticateAndSetJwt(request, response, user);
+            authenticateAndSetJwt(response, user);
 
             return user;
 
@@ -85,7 +80,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signOut(HttpServletResponse response) {
         invalidateJwtCookie(response);
-        clearAuthentication();
+    }
+
+    @Override
+    public void verifyEmail(String token) {
+        verificationTokenService.validateToken(token);
     }
 
     @Override
@@ -119,15 +118,12 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    private void authenticateAndSetJwt(HttpServletRequest request, HttpServletResponse response, User user) {
+    private void authenticateAndSetJwt(HttpServletResponse response, User user) {
         // Generate a JWT token for the authenticated user
         String jwt = jwtService.generateToken(user);
 
         // Add the generated JWT token as a cookie in the response
         addJwtCookie(response, jwt);
-
-        // Set the authentication in the security context for the current session
-        setAuthentication(user, request);
     }
 
     /**
@@ -140,14 +136,6 @@ public class AuthServiceImpl implements AuthService {
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
-    }
-
-    /**
-     * Clears authentication in the SecurityContext.
-     */
-    @Override
-    public void clearAuthentication() {
-        SecurityContextHolder.clearContext();
     }
 
     /**
@@ -172,8 +160,8 @@ public class AuthServiceImpl implements AuthService {
     public void addJwtCookie(HttpServletResponse response, String jwt) {
         Cookie cookie = new Cookie("jwt", jwt);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true); // Enable only in HTTPS environments
-        cookie.setPath("/"); // Available across the application
+        cookie.setSecure(true);
+        cookie.setPath("/");
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
     }
@@ -184,8 +172,8 @@ public class AuthServiceImpl implements AuthService {
     public void invalidateJwtCookie(HttpServletResponse response) {
         Cookie cookie = new Cookie("jwt", "");
         cookie.setHttpOnly(true);
-        cookie.setSecure(true); // Enable only in HTTPS environments
-        cookie.setPath("/"); // Available across the application
+        cookie.setSecure(true);
+        cookie.setPath("/");
         cookie.setMaxAge(0); // Expire immediately
 
         response.addCookie(cookie);

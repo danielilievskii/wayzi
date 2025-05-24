@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axiosInstance from "../../axios/axiosInstance";
 import { Vehicle } from "./vehicleSlice";
 import { Location } from "./locationSlice";
+import rideRepository from "../../repository/rideRepository.ts";
 
 export interface RideStop {
     id: number;
@@ -41,20 +41,21 @@ export interface RideDetailsState {
 
 const initialState: RideDetailsState = {
     ride: null,
-    loading: false,
+    loading: true,
     error: null,
 };
 
-export const fetchRideDetails = createAsyncThunk<RideDetails, void, { rejectValue: string }>(
+export const fetchRideDetails = createAsyncThunk<RideDetails, string, { rejectValue: string }>(
     'rides/fetchRideDetails',
     async (rideId, { rejectWithValue }) => {
-        try {
-            const res = await axiosInstance.get('/rides/' + rideId);
-            return res.data;
-        } catch (err: any) {
-            console.log(err)
-            return rejectWithValue(err.response?.data || 'Failed to fetch ride details');
-        }
+
+        return rideRepository.findById(rideId)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to fetch ride details.');
+            });
     }
 );
 
@@ -64,11 +65,8 @@ const rideDetailsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            // FILTER RIDES
-            .addCase(fetchRideDetails.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
+            // FETCH RIDE DETAILS
+            .addCase(fetchRideDetails.pending, () => {})
             .addCase(fetchRideDetails.fulfilled, (state, action: PayloadAction<RideDetails>) => {
                 state.loading = false;
                 state.ride = action.payload;

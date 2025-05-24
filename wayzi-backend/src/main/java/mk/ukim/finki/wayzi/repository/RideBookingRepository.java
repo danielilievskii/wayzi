@@ -1,7 +1,6 @@
 package mk.ukim.finki.wayzi.repository;
 
-import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
+import mk.ukim.finki.wayzi.model.domain.RideBooking;
 
 import java.util.List;
 

@@ -1,10 +1,8 @@
-package mk.ukim.finki.wayzi.model.domain.vehicle;
+package mk.ukim.finki.wayzi.model.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.enumeration.Color;
 import mk.ukim.finki.wayzi.model.enumeration.VehicleType;
 

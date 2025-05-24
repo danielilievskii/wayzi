@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import axiosInstance from "../../axios/axiosInstance.ts";
+import userRepository from "../../repository/userRepository.ts";
 
 interface ProfilePicState {
     pictures: Record<string, string>;
@@ -19,21 +19,21 @@ export const downloadProfilePic = createAsyncThunk<
     { rejectValue: string }
 >(
     'profilePic/download',
-    async (userId, { rejectWithValue }) => {
-        try {
-            const res = await axiosInstance.get(`/user/${userId}/download-profile-pic`, {
-                responseType: 'blob'
-            });
-            const blob = new Blob([res.data]);
-            const url = window.URL.createObjectURL(blob);
+    async (userId, {rejectWithValue}) => {
 
-            return { userId, url };
-        } catch (err: any) {
-            if (err.response?.data instanceof Blob) {
-                return rejectWithValue('Profile picture could not be downloaded.');
-            }
-            return rejectWithValue(err.response?.data || 'Failed to download profile picture');
-        }
+        return userRepository.downloadProfilePic(userId)
+            .then((response) => {
+                const blob = new Blob([response.data]);
+                const url = window.URL.createObjectURL(blob);
+                return {userId, url};
+            })
+            .catch((error) => {
+                const message =
+                    typeof error.response?.data === 'string'
+                        ? error.response.data
+                        : error.response?.data?.message || 'Failed to download profile picture';
+                return rejectWithValue(message);
+            });
     }
 );
 
@@ -43,25 +43,17 @@ export const submitProfilePic = createAsyncThunk<
     { rejectValue: string }
 >(
     'profilePic/submit',
-    async ({ profilePicFile, userId }, { rejectWithValue }) => {
-        try {
-            const formData = new FormData();
-            formData.append("file", profilePicFile);
+    async ({profilePicFile, userId}, {rejectWithValue}) => {
+        const formData = new FormData();
+        formData.append("file", profilePicFile);
 
-            const response = await axiosInstance.post(`/user/submit-profile-pic`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+        return userRepository.submitProfilePic(formData)
+            .then(() => {
+                return {userId}
+            })
+            .catch((error) => {
+                return rejectWithValue(error.response?.data || 'Failed to submit profile picture');
             });
-
-            if (response.status === 200) {
-                return { userId };
-            } else {
-                return rejectWithValue("Unexpected response status: " + response.status);
-            }
-        } catch (error: any) {
-            return rejectWithValue(error.response?.data || 'Failed to submit profile picture');
-        }
     }
 );
 

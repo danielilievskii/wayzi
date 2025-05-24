@@ -1,6 +1,6 @@
 package mk.ukim.finki.wayzi.web.dto.auth;
 
-import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.model.domain.User;
 
 public record AuthUserDto(
         Long id,

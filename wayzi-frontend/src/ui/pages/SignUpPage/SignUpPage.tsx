@@ -18,7 +18,7 @@ function SignUpPage() {
 
     const onSignUp = async (data: SignUpSchemaType) => {
         const result = await signUp(data)
-        if(result.error) {
+        if(result?.error) {
             setError(result.error)
         } else {
             navigate("/email-sent", { state: { email: data.email } })

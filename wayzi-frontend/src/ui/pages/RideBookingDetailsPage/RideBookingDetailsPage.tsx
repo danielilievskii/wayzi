@@ -1,4 +1,3 @@
-import {useUser} from "../../../context/UserContext.tsx";
 import {useParams} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store.ts";
@@ -6,12 +5,11 @@ import {useEffect, useState} from "react";
 import {formatDateTime} from "../../../utils/dateUtils.ts";
 import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
 import {QrCodeImageDialog} from "../../components/ride-bookings/QrCodeDialog/QrCodeImgDialog.tsx";
-import {fetchRideBookingDetails} from "../../../redux/slices/rideBookingDetailsSlice.ts";
+import {fetchBookingDetailsForBooker} from "../../../redux/slices/rideBookingDetailsSlice.ts";
 import {downloadProfilePic} from "../../../redux/slices/profilePicSlice.ts";
 import defaultProfilePic from "../../../../public/assets/images/default-profile-pic.png"
 
 export const RideBookingDetailsPage = () => {
-    const {currentUser} = useUser()
 
     const dispatch = useDispatch<AppDispatch>();
     const {handleThunk, loading, success, error} = useAsyncThunkHandler();
@@ -21,14 +19,12 @@ export const RideBookingDetailsPage = () => {
     const rideBookingsState = useSelector((state: RootState) => state.rideBookingDetails);
     const {rideBooking} = rideBookingsState
 
-
     const {pictures} = useSelector((state: RootState) => state.profilePics);
     const [driverProfilePic, setDriverProfilePic] = useState(pictures[rideBooking?.driverId]);
 
-
     useEffect(() => {
         if (!rideBooking && rideBookingId) {
-            handleThunk(dispatch, fetchRideBookingDetails, rideBookingId)
+            dispatch(fetchBookingDetailsForBooker(rideBookingId))
         }
 
     }, [rideBooking, dispatch]);
@@ -48,7 +44,6 @@ export const RideBookingDetailsPage = () => {
     return (
         <>
             {rideBooking && (
-
                 <div className="page-wrapper">
                     <div className="container py-5">
                         <div className="row justify-content-center">

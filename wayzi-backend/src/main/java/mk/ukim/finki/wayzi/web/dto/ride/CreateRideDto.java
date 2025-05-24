@@ -1,9 +1,9 @@
 package mk.ukim.finki.wayzi.web.dto.ride;
 
 import mk.ukim.finki.wayzi.model.domain.Location;
-import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import mk.ukim.finki.wayzi.model.domain.user.User;
-import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
+import mk.ukim.finki.wayzi.model.domain.Ride;
+import mk.ukim.finki.wayzi.model.domain.User;
+import mk.ukim.finki.wayzi.model.domain.Vehicle;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.constraints.Min;

@@ -5,8 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store.ts";
 import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
 import {NoPublishedRides} from "../../components/empty-states/NoPublishedRides.tsx";
-import {RidesFilterForm} from "../../components/shared/RidesFilterForm/RidesFilterForm.tsx";
-import {Ride} from "../../../redux/slices/rideSlice.ts";
+import {Ride, updateRideStatus} from "../../../redux/slices/rideSlice.ts";
 import {PublishedRideCard} from "../../components/published-rides/PublishedRideCard/PublishedRideCard.tsx";
 import {RidesPagination} from "../../components/shared/Pagination/Pagination.tsx";
 import {StatusFilterForm} from "../../components/shared/StatusFilterForm/StatusFilterForm.tsx";
@@ -21,15 +20,22 @@ export const PublishedRidesPage = () => {
     const {handleThunk, loading, success, error} = useAsyncThunkHandler();
 
     useEffect(() => {
+        // dispatch(fetchPublishedRides({...filter, ...pagination}))
         handleThunk(dispatch, fetchPublishedRides, {...filter, ...pagination}, () => {})
 
     }, [dispatch]);
 
-    const handlePageChange = (newPagination: PaginationSchemaType) => {
+    const handlePageChange = async (newPagination: PaginationSchemaType) => {
 
         handleThunk(dispatch, fetchPublishedRides, {...filter, ...newPagination}, () => {
             dispatch(setPagination(newPagination))
         })
+
+        // const resultAction = await dispatch(fetchPublishedRides({...filter, ...pagination}));
+        //
+        // if (updateRideStatus.fulfilled.match(resultAction)) {
+        //     dispatch(setPagination(newPagination))
+        // }
 
     };
 

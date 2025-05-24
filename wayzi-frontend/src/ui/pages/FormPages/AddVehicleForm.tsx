@@ -1,12 +1,12 @@
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { vehicleSchema, VehicleSchemaType } from "../../../schemas/vehicleSchema.ts";
-import { createVehicle } from "../../../redux/slices/vehicleSlice.ts";
-import { AppDispatch } from "../../../redux/store.ts";
-import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
+import {createVehicle, fetchVehicles} from "../../../redux/slices/vehicleSlice.ts";
+import {AppDispatch, RootState} from "../../../redux/store.ts";
 import {useNavigate} from "react-router";
+
 
 const colors = [
     { name: "RED", className: "bg-danger" },
@@ -32,7 +32,6 @@ const vehicleTypes = [
 export const AddVehicleForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    // const loading = useSelector((state: RootState) => state.profile.loading);
 
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -41,17 +40,20 @@ export const AddVehicleForm = () => {
         resolver: zodResolver(vehicleSchema),
     });
 
-    const { handleThunk, loading, success, error } = useAsyncThunkHandler();
+    const {createVehicleLoading, createVehicleError} = useSelector((state: RootState) => state.vehicle)
 
 
-    const onSubmit = (data: VehicleSchemaType) => {
-        handleThunk(dispatch, createVehicle, data, () => {
+    const onSubmit = async (data: VehicleSchemaType) => {
+        const resultAction = await dispatch(createVehicle(data));
+
+        if (createVehicle.fulfilled.match(resultAction)) {
+            await dispatch(fetchVehicles())
+            navigate("/profile")
+
             reset();
             setSelectedColor(null);
             setSelectedType(null);
-
-            navigate("/profile")
-        });
+        }
     };
 
     return (
@@ -130,15 +132,14 @@ export const AddVehicleForm = () => {
                     </button>
                     <button
                         type="submit"
-                        className={`btn custom-btn ml-2 ${(loading && (success || error))? "opacity-50 cursor-not-allowed" : ""}`}
-                        disabled={(loading && (success || error))}
+                        className={`btn custom-btn ml-2 ${createVehicleLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                        disabled={createVehicleLoading}
                     >
-                        {(loading && (success || error)) ? "Submitting..." : "Save"}
+                        {createVehicleLoading ? "Submitting..." : "Save"}
                     </button>
                 </div>
 
-                {success && <p className="text-success mt-3">Vehicle added successfully!</p>}
-                {error && <p className="text-danger mt-3">{error}</p>}
+                {createVehicleError && <p className="text-danger mt-3">{createVehicleError}</p>}
             </form>
         </div>
     );

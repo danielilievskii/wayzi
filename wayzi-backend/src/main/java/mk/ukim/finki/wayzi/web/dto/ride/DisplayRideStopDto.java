@@ -1,6 +1,6 @@
 package mk.ukim.finki.wayzi.web.dto.ride;
 
-import mk.ukim.finki.wayzi.model.domain.ride.RideStop;
+import mk.ukim.finki.wayzi.model.domain.RideStop;
 import mk.ukim.finki.wayzi.web.dto.location.DisplayLocationDto;
 
 import java.time.LocalDateTime;

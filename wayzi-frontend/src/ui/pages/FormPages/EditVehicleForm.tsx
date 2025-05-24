@@ -1,45 +1,45 @@
-import { useDispatch, useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { vehicleSchema, VehicleSchemaType } from "../../../schemas/vehicleSchema.ts";
-import {editVehicle, Vehicle} from "../../../redux/slices/vehicleSlice.ts";
-import { RootState, AppDispatch } from "../../../redux/store.ts";
-import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {vehicleSchema, VehicleSchemaType} from "../../../schemas/vehicleSchema.ts";
+import {editVehicle, fetchVehicles, Vehicle} from "../../../redux/slices/vehicleSlice.ts";
+import {RootState, AppDispatch} from "../../../redux/store.ts";
 import {useNavigate, useParams} from "react-router";
-import axiosInstance from "../../../axios/axiosInstance.ts";
-import { vehicleColors } from "../../../constants/vehicleColors.ts";
-import { vehicleTypes } from "../../../constants/vehicleTypes.ts";
+import {vehicleColors} from "../../../constants/vehicleColors.ts";
+import {vehicleTypes} from "../../../constants/vehicleTypes.ts";
+import vehicleRepository from "../../../repository/vehicleRepository.ts";
 
 
 export const EditVehicleForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
-    const { vehicle_id } = useParams();
+    const {vehicle_id} = useParams();
     const vehicles = useSelector((state: RootState) => state.vehicle.vehicles);
-
-    const existingVehicle = vehicles.find(vehicle => vehicle.id === Number(vehicle_id));
+    const existingVehicle = vehicles.find(vehicle => vehicle.id === vehicle_id);
     const [vehicle, setVehicle] = useState<Vehicle | null>(existingVehicle || null);
+
+    const {editVehicleError, editVehicleLoading} = useSelector((state: RootState) => state.vehicle)
 
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [selectedType, setSelectedType] = useState<string | null>(null);
 
-    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<VehicleSchemaType>({
+    const {register, handleSubmit, setValue, reset, formState: {errors}} = useForm<VehicleSchemaType>({
         resolver: zodResolver(vehicleSchema),
     });
 
-    const { handleThunk, loading, success, error } = useAsyncThunkHandler();
 
-    // Fetch vehicle if not found in Redux (e.g., page refresh)
+    // Fetch vehicle if not found in store
     useEffect(() => {
         const fetchVehicle = async () => {
-            try {
-                const res = await axiosInstance.get<Vehicle>(`/vehicle/${vehicle_id}`);
-                setVehicle(res.data);
-            } catch (err) {
-                console.error("Failed to fetch vehicle", err);
-            }
+            vehicleRepository.findById(String(vehicle_id))
+                .then((response) => {
+                    setVehicle(response.data);
+                })
+                .catch((error) => {
+                    console.error("Failed to fetch vehicle.", error);
+                });
         };
 
         if (!vehicle && vehicle_id) fetchVehicle();
@@ -51,7 +51,7 @@ export const EditVehicleForm = () => {
             setValue("brand", vehicle.brand);
             setValue("model", vehicle.model);
             setValue("color", vehicle.color as VehicleSchemaType["color"]);
-            setValue("capacity", vehicle.capacity.toString()); // assuming schema expects string
+            setValue("capacity", vehicle.capacity.toString());
             setValue("type", vehicle.type as VehicleSchemaType["type"]);
 
             setSelectedColor(vehicle.color);
@@ -59,18 +59,19 @@ export const EditVehicleForm = () => {
         }
     }, [vehicle, setValue]);
 
-    const onSubmit = (data: VehicleSchemaType) => {
+    const onSubmit = async (data: VehicleSchemaType) => {
+        const resultAction = await dispatch(editVehicle({id: vehicle_id, data}));
         if (!vehicle_id) return;
 
-        handleThunk(dispatch, editVehicle, { id: Number(vehicle_id), data }, () => {
+        if (editVehicle.fulfilled.match(resultAction)) {
+            await dispatch(fetchVehicles())
+            navigate("/profile")
+
             reset();
             setSelectedColor(null);
             setSelectedType(null);
-
-            navigate("/profile");
-        });
+        }
     };
-
 
 
     return (
@@ -81,12 +82,12 @@ export const EditVehicleForm = () => {
                 <div className="row mb-3">
                     <div className="col-md-6">
                         <label className="form-label">Brand</label>
-                        <input type="text" {...register("brand")} className="form-control" />
+                        <input type="text" {...register("brand")} className="form-control"/>
                         {errors.brand && <p className="text-danger">{errors.brand.message}</p>}
                     </div>
                     <div className="col-md-6">
                         <label className="form-label">Model</label>
-                        <input type="text" {...register("model")} className="form-control" />
+                        <input type="text" {...register("model")} className="form-control"/>
                         {errors.model && <p className="text-danger">{errors.model.message}</p>}
                     </div>
                 </div>
@@ -114,7 +115,7 @@ export const EditVehicleForm = () => {
 
                     <div className="col-md-6">
                         <label className="form-label">Capacity</label>
-                        <input type="number" {...register("capacity")} className="form-control" />
+                        <input type="number" {...register("capacity")} className="form-control"/>
                         {errors.capacity && <p className="text-danger">{errors.capacity.message}</p>}
                     </div>
                 </div>
@@ -149,15 +150,14 @@ export const EditVehicleForm = () => {
                     </button>
                     <button
                         type="submit"
-                        className={`btn custom-btn ms-2 ${(loading && (success || error))? "opacity-50 cursor-not-allowed" : ""}`}
-                        disabled={(loading && (success || error))}
+                        className={`btn custom-btn ms-2 ${(editVehicleLoading) ? "opacity-50 cursor-not-allowed" : ""}`}
+                        disabled={(editVehicleLoading)}
                     >
-                        {(loading && (success || error)) ? "Submitting..." : "Save"}
+                        {(editVehicleLoading) ? "Submitting..." : "Save"}
                     </button>
                 </div>
 
-                {success && <p className="text-success mt-3">Vehicle added successfully!</p>}
-                {error && <p className="text-danger mt-3">{error}</p>}
+                {editVehicleError && <p className="text-danger mt-3">{editVehicleError}</p>}
             </form>
         </div>
     );

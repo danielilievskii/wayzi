@@ -1,6 +1,6 @@
 package mk.ukim.finki.wayzi.web.dto.ridebooking;
 
-import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
+import mk.ukim.finki.wayzi.model.domain.RideBooking;
 import mk.ukim.finki.wayzi.model.enumeration.CheckInStatus;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
 import java.util.List;

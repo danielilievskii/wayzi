@@ -3,16 +3,12 @@ import "../../../styles/rides.css"
 import {formatDateTime} from "../../../../utils/dateUtils.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../../redux/store.ts";
-import {useAsyncThunkHandler} from "../../../../hooks/useAsyncThunkHandler.ts";
-import {QrCodeBtnDialog} from "../QrCodeDialog/QrCodeBtnDialog.tsx";
 import {useEffect, useState} from "react";
 import {QrCodeImageDialog} from "../QrCodeDialog/QrCodeImgDialog.tsx";
 import {cancelRideBooking, fetchRideBookings} from "../../../../redux/slices/rideBookingSlice.ts";
-// import { formatDateTime } from "../../utils/dateUtils.ts/";
 
 export const RideBookingCard = (props) => {
     const {rideBooking} = props
-    const {handleThunk, loading, success, error} = useAsyncThunkHandler();
     const dispatch = useDispatch<AppDispatch>();
 
     const { pictures } = useSelector((state: RootState) => state.profilePics);
@@ -24,18 +20,14 @@ export const RideBookingCard = (props) => {
         }
     }, [pictures, rideBooking.driverId]);
 
+    const {createRideBookingLoading, cancelRideBookingError, filter, pagination} = useSelector((state: RootState) => state.rideBookings)
 
-    const onCancelBooking = () => {
-        handleThunk(dispatch, cancelRideBooking, rideBooking.rideBookingId, () => {
-            console.log("CANCELLED")
+    const onCancelBooking = async () => {
+        const resultAction = await dispatch(cancelRideBooking(rideBooking.rideBookingId));
 
-            handleThunk(dispatch, fetchRideBookings, null, () => {
-                console.log("FETCHED")
-            })
-
-
-        })
-
+        if (cancelRideBooking.fulfilled.match(resultAction)) {
+            dispatch(fetchRideBookings({...filter, ...pagination}))
+        }
     }
 
     return (
@@ -109,7 +101,6 @@ export const RideBookingCard = (props) => {
                         {/* Optional: Right-side dropdown or action buttons can go here */}
                         <div className="col-md-4 text-end fw-semibold">
                             <QrCodeImageDialog qrCodeUrl={rideBooking.qrCodeUrl}/>
-                            {/* Placeholder for future actions like cancel booking, etc. */}
                         </div>
                     </div>
 
@@ -137,9 +128,9 @@ export const RideBookingCard = (props) => {
 
                 {rideBooking.rideBookingStatus == 'CONFIRMED' && (
                     <>
-                        <div className="col-md-3">
-                            <QrCodeBtnDialog qrCodeUrl={rideBooking.qrCodeUrl}/>
-                        </div>
+                        {/*<div className="col-md-3">*/}
+                        {/*    <QrCodeBtnDialog qrCodeUrl={rideBooking.qrCodeUrl}/>*/}
+                        {/*</div>*/}
 
                         <div className="col-md-3">
                             <button
@@ -153,20 +144,17 @@ export const RideBookingCard = (props) => {
                     </>
                 )}
 
-                {/*{(rideBooking.rideBookingStatus != 'ARCHIVED' && rideBooking.rideBookingStatuss != 'CANCELLED') && (*/}
-                {/*    */}
-                {/*)}*/}
 
                 {rideBooking.rideBookingStatus == 'ARCHIVED' && (
                     <>
                         <div className="col-md-3">
                             <button
-                                className={`btn btn-light p-2 fw-bold w-100`}>Rate driver
+                                className={`btn btn-light p-2 fw-bold w-100`}>Review
                             </button>
                         </div>
                         <div className="col-md-3">
-                            <button className="btn btn-light p-2 color-danger text-danger fw-bold w-100">Report driver
-                                abscense
+                            <button className="btn btn-light p-2 color-danger text-danger fw-bold w-100">
+                                Report absence
                             </button>
                         </div>
                     </>

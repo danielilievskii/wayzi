@@ -1,18 +1,13 @@
 import axiosInstance from "../axios/axiosInstance.ts";
 
 const userRepository = {
-    signIn: async (data) => {
-        return await axiosInstance.post("/auth/signin", data);
-    },
-    signUp: (data) => axiosInstance.post("/auth/signup", data),
-    signOut: async () => {
-        return await axiosInstance.get("/auth/signout");
-    },
-    me: async () => {
-        return await axiosInstance.get("/auth/me");
-    },
-    verifyEmail: (token: string) => axiosInstance.post("/auth/verify-email?token=" + token),
-
+    downloadProfilePic: (userId: string) => axiosInstance.get(`/user/${userId}/download-profile-pic`, {
+        responseType: 'blob'
+    }),
+    submitProfilePic:  (data) => axiosInstance.post("/user/submit-profile-pic", data, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }}),
 };
 
 export default userRepository;

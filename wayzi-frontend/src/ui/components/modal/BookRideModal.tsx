@@ -12,7 +12,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
 import {fetchLocations} from "../../../redux/slices/locationSlice.ts";
 import {useNavigate} from "react-router";
-import {createRide} from "../../../redux/slices/publishedRideSlice.ts";
+import {addRide} from "../../../redux/slices/publishedRideSlice.ts";
 
 export const BookRideModal = () => {
 
@@ -48,7 +48,7 @@ export const BookRideModal = () => {
     const {handleThunk, loading, success, error} = useAsyncThunkHandler();
 
     const onSubmit = (data: BookRideSchemaType) => {
-        handleThunk(dispatch, createRide, data, () => {
+        handleThunk(dispatch, addRide, data, () => {
             navigate("/rides/booked")
             reset();
         });

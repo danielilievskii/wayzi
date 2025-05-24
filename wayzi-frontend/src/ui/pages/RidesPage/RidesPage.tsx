@@ -2,10 +2,9 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store.ts";
 import {fetchRides, Ride, setFilter, setPagination} from "../../../redux/slices/rideSlice.ts";
-import {Link} from "react-router-dom";
 import "../../styles/rides.css";
 import {formatDateTime} from "../../../utils/dateUtils.ts";
-import {isSameDay, parseISO, isAfter} from 'date-fns';
+import {isSameDay, isAfter} from 'date-fns';
 import {RidesFilterForm} from "../../components/shared/RidesFilterForm/RidesFilterForm.tsx";
 import {RidesPagination} from "../../components/shared/Pagination/Pagination.tsx";
 

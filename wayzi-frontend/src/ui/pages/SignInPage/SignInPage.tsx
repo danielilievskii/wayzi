@@ -29,7 +29,7 @@ function SignInPage() {
         };
 
         const result = await signIn(signInData)
-        if(result.error) {
+        if(result?.error) {
             setError(result.error)
         } else {
             navigate(from, { replace: true });

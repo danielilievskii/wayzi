@@ -3,7 +3,7 @@ package mk.ukim.finki.wayzi.service.domain;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import mk.ukim.finki.wayzi.web.dto.ride.CreateRideDto;
 import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideDto;
-import mk.ukim.finki.wayzi.model.domain.ride.Ride;
+import mk.ukim.finki.wayzi.model.domain.Ride;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;

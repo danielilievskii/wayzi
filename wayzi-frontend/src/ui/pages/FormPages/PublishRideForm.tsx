@@ -5,10 +5,11 @@ import {fetchLocations} from "../../../redux/slices/locationSlice.ts";
 import {Controller, useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
-import {createRide} from "../../../redux/slices/publishedRideSlice.ts";
 import {useNavigate} from "react-router";
 import {PublishRideSchema, PublishRideSchemaType} from "../../../schemas/publishRideSchema.ts";
 import {fetchVehicles} from "../../../redux/slices/vehicleSlice.ts";
+import {createRide, fetchRides} from "../../../redux/slices/rideSlice.ts";
+import {fetchPublishedRides} from "../../../redux/slices/publishedRideSlice.ts";
 
 
 
@@ -16,8 +17,10 @@ export const PublishRideForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
+    const {createRideError, createRideLoading} = useSelector((state: RootState) => state.rides)
     const locations = useSelector((state: RootState) => state.location.locations)
     const vehicles = useSelector((state: RootState) => state.vehicle.vehicles)
+
 
     const [departureInput, setDepartureInput] = useState<string>("");
     const [departureSuggestions, toggleDepartureSuggestions] = useState<boolean>(false);
@@ -37,8 +40,6 @@ export const PublishRideForm = () => {
         control,
         name: "rideStops"
     });
-
-    const {handleThunk, loading, success, error} = useAsyncThunkHandler();
 
     useEffect(() => {
         if (locations.length == 0) {
@@ -62,11 +63,13 @@ export const PublishRideForm = () => {
             location.displayName.toLowerCase().includes(query.toLowerCase())
         );
 
-    const onSubmit = (data: PublishRideSchemaType) => {
-        handleThunk(dispatch, createRide, data, () => {
-            navigate("/rides/published")
+    const onSubmit  = async (data: PublishRideSchemaType) => {
+        const resultAction = await dispatch(createRide(data));
+
+        if (createRide.fulfilled.match(resultAction)) {
+            navigate("/rides/published");
             reset();
-        });
+        }
     };
 
     return (
@@ -139,11 +142,6 @@ export const PublishRideForm = () => {
                             )}
                         </div>
                     </div>
-
-
-
-
-
 
                     <div className="col-md-6 mb-3">
                         <label className="form-label">Departure time:</label>
@@ -401,9 +399,11 @@ export const PublishRideForm = () => {
 
                 <div className="d-flex justify-content-end">
                     <button type="submit" className="btn btn-light ms-2">Cancel</button>
-                    <button type="submit" className="btn custom-btn ms-2">Save</button>
+                    <button type="submit" disabled={createRideLoading} className="btn custom-btn ms-2">Save</button>
                 </div>
             </form>
+
+            {createRideError && <div className="alert alert-danger border-0" role="alert">{createRideError}</div>}
         </div>
     )
 }

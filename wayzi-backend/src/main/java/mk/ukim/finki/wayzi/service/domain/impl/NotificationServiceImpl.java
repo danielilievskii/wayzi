@@ -1,9 +1,8 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
-import lombok.AllArgsConstructor;
-import mk.ukim.finki.wayzi.model.VerificationToken;
-import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.model.domain.VerificationToken;
+import mk.ukim.finki.wayzi.model.domain.Ride;
+import mk.ukim.finki.wayzi.model.domain.User;
 import mk.ukim.finki.wayzi.model.dto.MailSendingStatus;
 import mk.ukim.finki.wayzi.service.domain.EmailService;
 import mk.ukim.finki.wayzi.service.domain.NotificationService;

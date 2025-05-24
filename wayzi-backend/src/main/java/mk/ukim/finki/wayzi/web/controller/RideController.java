@@ -1,13 +1,8 @@
 package mk.ukim.finki.wayzi.web.controller;
 
 import mk.ukim.finki.wayzi.service.application.RideStatusApplicationService;
-import mk.ukim.finki.wayzi.web.dto.ride.CreateRideDto;
-import mk.ukim.finki.wayzi.web.dto.ride.RideFilterDto;
-import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideDto;
+import mk.ukim.finki.wayzi.web.dto.ride.*;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
-import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideStatusDto;
-import mk.ukim.finki.wayzi.web.dto.ride.PublishedRideFilterDto;
-import mk.ukim.finki.wayzi.web.dto.ride.RideDetailsDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +20,10 @@ public class RideController {
         this.rideStatusApplicationService = rideStatusApplicationService;
     }
 
-//    @GetMapping
-//    public ResponseEntity<?> findAll() {
-//        return ResponseEntity.ok(rideApplicationService.findAll());
-//    }
+    @GetMapping
+    public ResponseEntity<RidePageDto> findPage(@ModelAttribute RideFilterDto rideFilterDto) {
+        return ResponseEntity.ok(rideApplicationService.findPage(rideFilterDto));
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<RideDetailsDto> findById(@PathVariable Long id) {
@@ -40,27 +35,22 @@ public class RideController {
         return ResponseEntity.ok(rideApplicationService.findRouteCoordinatesById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<?> findPage(@ModelAttribute RideFilterDto rideFilterDto) {
-        return ResponseEntity.ok(rideApplicationService.findPage(rideFilterDto));
-    }
-
     @GetMapping("/published")
     public ResponseEntity<?> findPublishedRidesPage(@ModelAttribute PublishedRideFilterDto publishedRideFilterDto) {
         return ResponseEntity.ok(rideApplicationService.findPublishedRidesPageForUser(publishedRideFilterDto));
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addRide(@RequestBody CreateRideDto createRideDto) {
+    @PostMapping
+    public ResponseEntity<?> createRide(@RequestBody CreateRideDto createRideDto) {
         return ResponseEntity.ok(rideApplicationService.save(createRideDto));
     }
 
-    @PostMapping("/edit/{id}")
-    public ResponseEntity<?> addRide(@PathVariable Long id, @RequestBody UpdateRideDto updateRideDto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateRide(@PathVariable Long id, @RequestBody UpdateRideDto updateRideDto) {
         return ResponseEntity.ok(rideApplicationService.edit(id, updateRideDto));
     }
 
-    @PostMapping("/update-status")
+    @PutMapping("/update-status")
     public ResponseEntity<?> updateRideStatus(@RequestBody UpdateRideStatusDto updateRideStatusDto) {        ;
         return ResponseEntity.ok(rideStatusApplicationService.updateRideStatus(updateRideStatusDto));
     }

@@ -1,9 +1,8 @@
-package mk.ukim.finki.wayzi.model.domain.ride;
+package mk.ukim.finki.wayzi.model.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mk.ukim.finki.wayzi.model.domain.user.User;
 import mk.ukim.finki.wayzi.model.enumeration.CheckInStatus;
 import mk.ukim.finki.wayzi.model.enumeration.PaymentMethod;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;

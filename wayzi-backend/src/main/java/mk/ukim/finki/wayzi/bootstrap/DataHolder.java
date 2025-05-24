@@ -2,12 +2,12 @@ package mk.ukim.finki.wayzi.bootstrap;
 
 import jakarta.annotation.PostConstruct;
 import mk.ukim.finki.wayzi.model.domain.Location;
-import mk.ukim.finki.wayzi.model.domain.ride.Ride;
-import mk.ukim.finki.wayzi.model.domain.ride.RideBooking;
-import mk.ukim.finki.wayzi.model.domain.ride.RideStop;
-import mk.ukim.finki.wayzi.model.domain.user.Admin;
-import mk.ukim.finki.wayzi.model.domain.user.User;
-import mk.ukim.finki.wayzi.model.domain.vehicle.Vehicle;
+import mk.ukim.finki.wayzi.model.domain.Ride;
+import mk.ukim.finki.wayzi.model.domain.RideBooking;
+import mk.ukim.finki.wayzi.model.domain.RideStop;
+import mk.ukim.finki.wayzi.model.domain.Admin;
+import mk.ukim.finki.wayzi.model.domain.User;
+import mk.ukim.finki.wayzi.model.domain.Vehicle;
 import mk.ukim.finki.wayzi.model.enumeration.*;
 import mk.ukim.finki.wayzi.repository.*;
 import org.springframework.security.crypto.password.PasswordEncoder;

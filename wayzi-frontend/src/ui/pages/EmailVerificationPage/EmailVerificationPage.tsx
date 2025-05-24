@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import userRepository from "../../../repository/userRepository.ts";
+import authRepository from "../../../repository/authRepository.ts";
 
 export const EmailVerificationPage = () => {
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ export const EmailVerificationPage = () => {
 
     useEffect(() => {
         const verifyEmail = async () => {
-            userRepository.verifyEmail(token)
+            authRepository.verifyEmail(token)
                 .then(() => {
                     setStatus("success");
                     setSuccessMessage("Your email has been successfully verified. You can now sign in.");

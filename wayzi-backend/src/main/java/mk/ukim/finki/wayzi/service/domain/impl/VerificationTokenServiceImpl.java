@@ -2,8 +2,8 @@ package mk.ukim.finki.wayzi.service.domain.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import mk.ukim.finki.wayzi.model.VerificationToken;
-import mk.ukim.finki.wayzi.model.domain.user.User;
+import mk.ukim.finki.wayzi.model.domain.VerificationToken;
+import mk.ukim.finki.wayzi.model.domain.User;
 import mk.ukim.finki.wayzi.model.exception.EmailAlreadyVerifiedException;
 import mk.ukim.finki.wayzi.model.exception.VerificationTokenExpiredException;
 import mk.ukim.finki.wayzi.model.exception.VerificationTokenNotFoundException;
