@@ -44,7 +44,8 @@ public class User implements UserDetails {
     protected Boolean isPhoneNumberVerified;
 
     @Lob
-    @Column(name = "profile_pic", columnDefinition = "LONGBLOB")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "profile_pic")
     protected byte[] profilePic;
 
     @JsonIgnore
@@ -94,6 +95,7 @@ public class User implements UserDetails {
 
         this.phoneNumber = "";
         this.isPhoneNumberVerified = false;
+        this.profilePic = null;
         this.vehicles = new ArrayList<>();
 
         this.role = Role.ROLE_STANDARD_USER;

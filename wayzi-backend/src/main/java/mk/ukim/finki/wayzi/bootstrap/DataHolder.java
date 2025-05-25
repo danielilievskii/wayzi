@@ -57,7 +57,7 @@ public class DataHolder {
 
         admins = new ArrayList<>();
         if(this.adminRepository.count() == 0) {
-            admins.add(new Admin("admin@admin.com", passwordEncoder.encode("admin"), "Admin"));
+            admins.add(new Admin("admin@wayzi.com", passwordEncoder.encode("12345"), "Admin"));
             adminRepository.saveAll(admins);
         }
 
@@ -155,31 +155,5 @@ public class DataHolder {
 
             this.locationRepository.saveAll(locations);
         }
-
-        rides = new ArrayList<>();
-        if(this.rideRepository.count() == 0) {
-            rides.add(new Ride(locations.get(1), LocalDateTime.now(), locations.get(2), LocalDateTime.now().plusHours(4).plusMinutes(30), admins.get(0), vehicles.get(0), 4, 200, RideStatus.CONFIRMED));
-            rides.add(new Ride(locations.get(0), LocalDateTime.now(), locations.get(1), LocalDateTime.now().plusHours(4).plusMinutes(30), users.get(0), vehicles.get(0), 4, 200, RideStatus.STARTED));
-            rides.add(new Ride(locations.get(14), LocalDateTime.now().plusHours(30), locations.get(21), LocalDateTime.now().plusHours(31).plusMinutes(30), users.get(0), vehicles.get(0), 4, 200, RideStatus.CONFIRMED));
-            rides.add(new Ride(locations.get(15), LocalDateTime.now().plusHours(100), locations.get(30), LocalDateTime.now().plusHours(100).plusMinutes(30), users.get(0), vehicles.get(0), 4, 200, RideStatus.PENDING));
-            rides.add(new Ride(locations.get(20), LocalDateTime.now().plusHours(1), locations.get(12), LocalDateTime.now().plusHours(4), users.get(0), vehicles.get(1), 2, 150, RideStatus.PENDING));
-            this.rideRepository.saveAll(rides);
-        }
-
-        rideStops = new ArrayList<>();
-        if(this.rideStopRepository.count() == 0) {
-            rideStops.add(new RideStop(rides.get(0), locations.get(10), LocalDateTime.now().plusHours(1), 1));
-            rideStops.add(new RideStop(rides.get(0), locations.get(31), LocalDateTime.now().plusHours(2), 2));
-            this.rideStopRepository.saveAll(rideStops);
-        }
-
-        rideBookings = new ArrayList<>();
-        if(this.rideBookingRepository.count() == 0) {
-            rideBookings.add(new RideBooking(rides.get(0), users.get(0), PaymentMethod.CASH, RideBookingStatus.CONFIRMED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
-            rideBookings.add(new RideBooking(rides.get(1), users.get(0), PaymentMethod.CASH, RideBookingStatus.ARCHIVED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
-            rideBookings.add(new RideBooking(rides.get(2), users.get(0), PaymentMethod.CASH, RideBookingStatus.CANCELLED, CheckInStatus.NOT_CHECKED_IN, 2, rides.get(0).getPricePerSeat() * 2, "test", LocalDateTime.now(), false, false));
-            this.rideBookingRepository.saveAll(rideBookings);
-        }
-
     }
 }
