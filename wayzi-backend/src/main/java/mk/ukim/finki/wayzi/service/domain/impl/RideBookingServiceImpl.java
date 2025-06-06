@@ -130,16 +130,20 @@ public class RideBookingServiceImpl implements RideBookingService {
 
 
     private void validateBookingRequest(Ride ride, User user, Integer bookedSeats) {
-        if (isDriverBookingOwnRide(ride.getDriver(), user)) {
+        if (isUserBookingOwnRide(ride.getDriver(), user)) {
             throw new RideBookingNotAllowedException("You cannot book your own ride.");
+        }
+
+        if(hasUserAlreadyBooked(ride, user)) {
+            throw new RideBookingNotAllowedException("You already have an active booking for this ride.");
         }
 
         if (!ride.getStatus().name().equals("PENDING") && !ride.getStatus().name().equals("CONFIRMED")) {
             throw new RideBookingNotAllowedException("You cannot book this ride.");
         }
 
-        if(hasPassengerAlreadyBooked(ride, user)) {
-            throw new RideBookingNotAllowedException("You already have an active booking for this ride.");
+        if(LocalDateTime.now().isAfter(ride.getDepartureTime())) {
+            throw new RideBookingNotAllowedException("You cannot book this ride.");
         }
 
         if (bookedSeats > ride.getAvailableSeats()) {
@@ -147,7 +151,7 @@ public class RideBookingServiceImpl implements RideBookingService {
         }
     }
 
-    private boolean hasPassengerAlreadyBooked(Ride ride, User user) {
+    private boolean hasUserAlreadyBooked(Ride ride, User user) {
         for(RideBooking rideBooking : ride.getActiveRideBookings()) {
             if(rideBooking.getBooker().getId() == user.getId()) {
                 return true;
@@ -156,8 +160,8 @@ public class RideBookingServiceImpl implements RideBookingService {
         return false;
     }
 
-    private boolean isDriverBookingOwnRide(User driver, User booker) {
-        return driver.getId() == booker.getId();
+    private boolean isUserBookingOwnRide(User driver, User booker) {
+        return driver.getId().equals(booker.getId());
     }
 
     private Integer calculateTotalPrice(Integer pricePerSeat, Integer bookedSeats) {

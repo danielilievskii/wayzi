@@ -1,5 +1,6 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
+import mk.ukim.finki.wayzi.model.exception.RideBadRequestException;
 import mk.ukim.finki.wayzi.service.domain.*;
 import mk.ukim.finki.wayzi.web.dto.ride.CreateRideDto;
 import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideDto;
@@ -23,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -62,6 +64,8 @@ public class RideServiceImpl implements RideService {
         // Check if the user owns the vehicle
         Vehicle vehicle = vehicleService.findByIdAndCheckOwnership(createRideDto.vehicleId());
 
+        validateRide(createRideDto);
+
         Location departureLocation = locationService.findById(createRideDto.departureLocationId());
         Location arrivalLocaiton = locationService.findById(createRideDto.arrivalLocationId());
 
@@ -92,6 +96,17 @@ public class RideServiceImpl implements RideService {
                 .collect(Collectors.toList());
     }
 
+    public void validateRide(CreateRideDto createRideDto) {
+        LocalDateTime now = LocalDateTime.now();
+
+        if(createRideDto.departureTime().isBefore(now) || createRideDto.arrivalTime().isBefore(now)) {
+            throw new RideBadRequestException("Invalid departure or arrival time.");
+        }
+
+        if(createRideDto.departureTime().isAfter(createRideDto.arrivalTime())) {
+            throw new RideBadRequestException("Departure time can't be after arrival time.");
+        }
+    }
 
 
     @Override
