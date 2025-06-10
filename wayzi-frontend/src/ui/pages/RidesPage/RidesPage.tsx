@@ -63,7 +63,7 @@ export const RidesPage = () => {
             });
         }
 
-    }, [dispatch]);
+    }, [rides]);
 
 
     const handlePageChange = (newPagination: PaginationSchemaType) => {

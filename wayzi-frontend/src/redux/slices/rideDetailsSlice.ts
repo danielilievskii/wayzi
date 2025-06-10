@@ -6,6 +6,7 @@ import rideRepository from "../../repository/rideRepository.ts";
 export interface RideStop {
     id: number;
     location: Location;
+    stopAddress: string
     stopTime: string;
     stopOrder: number;
 }
@@ -21,8 +22,10 @@ export interface RideDetails {
     driverName: string
     driverId: string
     departureLocation: Location;
+    departureAddress: string;
     departureTime: string;
     arrivalLocation: Location;
+    arrivalAddress: string;
     arrivalTime: string;
     vehicle: Vehicle;
     availableSeats: number;

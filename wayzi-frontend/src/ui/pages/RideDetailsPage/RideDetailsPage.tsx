@@ -39,6 +39,14 @@ export const RideDetailsPage = () => {
     }, [rideId, dispatch]);
 
     useEffect(() => {
+        if (ride) {
+            if (!pictures[ride.driverId]) {
+                dispatch(downloadProfilePic(ride.driverId))
+            }
+        }
+    }, [pictures, ride]);
+
+    useEffect(() => {
         if (ride && pictures[ride.driverId]) {
             setDriverProfilePic(pictures[ride.driverId]);
         }
@@ -63,7 +71,7 @@ export const RideDetailsPage = () => {
             });
         }
 
-    }, [dispatch]);
+    }, [ride, dispatch]);
 
     useEffect(() => {
         if (!ride) return;
@@ -131,9 +139,11 @@ export const RideDetailsPage = () => {
 
                                                 <div className="ms-4">
                                                     <div
-                                                        className="fw-semibold text-dark">{ride.departureLocation.displayName}</div>
+                                                        className="fw-semibold text-dark">{ride.departureLocation.displayName}
+                                                    </div>
                                                     <div
-                                                        className="text-muted small">{formatDateTime(ride.departureTime, "hh:mm a")}</div>
+                                                        className="text-muted small">{formatDateTime(ride.departureTime, "hh:mm a")} • <i>{ride.departureAddress}</i>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -156,7 +166,11 @@ export const RideDetailsPage = () => {
 
                                                     <div className="ms-4">
                                                         <div
-                                                            className="text-body-secondary">{stop.location.displayName}</div>
+                                                            className="text-body-secondary">{stop.location.displayName}
+                                                        </div>
+                                                        {/*<div*/}
+                                                        {/*    className="text-muted small">{formatDateTime(stop.stopTime, "hh:mm a")} • <i>{stop.stopAddress}</i>*/}
+                                                        {/*</div>*/}
                                                     </div>
                                                 </div>
                                             ))}
@@ -180,7 +194,7 @@ export const RideDetailsPage = () => {
                                                     <div
                                                         className="fw-semibold text-dark">{ride.arrivalLocation.displayName}</div>
                                                     <div
-                                                        className="text-muted small">{formatDateTime(ride.arrivalTime, "hh:mm a")}</div>
+                                                        className="text-muted small">{formatDateTime(ride.arrivalTime, "hh:mm a")} • <i>{ride.arrivalAddress}</i></div>
                                                 </div>
                                             </div>
                                         </div>

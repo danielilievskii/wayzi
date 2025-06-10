@@ -23,6 +23,8 @@ public class RideStop {
     @JoinColumn(name = "location_id")
     private Location location;
 
+    private String stopAddress;
+
     private LocalDateTime stopTime;
 
     private int stopOrder;
@@ -33,9 +35,10 @@ public class RideStop {
         this.stopOrder = stopOrder;
     }
 
-    public RideStop(Ride ride, Location location, LocalDateTime stopTime, int stopOrder) {
+    public RideStop(Ride ride, Location location, String stopAddress, LocalDateTime stopTime, int stopOrder) {
         this.ride = ride;
         this.location = location;
+        this.stopAddress = stopAddress;
         this.stopTime = stopTime;
         this.stopOrder = stopOrder;
     }

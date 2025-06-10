@@ -13,8 +13,10 @@ export interface RideBooking {
     driverName: string;
     driverId: string;
     departureLocation: Location;
+    departureAddress: string;
     departureTime: string;
     arrivalLocation: Location;
+    arrivalAddress: string;
     arrivalTime: string;
     paymentMethod: string;
     rideBookingStatus: string;

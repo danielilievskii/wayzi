@@ -12,6 +12,8 @@ public record CreateRideStopDto(
         @NotNull(message = "Stop location is required")
         Long locationId,
 
+        String stopAddress,
+
         @NotNull(message = "Stop time is required")
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         LocalDateTime stopTime,
@@ -20,6 +22,6 @@ public record CreateRideStopDto(
 ) {
 
     public RideStop toEntity(Ride ride, Location location) {
-        return new RideStop(ride, location, stopTime, stopOrder);
+        return new RideStop(ride, location, stopAddress, stopTime, stopOrder);
     }
 }

@@ -20,13 +20,18 @@ public class Ride {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //TODO: embedded class
     @ManyToOne
     private Location departureLocation;
+
+    private String departureAddress;
 
     private LocalDateTime departureTime;
 
     @ManyToOne
     private Location arrivalLocation;
+
+    private String arrivalAddress;
 
     private LocalDateTime arrivalTime;
 
@@ -56,14 +61,18 @@ public class Ride {
     private List<RideBooking> rideBookings;
 
     public Ride(Location departureLocation,
+                String departureAddress,
                 LocalDateTime departureTime,
                 Location arrivalLocation,
+                String arrivalAddress,
                 LocalDateTime arrivalTime,
                 Integer availableSeats,
                 int pricePerSeat) {
         this.departureLocation = departureLocation;
+        this.departureAddress = departureAddress;
         this.departureTime = departureTime;
         this.arrivalLocation = arrivalLocation;
+        this.arrivalAddress = arrivalAddress;
         this.arrivalTime = arrivalTime;
         this.availableSeats = availableSeats;
         this.pricePerSeat = pricePerSeat;
@@ -71,8 +80,10 @@ public class Ride {
     }
 
     public Ride(Location departureLocation,
+                String departureAddress,
                 LocalDateTime departureTime,
                 Location arrivalLocation,
+                String arrivalAddress,
                 LocalDateTime arrivalTime,
                 User driver,
                 Vehicle vehicle,
@@ -80,8 +91,10 @@ public class Ride {
                 int pricePerSeat,
                 RideStatus status) {
         this.departureLocation = departureLocation;
+        this.departureAddress = departureAddress;
         this.departureTime = departureTime;
         this.arrivalLocation = arrivalLocation;
+        this.arrivalAddress = arrivalAddress;
         this.arrivalTime = arrivalTime;
         this.driver = driver;
         this.vehicle = vehicle;

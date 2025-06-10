@@ -4,12 +4,10 @@ import {useEffect, useState} from "react";
 import {fetchLocations} from "../../../redux/slices/locationSlice.ts";
 import {Controller, useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
 import {useNavigate} from "react-router";
 import {PublishRideSchema, PublishRideSchemaType} from "../../../schemas/publishRideSchema.ts";
 import {fetchVehicles} from "../../../redux/slices/vehicleSlice.ts";
 import {createRide, fetchRides} from "../../../redux/slices/rideSlice.ts";
-import {fetchPublishedRides} from "../../../redux/slices/publishedRideSlice.ts";
 
 
 
@@ -75,161 +73,161 @@ export const PublishRideForm = () => {
     return (
         <div className="custom-container mt-5 page-wrapper">
             <form id="form" className="bg-white p-4 rounded position-relative" onSubmit={handleSubmit(onSubmit)}>
-
-                {/*<Controller*/}
-                {/*    name="departureLocationId"*/}
-                {/*    control={control}*/}
-                {/*    render={({ field }) => (*/}
-                {/*        <Autocomplete*/}
-                {/*            options={locations}*/}
-                {/*            getOptionLabel={(option) => option.displayName}*/}
-                {/*            isOptionEqualToValue={(option, value) => option.id === value?.id}*/}
-                {/*            onChange={(_, value) => field.onChange(value?.id ?? null)}*/}
-                {/*            renderInput={(params) => (*/}
-                {/*                <TextField*/}
-                {/*                    {...params}*/}
-                {/*                    label="Departure Location"*/}
-                {/*                    error={!!errors.departureLocationId}*/}
-                {/*                    helperText={errors.departureLocationId?.message}*/}
-                {/*                />*/}
-                {/*            )}*/}
-                {/*        />*/}
-                {/*    )}*/}
-                {/*/>*/}
-
                 <div className="row">
-                    <div className="col-md-6 mb-3">
-                        <div className="position-relative">
-                            <label htmlFor="leavingFrom" className="form-label">Leaving from:</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="e.g. Skopje"
-                                value={departureInput}
-                                {...register("departureLocationName")}
-                                onFocus={() => toggleArrivalSuggestions(false)}
-                                onChange={(e) => {
-                                    setDepartureInput(e.target.value);
-                                    setValue("departureLocationId", "");
-                                    toggleDepartureSuggestions(true);
-                                }}
-                                autoComplete="off"
-                            />
-                            {errors.departureLocationId && (
-                                <p className="text-danger">{errors.departureLocationId.message}</p>
-                            )}
-
-                            {departureSuggestions && departureInput && (
-                                <div
-                                    className="list-group position-absolute w-100"
-                                    style={{ zIndex: 1000, marginTop: 10 }}
-                                >
-                                    {filterSuggestions(departureInput).slice(0, 10).map((location) => (
-                                        <button
-                                            type="button"
-                                            key={location.id}
-                                            className="list-group-item list-group-item-action"
-                                            onClick={() => {
-                                                setDepartureInput(location.displayName);
-                                                setValue("departureLocationId", String(location.id));
-                                                toggleDepartureSuggestions(false);
-                                            }}
-                                        >
-                                            {location.displayName}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="col-md-6 mb-3">
-                        <label className="form-label">Departure time:</label>
-                        <div className="input-group">
-                            <input type="datetime-local"
-                                   id="datePickerDeparture"
-                                   defaultValue={new Date().toISOString().slice(0, 16)}
-                                   className="form-control"
-                                   {...register("departureTime")}
-                            />
-                            <span className="cursor-pointer input-group-text"
-                                  onClick={() => {
-                                      (document.getElementById('datePickerDeparture') as HTMLInputElement).showPicker()
-                                  }}>
-                                <i className="fa-solid fa-calendar"></i>
-                            </span>
-                        </div>
-                        {errors.departureTime && <p className="text-danger">{errors.departureTime.message}</p>}
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="col-md-6 mb-3 position-relative">
-                        <div className="position-relative">
-                            <label className="form-label">Going to:</label>
-                            <div className="input-group">
+                    <div className="col-md-6">
+                        <div className="row mb-3">
+                            <div className="position-relative">
+                                <label htmlFor="leavingFrom" className="form-label">Leaving from:</label>
                                 <input
                                     type="text"
                                     className="form-control"
-                                    placeholder="e.g. Ohrid"
-                                    value={arrivalInput}
-                                    {...register("arrivalLocationName")}
-
-                                    onFocus={() => {
-                                        toggleDepartureSuggestions(false);
-                                    }}
+                                    placeholder="e.g. Skopje"
+                                    value={departureInput}
+                                    {...register("departureLocationName")}
+                                    onFocus={() => toggleArrivalSuggestions(false)}
                                     onChange={(e) => {
-                                        setArrivalInput(e.target.value);
-                                        setValue("arrivalLocationId", "");
-                                        toggleArrivalSuggestions(true)
+                                        setDepartureInput(e.target.value);
+                                        setValue("departureLocationId", "");
+                                        toggleDepartureSuggestions(true);
                                     }}
                                     autoComplete="off"
                                 />
-                            </div>
-                            {errors.arrivalLocationId && <p className="text-danger">{errors.arrivalLocationId.message}</p>}
+                                {errors.departureLocationId && (
+                                    <p className="text-danger">{errors.departureLocationId.message}</p>
+                                )}
 
-                            {arrivalSuggestions && arrivalInput && (
-                                <div className="list-group position-absolute w-100" style={{zIndex: 1000, marginTop: 10}}>
-                                    {filterSuggestions(arrivalInput).slice(0, 10).map((location) => (
-                                        <button
-                                            type="button"
-                                            key={location.id}
-                                            className="list-group-item list-group-item-action"
-                                            onClick={() => {
-                                                setArrivalInput(location.displayName);
-                                                setValue("arrivalLocationId", String(location.id))
-                                                toggleArrivalSuggestions(false);
-                                            }}
-                                        >
-                                            {location.displayName}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
+                                {departureSuggestions && departureInput && (
+                                    <div
+                                        className="list-group position-absolute w-100"
+                                        style={{ zIndex: 1000, marginTop: 10 }}
+                                    >
+                                        {filterSuggestions(departureInput).slice(0, 10).map((location) => (
+                                            <button
+                                                type="button"
+                                                key={location.id}
+                                                className="list-group-item list-group-item-action"
+                                                onClick={() => {
+                                                    setDepartureInput(location.displayName);
+                                                    setValue("departureLocationId", String(location.id));
+                                                    toggleDepartureSuggestions(false);
+                                                }}
+                                            >
+                                                {location.displayName}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
+                        <div className="row mb-3">
+                            <label className="form-label">Departure address:</label>
+                            <div className="input-group">
+                                <input type="text" className="form-control" {...register("departureAddress")} min="0"/>
+                            </div>
+                            {errors.departureAddress && <p className="text-danger">{errors.departureAddress.message}</p>}
+                        </div>
 
-                    </div>
-
-                    <div className="col-md-6 mb-3">
-                        <label className="form-label">Arrival time:</label>
-                        <div className="input-group">
-                            <input type="datetime-local"
-                                   id="datePickerArrival"
-                                   className="form-control"
-                                   defaultValue={new Date(Date.now() + 60 * 60 * 2000).toISOString().slice(0, 16)}
-                                   {...register("arrivalTime")}
-                            />
-                            <span className="cursor-pointer input-group-text"
-                                  onClick={() => {
-                                      (document.getElementById('datePickerDeparture') as HTMLInputElement).showPicker()
-                                  }}>
+                        <div className="row mb-3">
+                            <label className="form-label">Departure time:</label>
+                            <div className="input-group">
+                                <input type="datetime-local"
+                                       id="datePickerDeparture"
+                                       defaultValue={new Date().toISOString().slice(0, 16)}
+                                       min={new Date().toISOString().slice(0, 16)}
+                                       className="form-control"
+                                       {...register("departureTime")}
+                                />
+                                <span className="cursor-pointer input-group-text"
+                                      onClick={() => {
+                                          (document.getElementById('datePickerDeparture') as HTMLInputElement).showPicker()
+                                      }}>
                                 <i className="fa-solid fa-calendar"></i>
                             </span>
+                            </div>
+                            {errors.departureTime && <p className="text-danger">{errors.departureTime.message}</p>}
                         </div>
-                        {errors.arrivalTime && <p className="text-danger">{errors.arrivalTime.message}</p>}
+
+
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="row mb-3">
+                            <div className="position-relative">
+                                <label className="form-label">Going to:</label>
+                                <div className="input-group">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="e.g. Ohrid"
+                                        value={arrivalInput}
+                                        {...register("arrivalLocationName")}
+
+                                        onFocus={() => {
+                                            toggleDepartureSuggestions(false);
+                                        }}
+                                        onChange={(e) => {
+                                            setArrivalInput(e.target.value);
+                                            setValue("arrivalLocationId", "");
+                                            toggleArrivalSuggestions(true)
+                                        }}
+                                        autoComplete="off"
+                                    />
+                                </div>
+                                {errors.arrivalLocationId && <p className="text-danger">{errors.arrivalLocationId.message}</p>}
+
+                                {arrivalSuggestions && arrivalInput && (
+                                    <div className="list-group position-absolute w-100" style={{zIndex: 1000, marginTop: 10}}>
+                                        {filterSuggestions(arrivalInput).slice(0, 10).map((location) => (
+                                            <button
+                                                type="button"
+                                                key={location.id}
+                                                className="list-group-item list-group-item-action"
+                                                onClick={() => {
+                                                    setArrivalInput(location.displayName);
+                                                    setValue("arrivalLocationId", String(location.id))
+                                                    toggleArrivalSuggestions(false);
+                                                }}
+                                            >
+                                                {location.displayName}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="row mb-3">
+                            <label className="form-label">Arrival address:</label>
+                            <div className="input-group">
+                                <input type="text" className="form-control" {...register("arrivalAddress")} min="0"/>
+                            </div>
+                            {errors.arrivalAddress && <p className="text-danger">{errors.arrivalAddress.message}</p>}
+                        </div>
+
+                        <div className="row mb-3">
+                            <label className="form-label">Arrival time:</label>
+                            <div className="input-group">
+                                <input type="datetime-local"
+                                       id="datePickerArrival"
+                                       className="form-control"
+                                       defaultValue={new Date(Date.now() + 60 * 60 * 2000).toISOString().slice(0, 16)}
+                                       min={new Date().toISOString().slice(0, 16)}
+                                       {...register("arrivalTime")}
+                                />
+                                <span className="cursor-pointer input-group-text"
+                                      onClick={() => {
+                                          (document.getElementById('datePickerArrival') as HTMLInputElement).showPicker()
+                                      }}>
+                                        <i className="fa-solid fa-calendar"></i>
+                                    </span>
+                            </div>
+                            {errors.arrivalTime && <p className="text-danger">{errors.arrivalTime.message}</p>}
+                        </div>
+
                     </div>
                 </div>
+
 
                 <div className="row">
                     <div className="col-md-4 mb-3">
@@ -272,8 +270,9 @@ export const PublishRideForm = () => {
                         <div key={field.id} className="row g-2 d-flex  mb-2 position-relative">
                             <div  className="col-md-1 mt-3 align-self-center">
                                 <p>No. <span>{index + 1}</span></p>
+                                <input type="text" hidden value={index+1} {...register(`rideStops.${index}.stopOrder`)}/>
                             </div>
-                            <div className="col-md-5 position-relative">
+                            <div className="col-md-4 position-relative">
                                 <label className="form-label">Stop location</label>
                                 <div style={{ minHeight: "70px" }}>
                                     <input
@@ -339,7 +338,17 @@ export const PublishRideForm = () => {
 
                             </div>
 
-                            <div className="col-md-5">
+                            <div className="col-md-3">
+                                <label className="form-label">Stop address:</label>
+                                <div className="input-group">
+                                    <input type="text" className="form-control"  {...register(`rideStops.${index}.stopAddress`)} min="0"/>
+                                </div>
+                                {errors.rideStops?.[index]?.stopAddress && (
+                                    <p className="text-danger">{errors.rideStops[index].stopAddress?.message}</p>
+                                )}
+                            </div>
+
+                            <div className="col-md-3">
                                 <label className="form-label">Stop time</label>
 
                                 <div className="input-group">
@@ -385,6 +394,7 @@ export const PublishRideForm = () => {
                         append({
                             locationName: "",
                             locationId: "",
+                            stopAddress: "",
                             // stopTime: "",
                             stopTime: new Date(Date.now() + 60 * 60 * 1000).toISOString().slice(0, 16),
                         })
@@ -401,9 +411,11 @@ export const PublishRideForm = () => {
                     <button type="submit" className="btn btn-light ms-2">Cancel</button>
                     <button type="submit" disabled={createRideLoading} className="btn custom-btn ms-2">Save</button>
                 </div>
+
+                {createRideError && <div className="alert alert-danger border-0 mt-2" role="alert">{createRideError}</div>}
             </form>
 
-            {createRideError && <div className="alert alert-danger border-0" role="alert">{createRideError}</div>}
+
         </div>
     )
 }

@@ -137,12 +137,12 @@ export const PublishedRideCard = (props) => {
                                 Confirm
                             </button>
                         </div>
-                        <div className="col-md-3">
-                            <button
-                                className={`btn btn-light p-2 fw-bold w-100`}>Edit
-                                ride
-                            </button>
-                        </div>
+                        {/*<div className="col-md-3">*/}
+                        {/*    <button*/}
+                        {/*        className={`btn btn-light p-2 fw-bold w-100`}>Edit*/}
+                        {/*        ride*/}
+                        {/*    </button>*/}
+                        {/*</div>*/}
                     </>
 
                 )}
@@ -175,7 +175,7 @@ export const PublishedRideCard = (props) => {
 
                 <div className="col-md-3">
                     <button
-                        className={`btn btn-light p-2 fw-bold w-100`}>View passengers
+                        className={`btn btn-light p-2 fw-bold w-100`}>View bookings
                     </button>
                 </div>
 

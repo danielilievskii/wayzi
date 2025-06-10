@@ -60,6 +60,7 @@ public class SecurityConfig {
                                 "/api/locations/**",
                                 "/api/rides",
                                 "/api/rides/{id}",
+                                "/api/rides/{id}/route",
                                 "/api/locations/**",
                                 "/api/user/{id}/download-profile-pic",
                                 "/api/routes/**"

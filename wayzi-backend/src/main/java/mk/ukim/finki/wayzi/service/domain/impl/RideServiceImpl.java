@@ -3,6 +3,7 @@ package mk.ukim.finki.wayzi.service.domain.impl;
 import mk.ukim.finki.wayzi.model.exception.RideBadRequestException;
 import mk.ukim.finki.wayzi.service.domain.*;
 import mk.ukim.finki.wayzi.web.dto.ride.CreateRideDto;
+import mk.ukim.finki.wayzi.web.dto.ride.CreateRideStopDto;
 import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideDto;
 import mk.ukim.finki.wayzi.web.dto.ride.UpdateRideStopDto;
 import mk.ukim.finki.wayzi.model.exception.AccessDeniedException;
@@ -22,13 +23,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static mk.ukim.finki.wayzi.specifications.FieldFilterSpecification.*;
@@ -96,15 +95,34 @@ public class RideServiceImpl implements RideService {
                 .collect(Collectors.toList());
     }
 
-    public void validateRide(CreateRideDto createRideDto) {
+    public void validateRide(CreateRideDto ride) {
         LocalDateTime now = LocalDateTime.now();
 
-        if(createRideDto.departureTime().isBefore(now) || createRideDto.arrivalTime().isBefore(now)) {
+        if(ride.departureTime().isBefore(now) || ride.arrivalTime().isBefore(now)) {
             throw new RideBadRequestException("Invalid departure or arrival time.");
         }
 
-        if(createRideDto.departureTime().isAfter(createRideDto.arrivalTime())) {
+        if(ride.departureTime().isAfter(ride.arrivalTime())) {
             throw new RideBadRequestException("Departure time can't be after arrival time.");
+        }
+
+        List<CreateRideStopDto> rideStops = ride.rideStops().stream().sorted(Comparator.comparing(CreateRideStopDto::stopOrder)).toList();
+        for (int i = 0; i < rideStops.size(); i++) {
+            CreateRideStopDto stop = rideStops.get(i);
+
+            if (stop.stopTime().isBefore(ride.departureTime()) ||
+                    stop.stopTime().isAfter(ride.arrivalTime())) {
+                throw new RideBadRequestException("Stop time no. " + (i+1)  + " must be between departure and arrival time.");
+            }
+
+            for(int j = i+1; j < rideStops.size(); j++) {
+                if(i == j) continue;
+
+                if (rideStops.get(i).stopTime().isAfter(rideStops.get(j).stopTime())) {
+                    throw new RideBadRequestException("Stop no. " + (i+1) +
+                            " has later time than stop no. " + (j+1));
+                }
+            }
         }
     }
 

@@ -9,6 +9,7 @@ import java.util.List;
 public record DisplayRideStopDto(
         Long id,
         DisplayLocationDto location,
+        String stopAddress,
         LocalDateTime stopTime,
         int stopOrder
 ) {
@@ -16,6 +17,7 @@ public record DisplayRideStopDto(
         return new DisplayRideStopDto(
                 rideStop.getId(),
                 DisplayLocationDto.from(rideStop.getLocation()),
+                rideStop.getStopAddress(),
                 rideStop.getStopTime(),
                 rideStop.getStopOrder()
         );

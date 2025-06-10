@@ -20,12 +20,18 @@ public record CreateRideDto(
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         LocalDateTime departureTime,
 
+        @NotNull(message = "Departure address is required")
+        String departureAddress,
+
         @NotNull(message = "Arrival location is required")
         Long arrivalLocationId,
 
         @NotNull(message = "Arrival time is required")
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         LocalDateTime arrivalTime,
+
+        @NotNull(message = "Arrival address is required")
+        String arrivalAddress,
 
         @NotNull(message = "Vehicle selection is required")
         Long vehicleId,
@@ -45,8 +51,10 @@ public record CreateRideDto(
     public Ride toEntity(Location departureLocation, Location arrivalLocation, User driver, Vehicle vehicle, RideStatus status) {
         return new Ride(
                 departureLocation,
+                this.departureAddress,
                 this.departureTime,
                 arrivalLocation,
+                this.arrivalAddress,
                 this.arrivalTime,
                 driver,
                 vehicle,

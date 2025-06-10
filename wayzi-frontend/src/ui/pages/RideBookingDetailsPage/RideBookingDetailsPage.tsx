@@ -32,13 +32,17 @@ export const RideBookingDetailsPage = () => {
     useEffect(() => {
         if (rideBooking) {
             if (!pictures[rideBooking.driverId]) {
-                handleThunk(dispatch, downloadProfilePic, rideBooking.driverId, () => {
-                    setDriverProfilePic(pictures[rideBooking.driverId]);
-                })
+                dispatch(downloadProfilePic(rideBooking.driverId))
             }
         }
 
-    }, [pictures, rideBooking, dispatch]);
+    }, [pictures, rideBooking]);
+
+    useEffect(() => {
+        if (rideBooking && pictures[rideBooking.driverId]) {
+            setDriverProfilePic(pictures[rideBooking.driverId]);
+        }
+    }, [rideBooking, pictures]);
 
 
     return (
@@ -82,7 +86,7 @@ export const RideBookingDetailsPage = () => {
                                                     <div className="fw-medium">
                                                         {formatDateTime(rideBooking.departureTime, 'PPPPp')}
                                                         <div className="text-muted small">📍
-                                                            Pickup Address
+                                                            {rideBooking.departureAddress || "No specific address provided."}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -91,7 +95,7 @@ export const RideBookingDetailsPage = () => {
                                                     <div className="fw-medium">
                                                         {formatDateTime(rideBooking.arrivalTime, 'PPPPp')}
                                                         <div className="text-muted small">
-                                                            📍 Drop-off Address
+                                                            📍 {rideBooking.arrivalAddress || "No specific address provided."}
                                                         </div>
                                                     </div>
                                                 </div>
