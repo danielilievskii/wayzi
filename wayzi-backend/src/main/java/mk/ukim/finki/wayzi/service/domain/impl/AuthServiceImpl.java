@@ -3,6 +3,7 @@ package mk.ukim.finki.wayzi.service.domain.impl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import mk.ukim.finki.wayzi.service.domain.VerificationTokenService;
 import mk.ukim.finki.wayzi.web.dto.auth.SignInDto;
 import mk.ukim.finki.wayzi.web.dto.auth.SignUpDto;
@@ -88,6 +89,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public User getCurrentUser(HttpServletRequest request) {
         String jwt = getJwtFromCookies(request);
         if (jwt == null) {
@@ -104,6 +106,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

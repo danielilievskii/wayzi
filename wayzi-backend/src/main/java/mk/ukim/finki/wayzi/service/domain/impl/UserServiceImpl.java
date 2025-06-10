@@ -1,6 +1,7 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
 
+import jakarta.transaction.Transactional;
 import mk.ukim.finki.wayzi.model.domain.User;
 import mk.ukim.finki.wayzi.model.exception.ProfilePictureNotFoundException;
 import mk.ukim.finki.wayzi.repository.UserRepository;
@@ -38,6 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Resource loadProfilePicAsResource(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("error"));

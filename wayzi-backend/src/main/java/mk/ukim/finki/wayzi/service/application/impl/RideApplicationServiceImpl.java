@@ -1,5 +1,6 @@
 package mk.ukim.finki.wayzi.service.application.impl;
 
+import jakarta.transaction.Transactional;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
 import mk.ukim.finki.wayzi.service.domain.RideService;
 import mk.ukim.finki.wayzi.web.dto.ride.*;
@@ -59,6 +60,7 @@ public class RideApplicationServiceImpl implements RideApplicationService {
     }
 
     @Override
+    @Transactional
     public RideDetailsDto findById(Long id) {
         return RideDetailsDto.from(
                 rideService.findById(id)

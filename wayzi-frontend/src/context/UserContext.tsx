@@ -60,8 +60,8 @@ export const UserProvider = ({children}: { children: ReactNode }) => {
     const signOut = () => {
         return authRepository.signOut()
             .then(() => {
-                setCurrentUser(null);
-                navigate("/")
+                window.location.reload();
+                // window.location.href = "/";
             })
             .catch((error) => {
                 console.log(error);

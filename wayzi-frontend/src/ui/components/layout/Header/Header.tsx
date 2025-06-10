@@ -105,7 +105,7 @@ export const Header = () => {
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/" onClick={onSignOut}>
+                                            <Link className="dropdown-item d-flex align-items-center gap-2 py-2" onClick={onSignOut}>
                                                 <i className="fa-solid fa-arrow-right-from-bracket"></i>
                                                 <span>Log out</span>
                                             </Link>
