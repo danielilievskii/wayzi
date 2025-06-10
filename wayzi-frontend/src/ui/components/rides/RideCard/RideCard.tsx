@@ -22,18 +22,18 @@ export const RideCard = (props) => {
                 <div className="card shadow-sm border-0 px-3 py-2 p-md-4">
 
                     {dateFlag &&
-                        <span className="text-dark-emphasis fw-bold">{formatDateTime(ride.departureTime, "EEEE, d MMMM")}</span>
+                        <span className="text-secondary fw-bold">{formatDateTime(ride.departureTime, "EEEE, d MMMM")}</span>
                     }
                     <div className="row justify-content-between align-items-start">
                         <div className="col-md-8">
-                            <div className="d-flex align-items-center gap-2 mb-2">
+                            <div className="d-flex align-items-center gap-2 mb-3">
                                 <h5>{ride.departureLocation.displayName}</h5>
-                                <span className="bg-danger-subtle px-2 py-1 rounded">
+                                <span className="bg-light px-2 py-1 rounded">
                                     {formatDateTime(ride.departureTime, "hh:mm a")}
                                 </span>
                                 <i className="fa-solid fa-arrow-right"></i>
                                 <h5>{ride.arrivalLocation.displayName}</h5>
-                                <span className="bg-danger-subtle px-2 py-1 rounded">
+                                <span className="bg-light px-2 py-1 rounded">
                                     {formatDateTime(ride.arrivalTime, "hh:mm a")}
                                 </span>
                             </div>

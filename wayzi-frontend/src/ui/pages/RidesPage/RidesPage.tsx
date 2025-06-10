@@ -19,8 +19,7 @@ export const RidesPage = () => {
 
     const ridesState = useSelector((state: RootState) => state.rides);
     const {rides, filter, pagination} = ridesState;
-    const [ridesOnDate, setRidesOnDate] = useState<Ride[]>([])
-    const [ridesAfterDate, setRidesAfterDate] = useState<Ride[]>([])
+    const [ridesOnDate, setRidesOnDate] = useState<boolean>(true)
 
     const { pictures } = useSelector((state: RootState) => state.profilePics);
 
@@ -37,12 +36,9 @@ export const RidesPage = () => {
         if (!rides || rides.length === 0 || !filter?.date) return;
 
         const filterDate = filter?.date
-
         const onDate = rides.filter((ride: Ride) => isSameDay(ride.departureTime.split("T")[0], filterDate))
-        const afterDate = rides.filter((ride: Ride) => isAfter(ride.departureTime.split("T")[0], filterDate))
+        setRidesOnDate(onDate.length !== 0);
 
-        setRidesOnDate(onDate);
-        setRidesAfterDate(afterDate);
     }, [ridesState]);
 
     useEffect(() => {
@@ -89,52 +85,29 @@ export const RidesPage = () => {
 
                 <div className="container w-75 responsive-text p-0">
                     <div className="row row-cols-1 g-3">
-                        {!loading && (success || error) && ridesOnDate.length === 0 && ridesAfterDate.length === 0 && (
+                        {!loading && (success || error) && rides.length === 0 && (
                             <NoRides/>
                         )}
 
-                        {!loading && (success || error) && (ridesOnDate.length > 0 || ridesAfterDate.length > 0) && (
+                        {!loading && (success || error) && rides.length > 0 && (
                            <>
-                               {ridesOnDate.length > 0 && (
-                                   <>
-                                       <div className="row mb-0">
-                                    <span className="text-dark-emphasis fw-bold fs-5 px-2 py-1">
-                                    {formatDateTime(filter.date, "EEEE, d MMMM")}
-                                    </span>
-                                       </div>
-                                       {ridesOnDate.map((ride) => (
-                                           <RideCard key={ride.id} ride={ride} dateFlag={false}/>
-                                       ))}
-
-                                       <RidesPagination
-                                           onPageChange={handlePageChange}
-                                           setPagination={setPagination}
-                                           state={ridesState}
-                                       />
-                                   </>
+                               {!ridesOnDate && (
+                                   <div>
+                                       <p className="text-center">
+                                           There aren't any rides scheduled on this date. Showing rides after the selected date.
+                                       </p>
+                                   </div>
                                )}
 
+                               {rides.map((ride) => (
+                                   <RideCard key={ride.id} ride={ride} dateFlag={true}/>
+                               ))}
 
-                               {ridesOnDate.length === 0 && ridesAfterDate.length > 0 && (
-                                   <>
-                                       <div>
-                                           <p className="text-center">
-                                               There aren't any rides scheduled on this date. Showing rides after the selected date.
-                                           </p>
-                                       </div>
-
-                                       {ridesAfterDate.map((ride) => (
-                                           <RideCard key={ride.id} ride={ride} dateFlag={true}/>
-                                       ))}
-
-                                       <RidesPagination
-                                           onPageChange={handlePageChange}
-                                           setPagination={setPagination}
-                                           state={ridesState}
-                                       />
-                                   </>
-                               )}
-
+                               <RidesPagination
+                                   onPageChange={handlePageChange}
+                                   setPagination={setPagination}
+                                   state={ridesState}
+                               />
                            </>
                         )}
                     </div>
