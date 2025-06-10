@@ -56,7 +56,7 @@ export const RideBookingDetailsPage = () => {
                                 <div className="card shadow-sm rounded-4 border-0">
                                     <div className="card-body p-5">
 
-                                        {/* Header */}
+                                        {/* Footer */}
                                         <div className="d-flex justify-content-between align-items-center mb-4">
                                             <div>
                                                 <h3 className="fw-bold text-dark mb-1">

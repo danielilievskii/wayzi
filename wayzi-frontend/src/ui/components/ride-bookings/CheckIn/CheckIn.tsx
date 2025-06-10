@@ -22,7 +22,7 @@ export const CheckIn = (props) => {
                 <div className="card shadow-sm rounded-4 border-0">
                     <div className="card-body p-5">
 
-                        {/* Header */}
+                        {/* Footer */}
                         <div className="d-flex justify-content-between align-items-center mb-4">
                             <h3 className="fw-bold text-dark mb-0">Passenger Check-In</h3>
                             <span className="badge bg-light text-dark border fw-semibold">

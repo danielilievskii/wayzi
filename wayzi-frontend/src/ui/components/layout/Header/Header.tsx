@@ -26,7 +26,7 @@ export const Header = () => {
         <nav className="fixed-top navbar navbar-expand-lg" style={{ zIndex: 1 }}>
             <div className="container">
                 <Link className="navbar-brand" to="/">
-                    <img src="/assets/images/Logo_FINKI_UKIM_EN.jpg" alt="Wayzi Logo" height="60" />
+                    <img src="/assets/images/wayzi-logo.png" alt="Wayzi Logo" height="60" />
                 </Link>
 
                 <button
