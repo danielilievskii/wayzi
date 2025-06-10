@@ -5,10 +5,12 @@ import mk.ukim.finki.wayzi.model.domain.RideBooking;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import mk.ukim.finki.wayzi.model.exception.InvalidRideStatusException;
+import mk.ukim.finki.wayzi.service.domain.NotificationService;
 import mk.ukim.finki.wayzi.service.domain.RideBookingService;
 import mk.ukim.finki.wayzi.service.domain.RideService;
 import mk.ukim.finki.wayzi.service.domain.RideStatusService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -17,10 +19,12 @@ public class RideStatusServiceImpl implements RideStatusService {
 
     private final RideService rideService;
     private final RideBookingService rideBookingService;
+    private final NotificationService notificationService;
 
-    public RideStatusServiceImpl(RideService rideService, RideBookingService rideBookingService) {
+    public RideStatusServiceImpl(RideService rideService, RideBookingService rideBookingService, NotificationService notificationService) {
         this.rideService = rideService;
         this.rideBookingService = rideBookingService;
+        this.notificationService = notificationService;
     }
 
     private boolean canTransitionTo(RideStatus currentStatus, RideStatus newStatus) {
@@ -33,14 +37,8 @@ public class RideStatusServiceImpl implements RideStatusService {
             };
     }
 
-    private void validateRideCanStart(Ride ride) {
-        LocalDateTime currentTime = LocalDateTime.now();
-        if (currentTime.isBefore(ride.getDepartureTime())) {
-            throw new InvalidRideStatusException("The ride cannot start before the scheduled departure time.");
-        }
-    }
-
     @Override
+    @Transactional
     public Ride transitionTo(Long id, RideStatus newStatus) {
         Ride ride = rideService.findByIdAndCheckOwnership(id);
         RideStatus currentStatus = ride.getStatus();
@@ -64,17 +62,49 @@ public class RideStatusServiceImpl implements RideStatusService {
             validateRideCanStart(ride);
         }
 
-        //TODO: Notify passengers of status change (publish event)
-
         ride.setStatus(newStatus);
-        return rideService.save(ride);
+        rideService.save(ride);
+
+        notifyPassengersOfRideStatusChange(ride, newStatus);
+
+        return ride;
     }
 
-    public void updateRideBookings(Ride ride, RideBookingStatus bookingStatus) {
+    private void validateRideCanStart(Ride ride) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        if (currentTime.isBefore(ride.getDepartureTime())) {
+            throw new InvalidRideStatusException("The ride cannot start before the scheduled departure time.");
+        }
+    }
+
+    private void updateRideBookings(Ride ride, RideBookingStatus bookingStatus) {
         for(RideBooking rideBooking : ride.getRideBookings()) {
             if(rideBooking.getBookingStatus() == RideBookingStatus.CONFIRMED) {
                 rideBooking.setBookingStatus(bookingStatus);
                 rideBookingService.save(rideBooking);
+            }
+        }
+    }
+
+    private void notifyPassengersOfRideStatusChange(Ride ride, RideStatus rideStatus) {
+        for(RideBooking rideBooking : ride.getRideBookings()) {
+            if(rideBooking.getBookingStatus() == RideBookingStatus.CONFIRMED) {
+                switch (rideStatus) {
+                    case STARTED:
+                        notificationService.notifyPassengerOfRideStart(rideBooking);
+                        break;
+                    case FINISHED:
+                        notificationService.notifyPassengerOfRideFinish(rideBooking);
+                        break;
+                    case CANCELLED:
+                        notificationService.notifyPassengerOfRideCancellation(rideBooking);
+                        break;
+                    case CONFIRMED:
+                        notificationService.notifyPassengerOfRideConfirmation(rideBooking);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

@@ -10,14 +10,12 @@ import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import mk.ukim.finki.wayzi.model.exception.*;
 import mk.ukim.finki.wayzi.repository.RideBookingRepository;
 import mk.ukim.finki.wayzi.repository.RideRepository;
-import mk.ukim.finki.wayzi.service.domain.AuthService;
-import mk.ukim.finki.wayzi.service.domain.QRCodeService;
-import mk.ukim.finki.wayzi.service.domain.RideBookingService;
-import mk.ukim.finki.wayzi.service.domain.RideService;
+import mk.ukim.finki.wayzi.service.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -31,13 +29,21 @@ public class RideBookingServiceImpl implements RideBookingService {
     private final RideBookingRepository rideBookingRepository;
     private final RideRepository rideRepository;
     private final QRCodeService qrCodeService;
+    private final NotificationService notificationService;
 
-    public RideBookingServiceImpl(RideService rideService, AuthService authService, RideBookingRepository rideBookingRepository, RideRepository rideRepository, QRCodeService qrCodeService) {
+    public RideBookingServiceImpl(RideService rideService,
+                                  AuthService authService,
+                                  RideBookingRepository rideBookingRepository,
+                                  RideRepository rideRepository,
+                                  QRCodeService qrCodeService,
+                                  NotificationService notificationService
+    ) {
         this.rideService = rideService;
         this.authService = authService;
         this.rideBookingRepository = rideBookingRepository;
         this.rideRepository = rideRepository;
         this.qrCodeService = qrCodeService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -96,6 +102,7 @@ public class RideBookingServiceImpl implements RideBookingService {
     }
 
     @Override
+    @Transactional
     public RideBooking bookRide(Long rideId, PaymentMethod paymentMethod, Integer bookedSeats, String message) {
         Ride ride = rideService.findById(rideId);
         User user = authService.getAuthenticatedUser();
@@ -123,7 +130,7 @@ public class RideBookingServiceImpl implements RideBookingService {
         String qrCodeUrl = qrCodeService.generateQRCodeBase64(bookingUrl, 200, 200);
         savedBooking.setQrCodeUrl(qrCodeUrl);
 
-        //TODO: Notify driver of new ride booking and send QR code to passenger
+        notificationService.notifyDriverOfNewBooking(savedBooking);
 
         return rideBookingRepository.save(rideBooking);
     }
@@ -169,6 +176,7 @@ public class RideBookingServiceImpl implements RideBookingService {
     }
 
     @Override
+    @Transactional
     public RideBooking cancelRideBooking(Long rideBookingId) {
         RideBooking rideBooking = findByIdEnsuringBookerOwnership(rideBookingId);
         validateBookingCancellation(rideBooking);
@@ -177,23 +185,10 @@ public class RideBookingServiceImpl implements RideBookingService {
         updateAvailableSeats(ride, rideBooking.getBookedSeats());
 
         rideBooking.setBookingStatus(RideBookingStatus.CANCELLED);
+
+        notificationService.notifyDriverOfBookingCancellation(rideBooking);
+
         return rideBookingRepository.save(rideBooking);
-
-        //TODO: Notify driver or ride booking cancellation
-    }
-
-    @Override
-    public RideBooking checkInPassenger(Long rideBookingId) {
-        RideBooking rideBooking = findByIdEnsuringDriverOwnership(rideBookingId);
-        validatePassengerCheckIn(rideBooking);
-
-        rideBooking.setCheckInStatus(CheckInStatus.CHECKED_IN);
-        return rideBookingRepository.save(rideBooking);
-    }
-
-    private void updateAvailableSeats(Ride ride, int bookedSeats) {
-        ride.setAvailableSeats(ride.getAvailableSeats() + bookedSeats);
-        rideService.save(ride);
     }
 
     private void validateBookingCancellation(RideBooking rideBooking) {
@@ -205,7 +200,21 @@ public class RideBookingServiceImpl implements RideBookingService {
         if(rideStatus == RideStatus.STARTED || rideStatus == RideStatus.FINISHED || rideStatus == RideStatus.CANCELLED) {
             throw new RideBookingCancellationNotAllowedException("Ride cancellation not possible.");
         }
+    }
 
+    private void updateAvailableSeats(Ride ride, int bookedSeats) {
+        ride.setAvailableSeats(ride.getAvailableSeats() + bookedSeats);
+        rideService.save(ride);
+    }
+
+
+    @Override
+    public RideBooking checkInPassenger(Long rideBookingId) {
+        RideBooking rideBooking = findByIdEnsuringDriverOwnership(rideBookingId);
+        validatePassengerCheckIn(rideBooking);
+
+        rideBooking.setCheckInStatus(CheckInStatus.CHECKED_IN);
+        return rideBookingRepository.save(rideBooking);
     }
 
     private void validatePassengerCheckIn(RideBooking rideBooking) {

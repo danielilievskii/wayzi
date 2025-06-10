@@ -1,5 +1,6 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
+import mk.ukim.finki.wayzi.model.domain.RideBooking;
 import mk.ukim.finki.wayzi.model.domain.VerificationToken;
 import mk.ukim.finki.wayzi.model.domain.Ride;
 import mk.ukim.finki.wayzi.model.domain.User;
@@ -63,7 +64,33 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<CompletableFuture<MailSendingStatus>> notifyPassengerRideCancelled(Ride ride) {
+    public List<CompletableFuture<MailSendingStatus>> notifyDriverOfNewBooking(RideBooking rideBooking) {
         return List.of();
     }
+
+    @Override
+    public List<CompletableFuture<MailSendingStatus>> notifyDriverOfBookingCancellation(RideBooking rideBooking) {
+        return List.of();
+    }
+
+    @Override
+    public List<CompletableFuture<MailSendingStatus>> notifyPassengerOfRideStart(RideBooking rideBooking) {
+        return List.of();
+    }
+
+    @Override
+    public List<CompletableFuture<MailSendingStatus>> notifyPassengerOfRideFinish(RideBooking rideBooking) {
+        return List.of();
+    }
+
+    @Override
+    public List<CompletableFuture<MailSendingStatus>> notifyPassengerOfRideConfirmation(RideBooking rideBooking) {
+        return List.of();
+    }
+
+    @Override
+    public List<CompletableFuture<MailSendingStatus>> notifyPassengerOfRideCancellation(RideBooking rideBooking) {
+        return List.of();
+    }
+
 }
