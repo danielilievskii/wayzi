@@ -7,7 +7,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useNavigate, useParams} from "react-router";
 import {BookRideSchema, BookRideSchemaType} from "../../../schemas/bookRideSchema.ts";
 import {paymentMethods} from "../../../constants/paymentMethods.ts";
-import {createRideBooking} from "../../../redux/slices/rideBookingSlice.ts";
+import {clearCreateRideBookingError, createRideBooking} from "../../../redux/slices/rideBookingSlice.ts";
 
 
 
@@ -16,17 +16,23 @@ export const BookRideForm = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-
+    const {createRideBookingError, createRideBookingLoading} = useSelector((state: RootState) => state.rideBookings)
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
-
-
-    const locations = useSelector((state: RootState) => state.location.locations)
-
 
     const {register, control, handleSubmit, setValue, reset, formState: {errors}} = useForm<BookRideSchemaType>({
         resolver: zodResolver(BookRideSchema),
     });
 
+    useEffect(() => {
+        dispatch(clearCreateRideBookingError());
+
+        return () => {
+            dispatch(clearCreateRideBookingError());
+        };
+    }, [dispatch]);
+
+
+    const locations = useSelector((state: RootState) => state.location.locations)
 
     useEffect(() => {
         if (locations.length == 0) {
@@ -35,7 +41,7 @@ export const BookRideForm = () => {
 
     }, [dispatch]);
 
-    const {createRideBookingError, createRideBookingLoading} = useSelector((state: RootState) => state.rideBookings)
+
 
     const onSubmit = async (data: BookRideSchemaType) => {
         const resultAction = await dispatch(createRideBooking({ id: String(ride_id), data }));
@@ -96,9 +102,6 @@ export const BookRideForm = () => {
                                 {...register("message")}>
                                         </textarea>
                         </div>
-                        {errors.paymentMethod &&
-                            <p className="text-danger">{errors.paymentMethod.message}</p>}
-
                     </div>
                 </div>
 

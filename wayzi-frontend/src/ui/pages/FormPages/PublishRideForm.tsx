@@ -2,12 +2,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store.ts";
 import {useEffect, useState} from "react";
 import {fetchLocations} from "../../../redux/slices/locationSlice.ts";
-import {Controller, useFieldArray, useForm} from "react-hook-form";
+import {useFieldArray, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useNavigate} from "react-router";
 import {PublishRideSchema, PublishRideSchemaType} from "../../../schemas/publishRideSchema.ts";
 import {fetchVehicles} from "../../../redux/slices/vehicleSlice.ts";
-import {createRide, fetchRides} from "../../../redux/slices/rideSlice.ts";
+import {clearCreateRideError, createRide} from "../../../redux/slices/rideSlice.ts";
 
 
 
@@ -15,7 +15,7 @@ export const PublishRideForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
-    const {createRideError, createRideLoading} = useSelector((state: RootState) => state.rides)
+
     const locations = useSelector((state: RootState) => state.location.locations)
     const vehicles = useSelector((state: RootState) => state.vehicle.vehicles)
 
@@ -28,6 +28,16 @@ export const PublishRideForm = () => {
 
     const [stopInputs, setStopInputs] = useState<string[]>([]);
     const [stopSuggestions, toggleStopSuggestions] = useState<boolean[]>([]);
+
+    const {createRideError, createRideLoading} = useSelector((state: RootState) => state.rides)
+
+    useEffect(() => {
+        dispatch(clearCreateRideError());
+
+        return () => {
+            dispatch(clearCreateRideError());
+        };
+    }, [dispatch]);
 
 
     const {register, control, handleSubmit, setValue, reset, formState: {errors}} = useForm<PublishRideSchemaType>({
@@ -62,7 +72,18 @@ export const PublishRideForm = () => {
         );
 
     const onSubmit  = async (data: PublishRideSchemaType) => {
-        const resultAction = await dispatch(createRide(data));
+
+        const updatedStops = data.rideStops?.map((ride, idx) => ({
+            ...ride,
+            stopOrder: idx+1,
+        }));
+
+        const newData = {
+            ...data,
+            rideStops: updatedStops,
+        };
+
+        const resultAction = await dispatch(createRide(newData));
 
         if (createRide.fulfilled.match(resultAction)) {
             navigate("/rides/published");
@@ -267,10 +288,9 @@ export const PublishRideForm = () => {
 
                 <div id="stopContainer">
                     {fields.map((field, index) => (
-                        <div key={field.id} className="row g-2 d-flex  mb-2 position-relative">
+                        <div key={field.id} className="row g-2 d-flex position-relative">
                             <div  className="col-md-1 mt-3 align-self-center">
                                 <p>No. <span>{index + 1}</span></p>
-                                <input type="text" hidden value={index+1} {...register(`rideStops.${index}.stopOrder`)}/>
                             </div>
                             <div className="col-md-4 position-relative">
                                 <label className="form-label">Stop location</label>
@@ -395,7 +415,6 @@ export const PublishRideForm = () => {
                             locationName: "",
                             locationId: "",
                             stopAddress: "",
-                            // stopTime: "",
                             stopTime: new Date(Date.now() + 60 * 60 * 1000).toISOString().slice(0, 16),
                         })
 

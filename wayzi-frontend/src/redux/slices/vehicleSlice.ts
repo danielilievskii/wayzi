@@ -101,7 +101,15 @@ export const deleteVehicle = createAsyncThunk(
 const vehicleSlice = createSlice({
     name: 'vehicle',
     initialState,
-    reducers: {},
+    reducers: {
+        clearCreateVehicleError(state) {
+            state.createVehicleError = null;
+        },
+        clearEditVehicleError(state) {
+            state.editVehicleError = null;
+        },
+
+    },
     extraReducers: (builder) => {
         builder
             //FETCH VEHICLES
@@ -154,3 +162,5 @@ const vehicleSlice = createSlice({
 });
 
 export default vehicleSlice.reducer;
+export const { clearEditVehicleError, clearCreateVehicleError} = vehicleSlice.actions;
+

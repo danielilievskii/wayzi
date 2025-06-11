@@ -1,9 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { vehicleSchema, VehicleSchemaType } from "../../../schemas/vehicleSchema.ts";
-import {createVehicle, fetchVehicles} from "../../../redux/slices/vehicleSlice.ts";
+import {clearCreateVehicleError, createVehicle, fetchVehicles} from "../../../redux/slices/vehicleSlice.ts";
 import {AppDispatch, RootState} from "../../../redux/store.ts";
 import {useNavigate} from "react-router";
 
@@ -41,6 +41,14 @@ export const AddVehicleForm = () => {
     });
 
     const {createVehicleLoading, createVehicleError} = useSelector((state: RootState) => state.vehicle)
+
+    useEffect(() => {
+        dispatch(clearCreateVehicleError());
+
+        return () => {
+            dispatch(clearCreateVehicleError());
+        };
+    }, [dispatch]);
 
 
     const onSubmit = async (data: VehicleSchemaType) => {

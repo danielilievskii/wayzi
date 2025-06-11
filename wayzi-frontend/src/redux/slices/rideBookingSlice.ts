@@ -131,6 +131,13 @@ const rideBookingSlice = createSlice({
         setPagination: (state, action: PayloadAction<PaginationSchemaType>) => {
             state.pagination = action.payload;
         },
+        clearCreateRideBookingError(state) {
+            state.createRideBookingError = null;
+        },
+        clearCancelRideBookingError(state) {
+            state.cancelRideBookingError = null;
+        },
+
     },
     extraReducers: (builder) => {
         builder
@@ -177,4 +184,4 @@ const rideBookingSlice = createSlice({
 })
 
 export default rideBookingSlice.reducer;
-export const { setFilter, setPagination } = rideBookingSlice.actions;
+export const { setFilter, setPagination, clearCreateRideBookingError, clearCancelRideBookingError } = rideBookingSlice.actions;

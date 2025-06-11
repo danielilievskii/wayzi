@@ -3,7 +3,12 @@ import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {vehicleSchema, VehicleSchemaType} from "../../../schemas/vehicleSchema.ts";
-import {editVehicle, fetchVehicles, Vehicle} from "../../../redux/slices/vehicleSlice.ts";
+import {
+    clearEditVehicleError,
+    editVehicle,
+    fetchVehicles,
+    Vehicle
+} from "../../../redux/slices/vehicleSlice.ts";
 import {RootState, AppDispatch} from "../../../redux/store.ts";
 import {useNavigate, useParams} from "react-router";
 import {vehicleColors} from "../../../constants/vehicleColors.ts";
@@ -20,15 +25,23 @@ export const EditVehicleForm = () => {
     const existingVehicle = vehicles.find(vehicle => vehicle.id === vehicle_id);
     const [vehicle, setVehicle] = useState<Vehicle | null>(existingVehicle || null);
 
-    const {editVehicleError, editVehicleLoading} = useSelector((state: RootState) => state.vehicle)
-
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [selectedType, setSelectedType] = useState<string | null>(null);
+
+    const {editVehicleError, editVehicleLoading} = useSelector((state: RootState) => state.vehicle)
+
+    useEffect(() => {
+        dispatch(clearEditVehicleError());
+
+        return () => {
+            dispatch(clearEditVehicleError());
+        };
+    }, [dispatch]);
+
 
     const {register, handleSubmit, setValue, reset, formState: {errors}} = useForm<VehicleSchemaType>({
         resolver: zodResolver(vehicleSchema),
     });
-
 
     // Fetch vehicle if not found in store
     useEffect(() => {

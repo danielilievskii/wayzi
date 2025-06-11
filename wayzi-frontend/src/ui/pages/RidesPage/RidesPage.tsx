@@ -3,8 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store.ts";
 import {fetchRides, Ride, setFilter, setPagination} from "../../../redux/slices/rideSlice.ts";
 import "../../styles/rides.css";
-import {formatDateTime} from "../../../utils/dateUtils.ts";
-import {isSameDay, isAfter} from 'date-fns';
+import {isSameDay} from 'date-fns';
 import {RidesFilterForm} from "../../components/shared/RidesFilterForm/RidesFilterForm.tsx";
 import {RidesPagination} from "../../components/shared/Pagination/Pagination.tsx";
 
@@ -18,28 +17,29 @@ export const RidesPage = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const ridesState = useSelector((state: RootState) => state.rides);
-    const {rides, filter, pagination} = ridesState;
+    const {rides, filter, pagination, loading} = ridesState;
+
     const [ridesOnDate, setRidesOnDate] = useState<boolean>(true)
 
     const { pictures } = useSelector((state: RootState) => state.profilePics);
 
-    const {handleThunk, loading, success, error} = useAsyncThunkHandler();
+    const {handleThunk, success, error} = useAsyncThunkHandler();
 
     useEffect(() => {
         const {departureLocationName, arrivalLocationName, ...restFilter} = filter || {};
-
         handleThunk(dispatch, fetchRides, {...restFilter, ...pagination}, () => {})
 
     }, [dispatch]);
 
+
     useEffect(() => {
-        if (!rides || rides.length === 0 || !filter?.date) return;
+        if (rides.length === 0 || !filter?.date) return;
 
         const filterDate = filter?.date
         const onDate = rides.filter((ride: Ride) => isSameDay(ride.departureTime.split("T")[0], filterDate))
         setRidesOnDate(onDate.length !== 0);
 
-    }, [ridesState]);
+    }, [rides]);
 
     useEffect(() => {
         if(rides.length !== 0) {
@@ -64,7 +64,7 @@ export const RidesPage = () => {
 
     const handlePageChange = (newPagination: PaginationSchemaType) => {
         const {departureLocationName, arrivalLocationName, ...restFilter} = filter || {};
-        // dispatch(fetchFilteredRides({ ...restFilter, ...newPagination }));
+
         handleThunk(dispatch, fetchRides, {...restFilter, ...newPagination}, () => {
             dispatch(setPagination(newPagination))
         })

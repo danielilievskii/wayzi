@@ -9,7 +9,7 @@ import {PublishRideSchemaType} from "../../schemas/publishRideSchema.ts";
 
 
 export interface RideStop {
-    id: number;
+    id: string;
     location: Location;
     stopTime: string;
     stopOrder: number;
@@ -153,6 +153,12 @@ const rideSlice = createSlice({
         setPagination: (state, action: PayloadAction<PaginationSchemaType>) => {
             state.pagination = action.payload;
         },
+        clearCreateRideError(state) {
+            state.createRideError = null;
+        },
+        clearEditRideError(state) {
+            state.updateRideError = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -209,5 +215,5 @@ const rideSlice = createSlice({
     },
 });
 
-export const {setFilter, setPagination} = rideSlice.actions;
+export const {setFilter, setPagination, clearCreateRideError, clearEditRideError} = rideSlice.actions;
 export default rideSlice.reducer;
