@@ -6,11 +6,13 @@ import {FilterSchemaType} from "../../schemas/filterSchema.ts";
 import {getLocalISOString} from "../../utils/dateUtils.ts";
 import rideRepository from "../../repository/rideRepository.ts";
 import {PublishRideSchemaType} from "../../schemas/publishRideSchema.ts";
+import {EditRideSchemaType} from "../../schemas/editRideSchema.ts";
 
 
 export interface RideStop {
     id: string;
     location: Location;
+    stopAddress: string;
     stopTime: string;
     stopOrder: number;
 }
@@ -20,8 +22,10 @@ export interface Ride {
     driverName: string
     driverId: string
     departureLocation: Location;
+    departureAddress: string;
     departureTime: string;
     arrivalLocation: Location;
+    arrivalAddress: string;
     arrivalTime: string;
     vehicle: Vehicle;
     availableSeats: number;
@@ -116,9 +120,12 @@ export const createRide = createAsyncThunk<Ride, PublishRideSchemaType, { reject
 );
 
 
-export const updateRide = createAsyncThunk<Ride, { id: string; data: Partial<Ride> }, { rejectValue: string }>(
+export const updateRide = createAsyncThunk<Ride, { id: string; data: EditRideSchemaType }, { rejectValue: string }>(
     'rides/edit',
     async ({ id, data }, { rejectWithValue }) => {
+        console.log("TUKA")
+        console.log(id)
+
         return rideRepository.updateRide(id, data)
             .then((response) => {
                 return response.data;

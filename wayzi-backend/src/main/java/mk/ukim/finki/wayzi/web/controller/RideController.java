@@ -45,7 +45,7 @@ public class RideController {
         return ResponseEntity.ok(rideApplicationService.save(createRideDto));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/published/{id}/edit")
     public ResponseEntity<?> updateRide(@PathVariable Long id, @RequestBody UpdateRideDto updateRideDto) {
         return ResponseEntity.ok(rideApplicationService.edit(id, updateRideDto));
     }

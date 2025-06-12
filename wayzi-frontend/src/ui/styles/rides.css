@@ -1,33 +1,21 @@
 
 .status-bar {
-    border-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 8px;
     border: none;
     padding: 5px 10px;
     text-align: center;
     width: 120px;
+    background: #F5F5F5; /* neutral */
+    border-left: 4px solid;
     /*background: lightpink;*/
     /*color: black;*/
 }
 
-.pending-status-bar {
-    background: #F5A623;
-    color: white;
-}
-
-.cancelled-status-bar {
-    background: #D0021B;
-    color: white;
-}
-
-.finished-status-bar {
-    background: #4A90E2;
-    color: white;
-}
-
-.confirmed-status-bar {
-    background: #3EB489;
-    color: white;
-}
+.pending-status-bar { border-color: #F4A261; }
+.cancelled-status-bar { border-color: #D66A6A; }   /* muted soft red */
+.finished-status-bar  { border-color: #6BAED6; }   /* calm blue */
+.confirmed-status-bar { border-color: #5BA27C; }
 
 .ride-card {
     padding: 0 !important;

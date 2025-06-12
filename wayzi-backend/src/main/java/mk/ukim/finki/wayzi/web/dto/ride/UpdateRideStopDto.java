@@ -11,6 +11,8 @@ public record UpdateRideStopDto(
         @NotNull(message = "Stop location is required")
         Long locationId,
 
+        String stopAddress,
+
         @NotNull(message = "Stop time is required")
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         LocalDateTime stopTime,

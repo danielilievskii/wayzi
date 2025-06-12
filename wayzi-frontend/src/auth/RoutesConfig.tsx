@@ -20,6 +20,8 @@ import {ProtectedRoute} from "../ui/components/auth/ProtectedRoute/ProtectedRout
 import SignUpPage from "../ui/pages/SignUpPage/SignUpPage.tsx";
 import {EmailSentPage} from "../ui/pages/EmailSentPage/EmailSentPage.tsx";
 import {EmailVerificationPage} from "../ui/pages/EmailVerificationPage/EmailVerificationPage.tsx";
+import {EditRideForm} from "../ui/pages/FormPages/EditRideForm.tsx";
+import {RideBookersListPage} from "../ui/pages/RideBookersListPage/RideBookersListPage.tsx";
 
 export const AllRoutes = [
     {
@@ -104,6 +106,24 @@ export const AllRoutes = [
     {
         component: PublishedRidesPage,
         path: "/rides/published",
+        permission: [
+            Roles.ADMIN_USER,
+            Roles.STANDARD_USER,
+        ],
+        isProtected: true,
+    },
+    {
+        component: RideBookersListPage,
+        path: "/rides/published/:rideId",
+        permission: [
+            Roles.ADMIN_USER,
+            Roles.STANDARD_USER,
+        ],
+        isProtected: true,
+    },
+    {
+        component: EditRideForm,
+        path: "/rides/published/:rideId/edit",
         permission: [
             Roles.ADMIN_USER,
             Roles.STANDARD_USER,

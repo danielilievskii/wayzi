@@ -15,7 +15,8 @@ html {
 html, body, #root {
     min-height: 100vh;
     /*background-color: white;*/
-    background-color: #E6E6E6;
+    /*background-color: #E6E6E6;*/
+    background-color: #f3f5f8
     /*background: linear-gradient(135deg, #E6E6E6, #1E3A8A);*/
     /*background: linear-gradient(135deg, #E6E6E6, #003366);*/
 }

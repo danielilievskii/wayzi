@@ -20,7 +20,7 @@ export const RideBookingCard = (props) => {
         }
     }, [pictures, rideBooking.driverId]);
 
-    const {createRideBookingLoading, cancelRideBookingError, filter, pagination} = useSelector((state: RootState) => state.rideBookings)
+    const {filter, pagination} = useSelector((state: RootState) => state.rideBookings)
 
     const onCancelBooking = async () => {
         const resultAction = await dispatch(cancelRideBooking(rideBooking.rideBookingId));
@@ -42,13 +42,13 @@ export const RideBookingCard = (props) => {
                                     <div className="fw-semibold text-dark-emphasis">
 
                                         {rideBooking.rideBookingStatus === "CONFIRMED" && (
-                                            <span className="status-bar">CONFIRMED</span>
+                                            <span className="status-bar confirmed-status-bar">CONFIRMED</span>
                                         )}
                                         {rideBooking.rideBookingStatus === "CANCELLED" && (
-                                            <span className="status-bar">CANCELLED</span>
+                                            <span className="status-bar cancelled-status-bar">CANCELLED</span>
                                         )}
                                         {rideBooking.rideBookingStatus === "ARCHIVED" && (
-                                            <span className="status-bar">FINISHED</span>
+                                            <span className="status-bar finished-status-bar">FINISHED</span>
                                         )}
                                     </div>
                                     <span className="text-dark-emphasis fw-bold">

@@ -2,7 +2,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import locationRepository from "../../repository/locationRepository.ts";
 
 export interface Location {
-    id: number;
+    id: string;
     name: string;
     city: string;
     longitude: number;

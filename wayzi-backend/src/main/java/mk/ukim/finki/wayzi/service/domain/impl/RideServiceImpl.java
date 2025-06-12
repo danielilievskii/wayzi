@@ -57,6 +57,7 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
+    @Transactional
     public Ride save(CreateRideDto createRideDto) {
         User user = authService.getAuthenticatedUser();
 
@@ -66,9 +67,8 @@ public class RideServiceImpl implements RideService {
         validateRide(createRideDto);
 
         Location departureLocation = locationService.findById(createRideDto.departureLocationId());
-        Location arrivalLocaiton = locationService.findById(createRideDto.arrivalLocationId());
-
-        Ride ride = createRideDto.toEntity(departureLocation, arrivalLocaiton, user, vehicle, RideStatus.PENDING);
+        Location arrivalLocation = locationService.findById(createRideDto.arrivalLocationId());
+        Ride ride = createRideDto.toEntity(departureLocation, arrivalLocation, user, vehicle, RideStatus.PENDING);
 
         List<Location> locations = new ArrayList<>();
         locations.add(departureLocation);
@@ -76,7 +76,7 @@ public class RideServiceImpl implements RideService {
         List<RideStop> rideStops = buildRideStops(createRideDto, ride, locations);
         ride.setRideStops(rideStops);
 
-        locations.add(arrivalLocaiton);
+        locations.add(arrivalLocation);
 
         List<List<Double>> routeCoordinates = routeCoordinatesService.fetchCoordinates(locations);
         ride.setRouteCoordinates(routeCoordinates);
@@ -128,10 +128,14 @@ public class RideServiceImpl implements RideService {
 
 
     @Override
+    @Transactional
     public Ride edit(Long id, UpdateRideDto updateRideDto) {
         Ride ride = findByIdAndCheckOwnership(id);
 
         Vehicle vehicle = vehicleService.findByIdAndCheckOwnership(updateRideDto.vehicleId());
+
+        //TODO: Validate ride
+
         Location departureLocation = locationService.findById(updateRideDto.departureLocationId());
         Location arrivalLocation = locationService.findById(updateRideDto.arrivalLocationId());
 
@@ -143,22 +147,11 @@ public class RideServiceImpl implements RideService {
         ride.setPricePerSeat(updateRideDto.pricePerSeat());
         ride.setVehicle(vehicle);
 
+        // Remove any ride stops that are no longer in the DTO
+        removeDeletedRideStops(ride, updateRideDto);
 
-        Set<Long> rideStopIds = updateRideDto.rideStops().stream()
-                .map(UpdateRideStopDto::id)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-
-        // Remove any ride stops that are no longer in the DTO (they are orphans)
-        List<RideStop> rideStopsToRemove = new ArrayList<>();
-        for (RideStop existingStop : ride.getRideStops()) {
-            if (!rideStopIds.contains(existingStop.getId())) {
-                rideStopsToRemove.add(existingStop);
-            }
-        }
-
-        // Remove the orphaned ride stops from the collection
-        ride.getRideStops().removeAll(rideStopsToRemove);
+        List<Location> locations = new ArrayList<>();
+        locations.add(departureLocation);
 
         for (UpdateRideStopDto updateRideStopDto : updateRideDto.rideStops()) {
 
@@ -173,6 +166,8 @@ public class RideServiceImpl implements RideService {
             }
 
             Location stopLocation = locationService.findById(updateRideStopDto.locationId());
+            locations.add(stopLocation);
+
             rideStop.setLocation(stopLocation);
             rideStop.setStopTime(updateRideStopDto.stopTime());
             rideStop.setStopOrder(updateRideStopDto.stopOrder());
@@ -182,7 +177,30 @@ public class RideServiceImpl implements RideService {
                 ride.getRideStops().add(rideStop);
             }
         }
+
+        locations.add(arrivalLocation);
+
+        List<List<Double>> routeCoordinates = routeCoordinatesService.fetchCoordinates(locations);
+        ride.setRouteCoordinates(routeCoordinates);
+
         return rideRepository.save(ride);
+    }
+
+    private void removeDeletedRideStops(Ride ride, UpdateRideDto updateRideDto) {
+        // Remove any ride stops that are no longer in the DTO
+        Set<Long> rideStopIds = updateRideDto.rideStops().stream()
+                .map(UpdateRideStopDto::id)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        List<RideStop> rideStopsToRemove = new ArrayList<>();
+        for (RideStop existingStop : ride.getRideStops()) {
+            if (!rideStopIds.contains(existingStop.getId())) {
+                rideStopsToRemove.add(existingStop);
+            }
+        }
+
+        ride.getRideStops().removeAll(rideStopsToRemove);
     }
 
     @Override
@@ -221,7 +239,7 @@ public class RideServiceImpl implements RideService {
 
         return this.rideRepository.findAll(
                 specification,
-                PageRequest.of(pageNum - 1, pageSize, Sort.by("departureTime").ascending())
+                PageRequest.of(pageNum - 1, pageSize, Sort.by("departureTime").descending())
         );
     }
 

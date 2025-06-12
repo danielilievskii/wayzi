@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../../redux/store.ts";
 
 import {fetchPublishedRides} from "../../../../redux/slices/publishedRideSlice.ts";
+import {QrCodeImageDialog} from "../../ride-bookings/QrCodeDialog/QrCodeImgDialog.tsx";
 
 export const PublishedRideCard = (props) => {
     const {ride} = props
@@ -27,7 +28,7 @@ export const PublishedRideCard = (props) => {
     return (
         <div key={ride.id}>
             <div className="ride-card ride-card-border">
-                <Link to={`/rides/${ride.id}`} className="text-decoration-none">
+                {/*<Link to={`/rides/${ride.id}`} className="text-decoration-none">*/}
 
                     <div className="card border-0  px-2 py-3 py-sm-3 px-sm-3 py-md-4 px-md-4">
 
@@ -38,19 +39,19 @@ export const PublishedRideCard = (props) => {
                                     <div className="d-flex align-items-center gap-2">
                                         <div className="fw-semibold text-dark-emphasis">
                                             {ride.rideStatus === "PENDING" && (
-                                                <span className="status-bar">PENDING</span>
+                                                <span className="status-bar pending-status-bar">PENDING</span>
                                             )}
                                             {ride.rideStatus === "CONFIRMED" && (
-                                                <span className="status-bar">CONFIRMED</span>
+                                                <span className="status-bar confirmed-status-bar">CONFIRMED</span>
                                             )}
                                             {ride.rideStatus === "CANCELLED" && (
-                                                <span className="status-bar">CANCELLED</span>
+                                                <span className="status-bar cancelled-status-bar">CANCELLED</span>
                                             )}
                                             {ride.rideStatus === "STARTED" && (
-                                                <span className="status-bar">STARTED</span>
+                                                <span className="status-bar ">STARTED</span>
                                             )}
                                             {ride.rideStatus === "FINISHED" && (
-                                                <span className="status-bar">FINISHED</span>
+                                                <span className="status-bar finished-status-bar">FINISHED</span>
                                             )}
                                         </div>
                                         <span className="text-dark-emphasis fw-bold">
@@ -76,6 +77,7 @@ export const PublishedRideCard = (props) => {
                                             {formatDateTime(ride.arrivalTime, "hh:mm a")}
                                         </span>
                                     </div>
+
                                 </div>
                                 <div className="row">
                                     <div className="d-flex align-items-center align-content-end gap-3">
@@ -118,9 +120,21 @@ export const PublishedRideCard = (props) => {
                                     </div>
                                 </div>
                             </div>
+
+                            <div className="col-md-4 text-end fw-semibold">
+
+                                {ride.rideStatus == 'PENDING' && (
+                                    <Link to={`/rides/published/${ride.id}/edit`} className="text-decoration-none">
+                                        <i className="fa-solid fa-pen-to-square action-button"></i>
+                                    </Link>
+                                )}
+                            </div>
+
+
+
                         </div>
                     </div>
-                </Link>
+                {/*</Link>*/}
             </div>
             <div className="d-flex justify-content-evenly rounded p-2 row-gap-2 bg-white">
 
@@ -130,8 +144,7 @@ export const PublishedRideCard = (props) => {
                             <button
                                 onClick={() => {
                                     updateStatus("CONFIRMED")
-                                }
-                                }
+                                }}
                                 className="btn btn-light p-2 fw-bold w-100"
                             >
                                 Confirm

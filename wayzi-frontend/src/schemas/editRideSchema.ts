@@ -1,6 +1,6 @@
 import {z} from 'zod'
 
-export const PublishRideSchema = z.object({
+export const EditRideSchema = z.object({
     departureLocationName: z.string().min(1, { message: "Departure location is required" }),
     departureLocationId: z.string().min(1, { message: "Departure location is required" }),
     departureAddress: z.string().min(1, { message: "Departure address is required" }),
@@ -14,6 +14,7 @@ export const PublishRideSchema = z.object({
     pricePerSeat: z.coerce.number().min(1, { message: "Price per seat is required" }),
     rideStops: z.array(
         z.object({
+            id: z.string().nullable(),
             locationName: z.string().min(1, { message: "Please select a stop location" }),
             locationId: z.string().min(1, { message: "Stop location ID is required" }),
             stopAddress: z.string().min(1, { message: "Stop address is required" }),
@@ -22,4 +23,4 @@ export const PublishRideSchema = z.object({
     ).optional()
 });
 
-export type PublishRideSchemaType = z.infer<typeof PublishRideSchema>;
+export type EditRideSchemaType = z.infer<typeof EditRideSchema>;
