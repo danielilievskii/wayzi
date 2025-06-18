@@ -3,16 +3,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, RootState} from "../../../redux/store.ts";
 import {useEffect, useState} from "react";
 import {formatDateTime} from "../../../utils/dateUtils.ts";
-import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
 import {QrCodeImageDialog} from "../../components/ride-bookings/QrCodeDialog/QrCodeImgDialog.tsx";
 import {fetchBookingDetailsForBooker} from "../../../redux/slices/rideBookingDetailsSlice.ts";
 import {downloadProfilePic} from "../../../redux/slices/profilePicSlice.ts";
 import defaultProfilePic from "../../../../public/assets/images/default-profile-pic.png"
+import {Link} from "react-router-dom";
 
 export const RideBookingDetailsPage = () => {
 
     const dispatch = useDispatch<AppDispatch>();
-    const {handleThunk, loading, success, error} = useAsyncThunkHandler();
 
     const {rideBookingId} = useParams();
 
@@ -71,20 +70,17 @@ export const RideBookingDetailsPage = () => {
 
                                         {/* Ride Route Info */}
                                         <div className="mb-4">
-                                            <h5 className="fw-semibold text-primary mb-3">
-                                                <a
-                                                    href={`/rides/${rideBooking.rideId}`}
-                                                    className="btn btn-light text-decoration-none text-primary"
-                                                >
+                                            <Link to={`/rides/${rideBooking.rideId}`}                                                >
+                                                <button className="btn btn-light">
                                                     {rideBooking.departureLocation.name} ➜ {rideBooking.arrivalLocation.name}
-                                                </a>
-                                            </h5>
+                                                </button>
+                                            </Link>
 
                                             <div className="row g-3">
                                                 <div className="col-md-6">
                                                     <label className="text-muted small">Departure</label>
                                                     <div className="fw-medium">
-                                                        {formatDateTime(rideBooking.departureTime, 'PPPPp')}
+                                                        {formatDateTime(rideBooking.departureTime, 'PPPp')}
                                                         <div className="text-muted small">📍
                                                             {rideBooking.departureAddress || "No specific address provided."}
                                                         </div>
@@ -93,7 +89,7 @@ export const RideBookingDetailsPage = () => {
                                                 <div className="col-md-6">
                                                     <label className="text-muted small">Arrival</label>
                                                     <div className="fw-medium">
-                                                        {formatDateTime(rideBooking.arrivalTime, 'PPPPp')}
+                                                        {formatDateTime(rideBooking.arrivalTime, 'PPPp')}
                                                         <div className="text-muted small">
                                                             📍 {rideBooking.arrivalAddress || "No specific address provided."}
                                                         </div>

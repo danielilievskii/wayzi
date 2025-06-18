@@ -6,8 +6,9 @@ const rideBookingRepository = {
     createRideBooking:  (rideId: string, data: BookRideSchemaType) => axiosInstance.post(`/rides/${rideId}/book`, data),
     cancelRideBooking:  (id: string) => axiosInstance.put(`/rides/bookings/${id}/cancel`),
 
-    getBookingDetailsForBooker:  (id: string) => axiosInstance.get(`/rides/bookings/${id}`),
+    findBookersById:  (id: string) => axiosInstance.get(`/rides/published/${id}/bookings`),
 
+    getBookingDetailsForBooker:  (id: string) => axiosInstance.get(`/rides/bookings/${id}`),
     getBookingCheckInDetailsForDriver:  (id: string) => axiosInstance.get(`/rides/bookings/${id}/check-in`),
     checkInPassenger:  (id: string) => axiosInstance.put(`/rides/bookings/${id}/check-in`),
 

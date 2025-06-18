@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
 import mk.ukim.finki.wayzi.service.domain.RideService;
 import mk.ukim.finki.wayzi.web.dto.ride.*;
+import mk.ukim.finki.wayzi.web.dto.ridebooking.RideBookersDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,6 +58,14 @@ public class RideApplicationServiceImpl implements RideApplicationService {
                 publishedRideFilterDto.pageNum(),
                 publishedRideFilterDto.pageSize()
         ));
+    }
+
+    @Override
+    @Transactional
+    public RideBookersDto findBookersById(Long id) {
+        return RideBookersDto.from(
+                rideService.findByIdAndCheckOwnership(id)
+        );
     }
 
     @Override

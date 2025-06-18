@@ -8,6 +8,7 @@ import rideBookingCheckInReducer from "./slices/rideBookingCheckInSlice.ts";
 import locationReducer from "./slices/locationSlice.ts";
 import profilePicReducer from "./slices/profilePicSlice.ts";
 import rideDetailsSlice from "./slices/rideDetailsSlice.ts";
+import rideBookersSlice from "./slices/rideBookersSlice.ts";
 
 export const store = configureStore({
     reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
         rides: ridesReducer,
         rideDetails: rideDetailsSlice,
         publishedRides: publishedRidesReducer,
+        rideBookers: rideBookersSlice,
         rideBookings: rideBookingsReducer,
         rideBookingDetails: rideBookingDetailsReducer,
         rideBookingCheckIn: rideBookingCheckInReducer,

@@ -18,7 +18,7 @@
 .confirmed-status-bar { border-color: #5BA27C; }
 
 .ride-card {
-    padding: 0 !important;
+    /*padding: 0 !important;*/
     transition: 0.2s;
 
     /*background: #F5F5F5; !* Light gray *!*/

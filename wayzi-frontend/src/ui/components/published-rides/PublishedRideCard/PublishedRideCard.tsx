@@ -181,9 +181,12 @@ export const PublishedRideCard = (props) => {
                 )}
 
                 <div className="col-md-3">
-                    <button
-                        className={`btn btn-light p-2 fw-bold w-100`}>View bookings
-                    </button>
+                    <Link to={`/rides/published/${ride.id}/bookings`}>
+                        <button
+                            className={`btn btn-light p-2 fw-bold w-100`}>View bookings
+                        </button>
+                    </Link>
+
                 </div>
 
                 {(ride.rideStatus == 'PENDING' || ride.rideStatus == 'CONFIRMED') && (

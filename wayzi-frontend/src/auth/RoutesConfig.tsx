@@ -21,7 +21,7 @@ import SignUpPage from "../ui/pages/SignUpPage/SignUpPage.tsx";
 import {EmailSentPage} from "../ui/pages/EmailSentPage/EmailSentPage.tsx";
 import {EmailVerificationPage} from "../ui/pages/EmailVerificationPage/EmailVerificationPage.tsx";
 import {EditRideForm} from "../ui/pages/FormPages/EditRideForm.tsx";
-import {RideBookersListPage} from "../ui/pages/RideBookersListPage/RideBookersListPage.tsx";
+import {RideBookersPage} from "../ui/pages/RideBookersPage/RideBookersPage.tsx";
 
 export const AllRoutes = [
     {
@@ -113,8 +113,8 @@ export const AllRoutes = [
         isProtected: true,
     },
     {
-        component: RideBookersListPage,
-        path: "/rides/published/:rideId",
+        component: RideBookersPage,
+        path: "/rides/published/:rideId/bookings",
         permission: [
             Roles.ADMIN_USER,
             Roles.STANDARD_USER,

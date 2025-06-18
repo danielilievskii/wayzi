@@ -4,7 +4,7 @@ import mk.ukim.finki.wayzi.model.domain.Ride;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import mk.ukim.finki.wayzi.web.dto.location.DisplayLocationDto;
 import mk.ukim.finki.wayzi.web.dto.vehicle.DisplayVehicleDto;
-import mk.ukim.finki.wayzi.web.dto.ridebooking.RideBookingUserDetailsDto;
+import mk.ukim.finki.wayzi.web.dto.ridebooking.RideBookingUserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +24,7 @@ public record RideDetailsDto(
         Integer pricePerSeat,
         RideStatus rideStatus,
         List<DisplayRideStopDto> rideStops,
-        List<RideBookingUserDetailsDto> rideBookingUsers
+        List<RideBookingUserDto> rideBookingUsers
 ) {
     public static RideDetailsDto from(
             Ride ride
@@ -44,7 +44,7 @@ public record RideDetailsDto(
                 ride.getPricePerSeat(),
                 ride.getStatus(),
                 DisplayRideStopDto.from(ride.getRideStops()),
-                RideBookingUserDetailsDto.from(ride.getActiveRideBookings())
+                RideBookingUserDto.from(ride.getActiveRideBookings())
         );
     }
 

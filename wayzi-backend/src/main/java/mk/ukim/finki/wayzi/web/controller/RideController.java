@@ -40,6 +40,11 @@ public class RideController {
         return ResponseEntity.ok(rideApplicationService.findPublishedRidesPageForUser(publishedRideFilterDto));
     }
 
+    @GetMapping("/published/{id}/bookings")
+    public ResponseEntity<?> findBookersById(@PathVariable Long id) {
+        return ResponseEntity.ok(rideApplicationService.findBookersById(id));
+    }
+
     @PostMapping
     public ResponseEntity<?> createRide(@RequestBody CreateRideDto createRideDto) {
         return ResponseEntity.ok(rideApplicationService.save(createRideDto));
