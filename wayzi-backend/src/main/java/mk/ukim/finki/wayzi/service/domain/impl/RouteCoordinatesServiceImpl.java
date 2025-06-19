@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mk.ukim.finki.wayzi.model.domain.Location;
+import mk.ukim.finki.wayzi.model.domain.Ride;
+import mk.ukim.finki.wayzi.repository.RideRepository;
 import mk.ukim.finki.wayzi.service.domain.RouteCoordinatesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,6 +24,12 @@ public class RouteCoordinatesServiceImpl implements RouteCoordinatesService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    private final RideRepository rideRepository;
+
+    public RouteCoordinatesServiceImpl(RideRepository rideRepository) {
+        this.rideRepository = rideRepository;
+    }
 
 
     @Override
@@ -37,15 +46,17 @@ public class RouteCoordinatesServiceImpl implements RouteCoordinatesService {
                     apiKey, startLocation.getLongitude(), startLocation.getLatitude(), endLocation.getLongitude(), endLocation.getLatitude()
             );
 
-            String jsonResponse = restTemplate.getForObject(url, String.class);
-
-            List<List<Double>> extractedCoordinates = null;
             try {
-                extractedCoordinates = extractCoordinates(jsonResponse);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                String jsonResponse = restTemplate.getForObject(url, String.class);
+                List<List<Double>> extractedCoordinates = extractCoordinates(jsonResponse);
+                coordinates.addAll(extractedCoordinates);
+            } catch (Exception e) {
+                System.err.printf("Failed to fetch route between (%s) and (%s): %s%n",
+                        startLocation.getDisplayName(), endLocation.getDisplayName(), e.getMessage());
+
+                //TODO: Fallback retry mechanism
+                return List.of();
             }
-            coordinates.addAll(extractedCoordinates);
         }
 
         return coordinates;
