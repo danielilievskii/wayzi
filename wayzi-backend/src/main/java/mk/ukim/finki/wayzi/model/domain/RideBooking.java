@@ -46,10 +46,6 @@ public class RideBooking {
 
     private LocalDateTime bookingTime;
 
-    private boolean driverAbsenceReport;
-
-    private boolean riderAbsenceReport;
-
     public RideBooking(
             Ride ride,
             User booker,
@@ -59,9 +55,7 @@ public class RideBooking {
             Integer bookedSeats,
             Integer totalPrice,
             String qrCodeUrl,
-            LocalDateTime bookingTime,
-            boolean driverAbsenceReport,
-            boolean riderAbsenceReport
+            LocalDateTime bookingTime
     ) {
         this.ride = ride;
         this.booker = booker;
@@ -72,7 +66,5 @@ public class RideBooking {
         this.totalPrice = totalPrice;
         this.qrCodeUrl = qrCodeUrl;
         this.bookingTime = bookingTime;
-        this.driverAbsenceReport = driverAbsenceReport;
-        this.riderAbsenceReport = riderAbsenceReport;
     }
 }
