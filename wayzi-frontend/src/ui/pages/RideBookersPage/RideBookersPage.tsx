@@ -7,13 +7,14 @@ import {downloadProfilePic} from "../../../redux/slices/profilePicSlice.ts";
 import defaultProfilePic from "../../../../public/assets/images/default-profile-pic.png"
 import {fetchBookersByRideId} from "../../../redux/slices/rideBookersSlice.ts";
 import {Link} from "react-router-dom";
+import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
 
 export const RideBookersPage = () => {
 
     const dispatch = useDispatch<AppDispatch>();
+    const {handleThunk, loading} = useAsyncThunkHandler();
 
     const {rideId} = useParams();
-
     const rideBookersState = useSelector((state: RootState) => state.rideBookers);
     const {ride} = rideBookersState
 
@@ -21,12 +22,11 @@ export const RideBookersPage = () => {
     const [bookerProfilePics, setBookerProfilePics] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        if (!ride && rideId) {
-            console.log(rideId)
-            dispatch(fetchBookersByRideId(rideId))
+        if  (rideId && (!ride || ride.id !== rideId)) {
+            handleThunk(dispatch, fetchBookersByRideId, rideId, () => {});
         }
 
-    }, [ride, dispatch]);
+    }, [rideId, dispatch]);
 
     useEffect(() => {
         if (ride) {
@@ -60,6 +60,10 @@ export const RideBookersPage = () => {
 
         setBookerProfilePics(updatedPics);
     }, [pictures, ride]);
+
+    if (loading || !ride) {
+        return <div>Loading...</div>;
+    }
 
 
     return (
@@ -183,7 +187,7 @@ export const RideBookersPage = () => {
                                                                             {booking.message}
                                                                         </p>
 
-                                                                        {(ride.status === 'FINISHED' && booking.checkInStatus === 'NOT_CHECKED_IN' && booking.bookingStatus !== 'CANCELLED') && (
+                                                                        {(ride.status === 'FINISHED' && booking.checkInStatus === 'NOT_CHECKED_IN') && (
                                                                             <div className="d-flex justify-content-end mt-4">
                                                                                 <button className="btn btn-light p-2 color-danger fw-bold text-danger">
                                                                                     Report absence
@@ -198,6 +202,10 @@ export const RideBookersPage = () => {
                                                     ))}
                                                 </div>
                                             </div>
+                                        )}
+
+                                        {ride.bookers && ride.bookers.length === 0 && (
+                                            <p>This ride has no bookings yet.</p>
                                         )}
                                     </div>
                                 </div>

@@ -1,5 +1,6 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
+import jakarta.transaction.Transactional;
 import mk.ukim.finki.wayzi.web.dto.vehicle.CreateVehicleDto;
 import mk.ukim.finki.wayzi.model.exception.AccessDeniedException;
 import mk.ukim.finki.wayzi.model.exception.VehicleNotFoundException;
@@ -63,6 +64,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    @Transactional
     public Vehicle update(Long id, CreateVehicleDto createVehicleDto) {
         Vehicle vehicle = findByIdAndCheckOwnership(id);
         List<Ride> rides = rideService.findAllByVehicleIdForUser(id);

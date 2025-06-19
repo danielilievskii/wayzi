@@ -145,7 +145,7 @@ export const RideBookingCard = (props) => {
                 )}
 
 
-                {(rideBooking.rideBookingStatus === 'ARCHIVED' && rideBooking.checkInStatus === 'NOT_CHECKED_IN') && (
+                {((rideBooking.rideBookingStatus === 'ARCHIVED' || rideBooking.rideBookingStatus === 'CANCELLED') && rideBooking.checkInStatus === 'NOT_CHECKED_IN') && (
                     <div className="col-md-3">
                         <button className="btn btn-light p-2 color-danger text-danger fw-bold w-100">
                             Report absence

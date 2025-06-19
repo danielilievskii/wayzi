@@ -50,7 +50,7 @@ export const CheckIn = (props) => {
                         {/* Booking Statuses */}
                         <div className="row g-4 justify-content-center">
                             <div className="col-md-6">
-                                <div className="text-muted small mb-1">Booking Status</div>
+                                <div className="text-muted mb-1">Booking Status</div>
                                 <span className={`badge fw-medium ${
                                     rideBooking.rideBookingStatus === "CONFIRMED" ? "bg-info-subtle text-info" :
                                         rideBooking.rideBookingStatus === "CANCELLED" ? "bg-danger-subtle text-danger" :
@@ -60,10 +60,10 @@ export const CheckIn = (props) => {
     </span>
                             </div>
                             <div className="col-md-6">
-                                <div className="text-muted small mb-1">Check-In Status</div>
+                                <div className="text-muted mb-1">Check-In Status</div>
                                 <span className={`badge fw-medium ${
                                     rideBooking.checkInStatus === "CHECKED_IN"
-                                        ? "bg-success-subtle text-info"
+                                        ? "bg-info-subtle text-info"
                                         : "bg-warning-subtle text-warning"
                                 }`}>
       {rideBooking.checkInStatus.replace(/_/g, " ")}
