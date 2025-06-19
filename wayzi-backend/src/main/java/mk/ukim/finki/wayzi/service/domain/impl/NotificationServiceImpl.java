@@ -65,32 +65,114 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<CompletableFuture<MailSendingStatus>> notifyDriverOfNewBooking(RideBooking rideBooking) {
-        return List.of();
+        Map<String, Object> model = new HashMap<>();
+        model.put("header", "New Booking");
+        model.put("driverName", rideBooking.getRide().getDriver().getName());
+        model.put("from", rideBooking.getRide().getDepartureLocation().getDisplayName());
+        model.put("to", rideBooking.getRide().getArrivalLocation().getDisplayName());
+        model.put("departureTime", rideBooking.getRide().getDepartureTime());
+
+        model.put("bodyContent", "notify-driver-new-booking");
+
+        String subject = "Wayzi – New Booking!";
+        String template = "layout";
+
+        List<CompletableFuture<MailSendingStatus>> mailStatuses = new ArrayList<>();
+        mailStatuses.add(emailService.sendMail(new String[]{rideBooking.getRide().getDriver().getEmail()}, subject, template, model));
+        return mailStatuses;
     }
 
     @Override
     public List<CompletableFuture<MailSendingStatus>> notifyDriverOfBookingCancellation(RideBooking rideBooking) {
-        return List.of();
+        Map<String, Object> model = new HashMap<>();
+        model.put("header", "Booking Cancellation");
+        model.put("driverName", rideBooking.getRide().getDriver().getName());
+        model.put("from", rideBooking.getRide().getDepartureLocation().getDisplayName());
+        model.put("to", rideBooking.getRide().getArrivalLocation().getDisplayName());
+        model.put("departureTime", rideBooking.getRide().getDepartureTime());
+
+        model.put("bodyContent", "notify-driver-booking-cancellation");
+
+        String subject = "Wayzi – Booking Cancellation";
+        String template = "layout";
+
+        List<CompletableFuture<MailSendingStatus>> mailStatuses = new ArrayList<>();
+        mailStatuses.add(emailService.sendMail(new String[]{rideBooking.getRide().getDriver().getEmail()}, subject, template, model));
+        return mailStatuses;
     }
 
     @Override
     public List<CompletableFuture<MailSendingStatus>> notifyPassengerOfRideStart(RideBooking rideBooking) {
-        return List.of();
+        Map<String, Object> model = new HashMap<>();
+        model.put("header", "Ride Started");
+        model.put("passengerName", rideBooking.getBooker().getName());
+        model.put("from", rideBooking.getRide().getDepartureLocation().getDisplayName());
+        model.put("to", rideBooking.getRide().getArrivalLocation().getDisplayName());
+
+        model.put("bodyContent", "notify-passenger-ride-start");
+
+        String subject = "Wayzi – Ride Started";
+        String template = "layout";
+
+        List<CompletableFuture<MailSendingStatus>> mailStatuses = new ArrayList<>();
+        mailStatuses.add(emailService.sendMail(new String[]{rideBooking.getBooker().getEmail()}, subject, template, model));
+        return mailStatuses;
     }
 
     @Override
     public List<CompletableFuture<MailSendingStatus>> notifyPassengerOfRideFinish(RideBooking rideBooking) {
-        return List.of();
+        Map<String, Object> model = new HashMap<>();
+        model.put("header", "Ride Finished");
+        model.put("passengerName", rideBooking.getBooker().getName());
+        model.put("from", rideBooking.getRide().getDepartureLocation().getDisplayName());
+        model.put("to", rideBooking.getRide().getArrivalLocation().getDisplayName());
+
+        model.put("bodyContent", "notify-passenger-ride-finish");
+
+        String subject = "Wayzi – Ride Finished";
+        String template = "layout";
+
+        List<CompletableFuture<MailSendingStatus>> mailStatuses = new ArrayList<>();
+        mailStatuses.add(emailService.sendMail(new String[]{rideBooking.getBooker().getEmail()}, subject, template, model));
+        return mailStatuses;
     }
 
     @Override
     public List<CompletableFuture<MailSendingStatus>> notifyPassengerOfRideConfirmation(RideBooking rideBooking) {
-        return List.of();
+        Map<String, Object> model = new HashMap<>();
+        model.put("header", "Ride Confirmation");
+        model.put("passengerName", rideBooking.getBooker().getName());
+        model.put("from", rideBooking.getRide().getDepartureLocation().getDisplayName());
+        model.put("to", rideBooking.getRide().getArrivalLocation().getDisplayName());
+        model.put("departureTime", rideBooking.getRide().getDepartureTime());
+
+        model.put("bodyContent", "notify-passenger-ride-confirmation");
+
+        String subject = "Wayzi – Ride Confirmation";
+        String template = "layout";
+
+        List<CompletableFuture<MailSendingStatus>> mailStatuses = new ArrayList<>();
+        mailStatuses.add(emailService.sendMail(new String[]{rideBooking.getBooker().getEmail()}, subject, template, model));
+        return mailStatuses;
     }
 
     @Override
     public List<CompletableFuture<MailSendingStatus>> notifyPassengerOfRideCancellation(RideBooking rideBooking) {
-        return List.of();
+        Map<String, Object> model = new HashMap<>();
+        model.put("header", "Ride Cancellation");
+        model.put("passengerName", rideBooking.getBooker().getName());
+        model.put("from", rideBooking.getRide().getDepartureLocation().getDisplayName());
+        model.put("to", rideBooking.getRide().getArrivalLocation().getDisplayName());
+        model.put("departureTime", rideBooking.getRide().getDepartureTime());
+
+        model.put("bodyContent", "notify-passenger-ride-cancellation");
+
+        String subject = "Wayzi – Ride Cancellation";
+        String template = "layout";
+
+        List<CompletableFuture<MailSendingStatus>> mailStatuses = new ArrayList<>();
+        mailStatuses.add(emailService.sendMail(new String[]{rideBooking.getBooker().getEmail()}, subject, template, model));
+        return mailStatuses;
     }
 
 }
