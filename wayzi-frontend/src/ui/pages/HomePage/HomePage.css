@@ -8,13 +8,14 @@
 
 .landing-page {
     background-color: white;
-    height: 100vh;
+    min-height: 100vh;
     overflow-y: hidden;
     font-family: "Montserrat", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-size: 1rem;
     padding-top: 100px;
+    padding-bottom: 100px;
     /*padding-top: 95px;*/
 }
 

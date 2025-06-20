@@ -11,10 +11,6 @@ export const ProfilePage = () => {
 
                     <ProfilePictureCard/>
 
-                    {/* Additional Profile Sections */}
-                    <div className="floating-card shadow-sm p-3">
-                        <h5>Verify your profile</h5>
-                    </div>
                     <div className="floating-card shadow-sm p-3">
                         <h5>About you</h5>
                     </div>

@@ -16,7 +16,7 @@ export const RideCard = (props) => {
     }, [pictures, ride.driverId]);
 
     return (
-        <div key={ride.id} className="col-md-12 ride-card">
+        <div key={ride.id} className="col-md-12 ride-card p-0">
             <Link to={`/rides/${ride.id}`} className="text-decoration-none">
 
                 <div className="card shadow-sm border-0 px-3 py-2 p-md-4">

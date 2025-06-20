@@ -105,7 +105,7 @@ export const PublishedRideCard = (props) => {
                                             <span className="mx-2 color-gray">
                                             <span>{ride.availableSeats}</span>
                                             <span>
-                                                {ride.availableSeats == 1 ? ("booked seat") : ("booked seats")}
+                                                {ride.availableSeats == 1 ? (" available seat") : (" available seats")}
                                             </span>
                                     </span>
                                         </p>

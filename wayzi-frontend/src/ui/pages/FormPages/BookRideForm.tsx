@@ -47,7 +47,7 @@ export const BookRideForm = () => {
         const resultAction = await dispatch(createRideBooking({ id: String(ride_id), data }));
 
         if(createRideBooking.fulfilled.match(resultAction)) {
-            navigate("/rides/bookings")
+            navigate("/rides/" + ride_id)
             reset();
         }
     };

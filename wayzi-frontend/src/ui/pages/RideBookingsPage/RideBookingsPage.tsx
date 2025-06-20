@@ -9,10 +9,15 @@ import {NoRideBookings} from "../../components/empty-states/NoRideBookings.tsx";
 import {RideBookingCard} from "../../components/ride-bookings/RideBookingCard/RideBookingCard.tsx";
 import {rideBookingStatusFilters} from "../../../constants/filters.ts";
 import {StatusFilterForm} from "../../components/shared/StatusFilterForm/StatusFilterForm.tsx";
+import {downloadProfilePic} from "../../../redux/slices/profilePicSlice.ts";
 
 export const RideBookingsPage = () => {
 
     const dispatch = useDispatch<AppDispatch>();
+
+    const { pictures } = useSelector((state: RootState) => state.profilePics);
+
+
     const rideBookingsState = useSelector((state: RootState) => state.rideBookings);
     const {rideBookings, filter, pagination} = rideBookingsState
     const {handleThunk, loading, success, error} = useAsyncThunkHandler();
@@ -28,6 +33,26 @@ export const RideBookingsPage = () => {
             dispatch(setPagination(newPagination));
         })
     };
+
+    useEffect(() => {
+        if(rideBookings.length !== 0) {
+            const missingPicUserIds = new Set<string>();
+
+            rideBookings.forEach((ride) => {
+                if (ride.driverId != null && !isNaN(Number(ride.driverId))) {
+                    const driverIdStr = String(ride.driverId);
+                    if (!pictures[driverIdStr]) {
+                        missingPicUserIds.add(driverIdStr);
+                    }
+                }
+            });
+
+            missingPicUserIds.forEach((userId) => {
+                dispatch(downloadProfilePic(userId));
+            });
+        }
+
+    }, [rideBookings]);
 
     return (
 

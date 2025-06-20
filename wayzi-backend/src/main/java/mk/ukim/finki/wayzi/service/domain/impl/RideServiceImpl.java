@@ -269,6 +269,7 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
+    @Transactional
     public List<Ride> findAllByVehicleIdForUser(Long vehicleId) {
         Long driverId = authService.getAuthenticatedUser().getId();
         return rideRepository.findAllByDriverIdAndVehicleId(driverId, vehicleId);

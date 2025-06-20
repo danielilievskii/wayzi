@@ -18,8 +18,8 @@ public record RideBookersDto(
     public static RideBookersDto from(Ride ride) {
         return new RideBookersDto(
                 ride.getId(),
-                DisplayLocationDto.from(ride.getArrivalLocation()),
                 DisplayLocationDto.from(ride.getDepartureLocation()),
+                DisplayLocationDto.from(ride.getArrivalLocation()),
                 ride.getAvailableSeats(),
                 ride.getPricePerSeat(),
                 ride.getStatus(),

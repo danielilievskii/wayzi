@@ -7,13 +7,14 @@ import {downloadProfilePic} from "../../../redux/slices/profilePicSlice.ts";
 import defaultProfilePic from "../../../../public/assets/images/default-profile-pic.png"
 import {fetchBookersByRideId} from "../../../redux/slices/rideBookersSlice.ts";
 import {Link} from "react-router-dom";
+import {useAsyncThunkHandler} from "../../../hooks/useAsyncThunkHandler.ts";
 
 export const RideBookersPage = () => {
 
     const dispatch = useDispatch<AppDispatch>();
+    const {handleThunk, loading} = useAsyncThunkHandler();
 
     const {rideId} = useParams();
-
     const rideBookersState = useSelector((state: RootState) => state.rideBookers);
     const {ride} = rideBookersState
 
@@ -21,12 +22,11 @@ export const RideBookersPage = () => {
     const [bookerProfilePics, setBookerProfilePics] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        if (!ride && rideId) {
-            console.log(rideId)
-            dispatch(fetchBookersByRideId(rideId))
+        if  (rideId && (!ride || ride.id !== rideId)) {
+            handleThunk(dispatch, fetchBookersByRideId, rideId, () => {});
         }
 
-    }, [ride, dispatch]);
+    }, [rideId, dispatch]);
 
     useEffect(() => {
         if (ride) {
@@ -60,6 +60,10 @@ export const RideBookersPage = () => {
 
         setBookerProfilePics(updatedPics);
     }, [pictures, ride]);
+
+    if (loading || !ride) {
+        return <div>Loading...</div>;
+    }
 
 
     return (
@@ -122,12 +126,12 @@ export const RideBookersPage = () => {
                                                                     </Link>
                                                                 </div>
 
-                                                                <div className="row">
+                                                                <div className="row mt-4">
                                                                     <div className="col-md-6 p-0">
                                                                         <div className="row g-3">
                                                                             <div className="col-6">
                                                                                 <div
-                                                                                    className="text-muted small mb-1">Booked
+                                                                                    className="text-muted mb-1">Booked
                                                                                     Seats
                                                                                 </div>
                                                                                 <div
@@ -135,7 +139,7 @@ export const RideBookersPage = () => {
                                                                             </div>
                                                                             <div className="col-6">
                                                                                 <div
-                                                                                    className="text-muted small mb-1">Total
+                                                                                    className="text-muted mb-1">Total
                                                                                     Price
                                                                                 </div>
                                                                                 <div
@@ -145,7 +149,7 @@ export const RideBookersPage = () => {
                                                                             </div>
                                                                             <div className="col-6">
                                                                                 <div
-                                                                                    className="text-muted small mb-1">Payment
+                                                                                    className="text-muted mb-1">Payment
                                                                                     Method
                                                                                 </div>
                                                                                 <div
@@ -153,7 +157,7 @@ export const RideBookersPage = () => {
                                                                             </div>
                                                                             <div className="col-6">
                                                                                 <div
-                                                                                    className="text-muted small mb-1">Booking
+                                                                                    className="text-muted mb-1">Booking
                                                                                     Status
                                                                                 </div>
                                                                                 <span
@@ -169,7 +173,7 @@ export const RideBookersPage = () => {
                                                                                 </span>
                                                                             </div>
                                                                             <div className="col-12">
-                                                                                <div className="text-muted small mt-2">
+                                                                                <div className="text-muted small mt-4">
                                                                                     <i>Booked
                                                                                         on {formatDateTime(booking.bookingTime, "PPPp")}</i>
                                                                                 </div>
@@ -178,12 +182,12 @@ export const RideBookersPage = () => {
                                                                     </div>
 
                                                                     <div className="col-md-6 p-0">
-                                                                        <p className="text-muted small mb-1">Message</p>
-                                                                        <p className="border small rounded-3 p-3 bg-light text-dark fst-italic">
+                                                                        <p className="text-muted mb-1">Message</p>
+                                                                        <p className="border rounded-3 p-3 bg-light text-dark fst-italic">
                                                                             {booking.message}
                                                                         </p>
 
-                                                                        {(ride.status === 'FINISHED' && booking.checkInStatus === 'NOT_CHECKED_IN' && booking.bookingStatus !== 'CANCELLED') && (
+                                                                        {(ride.status === 'FINISHED' && booking.checkInStatus === 'NOT_CHECKED_IN') && (
                                                                             <div className="d-flex justify-content-end mt-4">
                                                                                 <button className="btn btn-light p-2 color-danger fw-bold text-danger">
                                                                                     Report absence
@@ -198,6 +202,10 @@ export const RideBookersPage = () => {
                                                     ))}
                                                 </div>
                                             </div>
+                                        )}
+
+                                        {ride.bookers && ride.bookers.length === 0 && (
+                                            <p>This ride has no bookings yet.</p>
                                         )}
                                     </div>
                                 </div>

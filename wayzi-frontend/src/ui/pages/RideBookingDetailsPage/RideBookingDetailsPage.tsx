@@ -56,7 +56,7 @@ export const RideBookingDetailsPage = () => {
                                     <div className="card-body p-5">
 
                                         {/* Footer */}
-                                        <div className="d-flex justify-content-between align-items-center mb-4">
+                                        <div className="d-flex justify-content-between align-items-center mb-3">
                                             <div>
                                                 <h3 className="fw-bold text-dark mb-1">
                                                     Booking Details
@@ -76,23 +76,23 @@ export const RideBookingDetailsPage = () => {
                                                 </button>
                                             </Link>
 
-                                            <div className="row g-3">
+                                            <div className="row g-3 mt-3">
                                                 <div className="col-md-6">
-                                                    <label className="text-muted small">Departure</label>
+                                                    <label className="text-muted">Departure</label>
                                                     <div className="fw-medium">
                                                         {formatDateTime(rideBooking.departureTime, 'PPPp')}
-                                                        <div className="text-muted small">📍
-                                                            {rideBooking.departureAddress || "No specific address provided."}
-                                                        </div>
+                                                        {/*<div className="text-muted small">📍*/}
+                                                        {/*    {rideBooking.departureAddress || "No specific address provided."}*/}
+                                                        {/*</div>*/}
                                                     </div>
                                                 </div>
                                                 <div className="col-md-6">
-                                                    <label className="text-muted small">Arrival</label>
+                                                    <label className="text-muted">Arrival</label>
                                                     <div className="fw-medium">
                                                         {formatDateTime(rideBooking.arrivalTime, 'PPPp')}
-                                                        <div className="text-muted small">
-                                                            📍 {rideBooking.arrivalAddress || "No specific address provided."}
-                                                        </div>
+                                                        {/*<div className="text-muted small">*/}
+                                                        {/*    📍 {rideBooking.arrivalAddress || "No specific address provided."}*/}
+                                                        {/*</div>*/}
                                                     </div>
                                                 </div>
                                             </div>
@@ -103,7 +103,7 @@ export const RideBookingDetailsPage = () => {
                                         {/* Ride Info Summary */}
                                         <div className="row g-4 mt-3">
                                             <div className="col-md-4">
-                                                <div className="text-muted small mb-1">Driver</div>
+                                                <div className="text-muted mb-1">Driver</div>
                                                 <div className="d-flex align-items-center gap-2 mb-2">
                                                     <img
                                                         src={driverProfilePic || defaultProfilePic}
@@ -117,25 +117,33 @@ export const RideBookingDetailsPage = () => {
                                                 {/*<div className="fw-semibold">{rideBooking.driverName}</div>*/}
                                             </div>
                                             <div className="col-md-4">
-                                                <div className="text-muted small mb-1">Payment Method</div>
+                                                <div className="text-muted  mb-1">Payment Method</div>
                                                 <div className="fw-semibold">{rideBooking.paymentMethod}</div>
                                             </div>
                                             <div className="col-md-4">
-                                                <div className="text-muted small mb-1">Booking Status</div>
-                                                <span className="badge bg-info-subtle text-info fw-medium">
+                                                <div className="text-muted  mb-1">Booking Status</div>
+                                                <span
+                                                    className={`badge fw-medium ${
+                                                        rideBooking.rideBookingStatus === "CONFIRMED"
+                                                            ? "bg-info-subtle text-info"
+                                                            :  rideBooking.rideBookingStatus === "CANCELLED"
+                                                                ? "bg-danger-subtle text-danger"
+                                                                : "bg-warning-subtle text-warning"
+                                                    }`}
+                                                >
                                                     {rideBooking.rideBookingStatus}
                                                 </span>
                                             </div>
                                             <div className="col-md-4">
-                                                <div className="text-muted small mb-1">Booked Seats</div>
+                                                <div className="text-muted  mb-1">Booked Seats</div>
                                                 <div className="fw-semibold">{rideBooking.bookedSeats}</div>
                                             </div>
                                             <div className="col-md-4">
-                                                <div className="text-muted small mb-1">Total Price</div>
+                                                <div className="text-muted  mb-1">Total Price</div>
                                                 <div className="fw-semibold">{rideBooking.totalPrice},00 MKD</div>
                                             </div>
                                             <div className="col-md-4">
-                                                <div className="text-muted small mb-1">Check-in Status</div>
+                                                <div className="text-muted  mb-1">Check-in Status</div>
                                                 <span
                                                     className={`badge fw-medium ${
                                                         rideBooking.checkInStatus === "CHECKED_IN"
@@ -149,7 +157,7 @@ export const RideBookingDetailsPage = () => {
                                                 </span>
                                             </div>
                                             <div className="mt-4">
-                                                <div className="text-muted small mb-1">Message</div>
+                                                <div className="text-muted  mb-1">Message</div>
                                                 <div className="border rounded-3 p-3 bg-light text-dark fst-italic">
                                                     {rideBooking.message}
                                                 </div>
