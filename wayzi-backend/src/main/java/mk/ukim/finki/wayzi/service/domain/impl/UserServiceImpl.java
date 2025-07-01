@@ -3,7 +3,7 @@ package mk.ukim.finki.wayzi.service.domain.impl;
 
 import jakarta.transaction.Transactional;
 import mk.ukim.finki.wayzi.model.domain.User;
-import mk.ukim.finki.wayzi.model.exception.ProfilePictureNotFoundException;
+import mk.ukim.finki.wayzi.model.exception.ResourceNotFoundException;
 import mk.ukim.finki.wayzi.repository.UserRepository;
 import mk.ukim.finki.wayzi.service.domain.AuthService;
 import mk.ukim.finki.wayzi.service.domain.UserService;
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
         byte[] imageBytes = user.getProfilePic();
         if (imageBytes == null || imageBytes.length == 0) {
-            throw new ProfilePictureNotFoundException(userId);
+            throw new ResourceNotFoundException(String.format("Profile picture for the user with id: %d was not found", userId));
         }
 
         return new ByteArrayResource(imageBytes);

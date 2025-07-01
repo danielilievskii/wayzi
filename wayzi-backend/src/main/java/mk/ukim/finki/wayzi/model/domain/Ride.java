@@ -105,6 +105,7 @@ public class Ride {
     }
 
     public List<RideBooking> getActiveRideBookings() {
+        if (this.rideBookings == null) return List.of();
         return this.rideBookings.stream()
                 .filter(rideBooking -> !rideBooking.getBookingStatus().equals(RideBookingStatus.CANCELLED))
                 .toList();

@@ -8,6 +8,7 @@ import mk.ukim.finki.wayzi.model.enumeration.PaymentMethod;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
 import mk.ukim.finki.wayzi.model.exception.*;
+import mk.ukim.finki.wayzi.model.exception.ResourceNotFoundException;
 import mk.ukim.finki.wayzi.repository.RideBookingRepository;
 import mk.ukim.finki.wayzi.repository.RideRepository;
 import mk.ukim.finki.wayzi.service.domain.*;
@@ -49,7 +50,7 @@ public class RideBookingServiceImpl implements RideBookingService {
     @Override
     public RideBooking findById(Long rideBookingId) {
         return rideBookingRepository.findById(rideBookingId)
-                .orElseThrow(() -> new RideBookingNotFoundException(rideBookingId));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Ride booking with id: %d was not found.", rideBookingId)));
     }
 
     @Override
@@ -138,23 +139,23 @@ public class RideBookingServiceImpl implements RideBookingService {
 
     private void validateBookingRequest(Ride ride, User user, Integer bookedSeats) {
         if (isUserBookingOwnRide(ride.getDriver(), user)) {
-            throw new RideBookingNotAllowedException("You cannot book your own ride.");
+            throw new IllegalStateException("You cannot book your own ride.");
         }
 
         if(hasUserAlreadyBooked(ride, user)) {
-            throw new RideBookingNotAllowedException("You already have an active booking for this ride.");
+            throw new IllegalStateException("You already have an active booking for this ride.");
         }
 
         if (!ride.getStatus().name().equals("PENDING") && !ride.getStatus().name().equals("CONFIRMED")) {
-            throw new RideBookingNotAllowedException("You cannot book this ride.");
+            throw new IllegalStateException("You cannot book this ride anymore.");
         }
 
         if(LocalDateTime.now().isAfter(ride.getDepartureTime())) {
-            throw new RideBookingNotAllowedException("You cannot book this ride.");
+            throw new IllegalStateException("You cannot book this ride anymore.");
         }
 
         if (bookedSeats > ride.getAvailableSeats()) {
-            throw new RideBookingNotAllowedException("You cannot book more seats than are available.");
+            throw new IllegalArgumentException("You cannot book more seats than are available.");
         }
     }
 
@@ -193,12 +194,12 @@ public class RideBookingServiceImpl implements RideBookingService {
 
     private void validateBookingCancellation(RideBooking rideBooking) {
         if (rideBooking.getBookingStatus() == RideBookingStatus.CANCELLED) {
-            throw new RideBookingCancellationNotAllowedException("You cannot cancel a ride twice.");
+            throw new IllegalStateException("You cannot cancel a ride twice.");
         }
 
         RideStatus rideStatus = rideBooking.getRide().getStatus();
         if(rideStatus == RideStatus.STARTED || rideStatus == RideStatus.FINISHED || rideStatus == RideStatus.CANCELLED) {
-            throw new RideBookingCancellationNotAllowedException("Ride cancellation not possible.");
+            throw new IllegalStateException("Ride cancellation not possible.");
         }
     }
 
@@ -219,13 +220,12 @@ public class RideBookingServiceImpl implements RideBookingService {
 
     private void validatePassengerCheckIn(RideBooking rideBooking) {
         if (rideBooking.getBookingStatus() == RideBookingStatus.CANCELLED) {
-            throw new PassengerCheckInNotAllowedException("The ride booking is cancelled.");
+            throw new IllegalStateException("The ride booking is cancelled.");
         }
 
         RideStatus rideStatus = rideBooking.getRide().getStatus();
         if(rideStatus == RideStatus.STARTED || rideStatus == RideStatus.FINISHED || rideStatus == RideStatus.CANCELLED) {
-            throw new PassengerCheckInNotAllowedException("Passenger check-in not possible.");
+            throw new IllegalStateException("Passenger check-in not possible.");
         }
-
     }
 }

@@ -3,7 +3,7 @@ package mk.ukim.finki.wayzi.service.domain.impl;
 import jakarta.transaction.Transactional;
 import mk.ukim.finki.wayzi.model.domain.*;
 import mk.ukim.finki.wayzi.model.enumeration.ReportType;
-import mk.ukim.finki.wayzi.model.exception.ReportImageNotFoundException;
+import mk.ukim.finki.wayzi.model.exception.ResourceNotFoundException;
 import mk.ukim.finki.wayzi.repository.ReportImageRepository;
 import mk.ukim.finki.wayzi.repository.ReportRepository;
 import mk.ukim.finki.wayzi.service.domain.AuthService;
@@ -60,11 +60,11 @@ public class ReportServiceImpl implements ReportService {
     @Transactional
     public Resource loadImageAsResource(Long id) {
         ReportImage image = imageRepository.findById(id)
-                .orElseThrow(() -> new ReportImageNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Report image with id: %d was not found.", id)));
 
         byte[] imageBytes = image.getPhoto();
         if (imageBytes == null || imageBytes.length == 0) {
-            throw new ReportImageNotFoundException(id);
+            throw new ResourceNotFoundException(String.format("Report image with id: %d was not found.", id));
         }
 
         return new ByteArrayResource(imageBytes);

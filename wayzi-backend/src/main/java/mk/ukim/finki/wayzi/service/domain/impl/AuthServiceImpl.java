@@ -4,13 +4,12 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import mk.ukim.finki.wayzi.model.exception.ConflictException;
 import mk.ukim.finki.wayzi.service.domain.VerificationTokenService;
 import mk.ukim.finki.wayzi.web.dto.auth.SignInDto;
 import mk.ukim.finki.wayzi.web.dto.auth.SignUpDto;
 import mk.ukim.finki.wayzi.model.exception.AuthenticationException;
 import mk.ukim.finki.wayzi.model.exception.AuthenticationFailedException;
-import mk.ukim.finki.wayzi.model.exception.InvalidCredentialsException;
-import mk.ukim.finki.wayzi.model.exception.UserAlreadyExistsException;
 import mk.ukim.finki.wayzi.model.domain.User;
 import mk.ukim.finki.wayzi.repository.UserRepository;
 import mk.ukim.finki.wayzi.service.domain.AuthService;
@@ -18,6 +17,7 @@ import mk.ukim.finki.wayzi.service.domain.JwtService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User signUp(SignUpDto signUpDto, HttpServletRequest request, HttpServletResponse response) {
         if (userRepository.existsByEmail(signUpDto.email())) {
-            throw new UserAlreadyExistsException("User with this email already exists.");
+            throw new ConflictException("User with this email already exists.");
         }
 
         User user = new User(signUpDto.email(), passwordEncoder.encode(signUpDto.password()), signUpDto.name(), false);
@@ -71,8 +71,10 @@ public class AuthServiceImpl implements AuthService {
 
             return user;
 
-        } catch (org.springframework.security.core.AuthenticationException e) {
-            throw new InvalidCredentialsException("Invalid email or password.");
+        } catch (UsernameNotFoundException e) {
+            throw e;
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Invalid email or password.");
         } catch (Exception e) {
             throw new AuthenticationFailedException("An error occurred during login.");
         }

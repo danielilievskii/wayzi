@@ -34,6 +34,7 @@ public record RideBookingUserDetailsDto(
     }
 
     public static List<RideBookingUserDetailsDto> from (List<RideBooking> rideBookings) {
+        if(rideBookings == null) return List.of();
         return rideBookings.stream().map(RideBookingUserDetailsDto::from).toList();
     }
 }

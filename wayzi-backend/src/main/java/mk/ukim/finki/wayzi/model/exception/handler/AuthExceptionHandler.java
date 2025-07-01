@@ -1,30 +1,30 @@
 package mk.ukim.finki.wayzi.model.exception.handler;
 
+import io.jsonwebtoken.security.SignatureException;
 import mk.ukim.finki.wayzi.model.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.security.SignatureException;
-
 @RestControllerAdvice
 public class AuthExceptionHandler {
-
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<String> handleInvalidCredentialsException(InvalidCredentialsException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-    }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<String> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDeniedException(Exception e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -39,11 +39,6 @@ public class AuthExceptionHandler {
 
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<String> handleSignatureException(SignatureException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid JWT token");
-    }
-
-    @ExceptionHandler(EmailAlreadyVerifiedException.class)
-    public ResponseEntity<String> handleEmailAlreadyVerifiedException(EmailAlreadyVerifiedException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid JWT token.");
     }
 }

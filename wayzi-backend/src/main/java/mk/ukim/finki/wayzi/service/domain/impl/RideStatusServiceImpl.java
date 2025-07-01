@@ -4,7 +4,6 @@ import mk.ukim.finki.wayzi.model.domain.Ride;
 import mk.ukim.finki.wayzi.model.domain.RideBooking;
 import mk.ukim.finki.wayzi.model.enumeration.RideBookingStatus;
 import mk.ukim.finki.wayzi.model.enumeration.RideStatus;
-import mk.ukim.finki.wayzi.model.exception.InvalidRideStatusException;
 import mk.ukim.finki.wayzi.service.domain.NotificationService;
 import mk.ukim.finki.wayzi.service.domain.RideBookingService;
 import mk.ukim.finki.wayzi.service.domain.RideService;
@@ -44,7 +43,7 @@ public class RideStatusServiceImpl implements RideStatusService {
         RideStatus currentStatus = ride.getStatus();
 
         if(!canTransitionTo(currentStatus, newStatus)) {
-            throw new InvalidRideStatusException("Transition from " + currentStatus.name() + " to " + newStatus.name() + " is not allowed.");
+            throw new IllegalStateException("Transition from " + currentStatus.name() + " to " + newStatus.name() + " is not allowed.");
         }
 
         if (newStatus == RideStatus.CANCELLED) {
@@ -73,7 +72,7 @@ public class RideStatusServiceImpl implements RideStatusService {
     private void validateRideCanStart(Ride ride) {
         LocalDateTime currentTime = LocalDateTime.now();
         if (currentTime.isBefore(ride.getDepartureTime())) {
-            throw new InvalidRideStatusException("The ride cannot start before the scheduled departure time.");
+            throw new IllegalStateException("The ride cannot start before the scheduled departure time.");
         }
     }
 

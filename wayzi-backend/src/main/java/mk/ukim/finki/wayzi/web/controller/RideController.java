@@ -3,6 +3,7 @@ package mk.ukim.finki.wayzi.web.controller;
 import mk.ukim.finki.wayzi.service.application.RideStatusApplicationService;
 import mk.ukim.finki.wayzi.web.dto.ride.*;
 import mk.ukim.finki.wayzi.service.application.RideApplicationService;
+import mk.ukim.finki.wayzi.web.dto.ridebooking.RideBookersDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,27 +37,27 @@ public class RideController {
     }
 
     @GetMapping("/published")
-    public ResponseEntity<?> findPublishedRidesPage(@ModelAttribute PublishedRideFilterDto publishedRideFilterDto) {
+    public ResponseEntity<RidePageDto> findPublishedRidesPage(@ModelAttribute PublishedRideFilterDto publishedRideFilterDto) {
         return ResponseEntity.ok(rideApplicationService.findPublishedRidesPageForUser(publishedRideFilterDto));
     }
 
     @GetMapping("/published/{id}/bookings")
-    public ResponseEntity<?> findBookersById(@PathVariable Long id) {
+    public ResponseEntity<RideBookersDto> findBookersById(@PathVariable Long id) {
         return ResponseEntity.ok(rideApplicationService.findBookersById(id));
     }
 
     @PostMapping
-    public ResponseEntity<?> createRide(@RequestBody CreateRideDto createRideDto) {
+    public ResponseEntity<DisplayRideDto> createRide(@RequestBody CreateRideDto createRideDto) {
         return ResponseEntity.ok(rideApplicationService.save(createRideDto));
     }
 
     @PutMapping("/published/{id}/edit")
-    public ResponseEntity<?> updateRide(@PathVariable Long id, @RequestBody UpdateRideDto updateRideDto) {
+    public ResponseEntity<DisplayRideDto> updateRide(@PathVariable Long id, @RequestBody UpdateRideDto updateRideDto) {
         return ResponseEntity.ok(rideApplicationService.edit(id, updateRideDto));
     }
 
     @PutMapping("/update-status")
-    public ResponseEntity<?> updateRideStatus(@RequestBody UpdateRideStatusDto updateRideStatusDto) {        ;
+    public ResponseEntity<DisplayRideDto> updateRideStatus(@RequestBody UpdateRideStatusDto updateRideStatusDto) {        ;
         return ResponseEntity.ok(rideStatusApplicationService.updateRideStatus(updateRideStatusDto));
     }
 

@@ -1,9 +1,9 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
 import jakarta.transaction.Transactional;
+import mk.ukim.finki.wayzi.model.exception.ResourceNotFoundException;
 import mk.ukim.finki.wayzi.web.dto.vehicle.CreateVehicleDto;
 import mk.ukim.finki.wayzi.model.exception.AccessDeniedException;
-import mk.ukim.finki.wayzi.model.exception.VehicleNotFoundException;
 import mk.ukim.finki.wayzi.model.domain.Ride;
 import mk.ukim.finki.wayzi.model.domain.User;
 import mk.ukim.finki.wayzi.model.domain.Vehicle;
@@ -32,13 +32,13 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public Vehicle findById(Long id) {
         return vehicleRepository.findById(id)
-                .orElseThrow(() -> new VehicleNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Vehicle with id: %d was not found.", id)));
     }
 
     @Override
     public Vehicle findByIdAndCheckOwnership(Long id) {
         Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new VehicleNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Vehicle with id: %d was not found.", id)));
 
         User currentUser = authService.getAuthenticatedUser();
 

@@ -26,7 +26,6 @@ public class RideBookingController {
             @RequestBody CreateRideBookingDto rideBookingDto) {
 
         return ResponseEntity.ok(rideBookingApplicationService.bookRide(rideId, rideBookingDto));
-
     }
 
     @PutMapping("/rides/bookings/{rideBookingId}/cancel")

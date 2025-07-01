@@ -4,9 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wayzi.model.domain.VerificationToken;
 import mk.ukim.finki.wayzi.model.domain.User;
-import mk.ukim.finki.wayzi.model.exception.EmailAlreadyVerifiedException;
-import mk.ukim.finki.wayzi.model.exception.VerificationTokenExpiredException;
-import mk.ukim.finki.wayzi.model.exception.VerificationTokenNotFoundException;
+import mk.ukim.finki.wayzi.model.exception.ConflictException;
+import mk.ukim.finki.wayzi.model.exception.ResourceNotFoundException;
 import mk.ukim.finki.wayzi.repository.UserRepository;
 import mk.ukim.finki.wayzi.repository.VerificationTokenRepository;
 import mk.ukim.finki.wayzi.service.domain.NotificationService;
@@ -45,14 +44,14 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Transactional
     public VerificationToken validateToken(String token) {
         VerificationToken verificationToken = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new VerificationTokenNotFoundException("The verification link is invalid."));
+                .orElseThrow(() -> new ResourceNotFoundException("The verification link is invalid."));
 
         if (verificationToken.isExpired()) {
-            throw new VerificationTokenExpiredException("This verification link has expired.");
+            throw new IllegalStateException("This verification link has expired.");
         }
 
         if (verificationToken.isUsed()) {
-            throw new EmailAlreadyVerifiedException("Email already verified.");
+            throw new ConflictException("Email already verified.");
         }
 
         User user = verificationToken.getUser();

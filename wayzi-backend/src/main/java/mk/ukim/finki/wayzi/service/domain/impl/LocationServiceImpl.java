@@ -1,7 +1,7 @@
 package mk.ukim.finki.wayzi.service.domain.impl;
 
-import mk.ukim.finki.wayzi.model.exception.LocationNotFoundException;
 import mk.ukim.finki.wayzi.model.domain.Location;
+import mk.ukim.finki.wayzi.model.exception.ResourceNotFoundException;
 import mk.ukim.finki.wayzi.repository.LocationRepository;
 import mk.ukim.finki.wayzi.service.domain.LocationService;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,6 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Location findById(Long id) {
         return locationRepository.findById(id)
-                .orElseThrow(() -> new LocationNotFoundException(id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Location with id: %d was not found.", id)));
     }
 }
