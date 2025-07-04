@@ -53,7 +53,7 @@ export const Header = () => {
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link " to="/rides/publish">
-                                <button className="btn btn-light p-2 rounded">
+                                <button id='publishRideButton' className="btn btn-light p-2 rounded">
                                     <i className="fa-solid fa-plus"></i> <span className="d-3">Publish a ride</span>
                                 </button>
 

@@ -114,7 +114,7 @@ export const PublishRideForm = () => {
                                     autoComplete="off"
                                 />
                                 {errors.departureLocationId && (
-                                    <p className="text-danger">{errors.departureLocationId.message}</p>
+                                    <p id="departureLocationError" className="text-danger">{errors.departureLocationId.message}</p>
                                 )}
 
                                 {departureSuggestions && departureInput && (
@@ -146,7 +146,7 @@ export const PublishRideForm = () => {
                             <div className="input-group">
                                 <input type="text" className="form-control" {...register("departureAddress")} min="0"/>
                             </div>
-                            {errors.departureAddress && <p className="text-danger">{errors.departureAddress.message}</p>}
+                            {errors.departureAddress && <p  id="departureAddressError" className="text-danger">{errors.departureAddress.message}</p>}
                         </div>
 
                         <div className="row mb-3">
@@ -154,7 +154,7 @@ export const PublishRideForm = () => {
                             <div className="input-group">
                                 <input type="datetime-local"
                                        id="datePickerDeparture"
-                                       defaultValue={new Date().toISOString().slice(0, 16)}
+                                       // defaultValue={new Date(Date.now() + 60 * 60 * 3000).toISOString().slice(0, 16)}
                                        min={new Date().toISOString().slice(0, 16)}
                                        className="form-control"
                                        {...register("departureTime")}
@@ -166,7 +166,7 @@ export const PublishRideForm = () => {
                                 <i className="fa-solid fa-calendar"></i>
                             </span>
                             </div>
-                            {errors.departureTime && <p className="text-danger">{errors.departureTime.message}</p>}
+                            {errors.departureTime && <p id="departureTime" className="text-danger">{errors.departureTime.message}</p>}
                         </div>
 
 
@@ -195,7 +195,7 @@ export const PublishRideForm = () => {
                                         autoComplete="off"
                                     />
                                 </div>
-                                {errors.arrivalLocationId && <p className="text-danger">{errors.arrivalLocationId.message}</p>}
+                                {errors.arrivalLocationId && <p id="arrivalLocationError" className="text-danger">{errors.arrivalLocationId.message}</p>}
 
                                 {arrivalSuggestions && arrivalInput && (
                                     <div className="list-group position-absolute w-100" style={{zIndex: 1000, marginTop: 10}}>
@@ -223,7 +223,7 @@ export const PublishRideForm = () => {
                             <div className="input-group">
                                 <input type="text" className="form-control" {...register("arrivalAddress")} min="0"/>
                             </div>
-                            {errors.arrivalAddress && <p className="text-danger">{errors.arrivalAddress.message}</p>}
+                            {errors.arrivalAddress && <p id="arrivalAddressError" className="text-danger">{errors.arrivalAddress.message}</p>}
                         </div>
 
                         <div className="row mb-3">
@@ -232,7 +232,7 @@ export const PublishRideForm = () => {
                                 <input type="datetime-local"
                                        id="datePickerArrival"
                                        className="form-control"
-                                       defaultValue={new Date(Date.now() + 60 * 60 * 2000).toISOString().slice(0, 16)}
+                                       // defaultValue={new Date(Date.now() + 60 * 60 * 5000).toISOString().slice(0, 16)}
                                        min={new Date().toISOString().slice(0, 16)}
                                        {...register("arrivalTime")}
                                 />
@@ -243,7 +243,7 @@ export const PublishRideForm = () => {
                                         <i className="fa-solid fa-calendar"></i>
                                     </span>
                             </div>
-                            {errors.arrivalTime && <p className="text-danger">{errors.arrivalTime.message}</p>}
+                            {errors.arrivalTime && <p id="arrivalTimeError" className="text-danger">{errors.arrivalTime.message}</p>}
                         </div>
 
                     </div>
@@ -260,7 +260,7 @@ export const PublishRideForm = () => {
                                 </option>
                             ))}
                         </select>
-                        {errors.vehicleId && <p className="text-danger">{errors.vehicleId.message}</p>}
+                        {errors.vehicleId && <p id="vehicleError" className="text-danger">{errors.vehicleId.message}</p>}
                     </div>
 
                     <div className="col-md-4 mb-3">
@@ -269,7 +269,7 @@ export const PublishRideForm = () => {
                             <input type="number" className="form-control" {...register("availableSeats")} min="1"/>
                             <span className="input-group-text"><i className="fa-solid fa-users"></i></span>
                         </div>
-                        {errors.availableSeats && <p className="text-danger">{errors.availableSeats.message}</p>}
+                        {errors.availableSeats && <p id="availableSeatsError" className="text-danger">{errors.availableSeats.message}</p>}
                     </div>
 
                     <div className="col-md-4 mb-3">
@@ -278,7 +278,7 @@ export const PublishRideForm = () => {
                             <input type="number" className="form-control" {...register("pricePerSeat")} min="0"/>
                             <span className="input-group-text"><strong>MKD</strong></span>
                         </div>
-                        {errors.pricePerSeat && <p className="text-danger">{errors.pricePerSeat.message}</p>}
+                        {errors.pricePerSeat && <p id="pricePerSeatError" className="text-danger">{errors.pricePerSeat.message}</p>}
                     </div>
                 </div>
 
@@ -409,6 +409,7 @@ export const PublishRideForm = () => {
 
                 <button
                     type="button"
+                    id="addStopButton"
                     className="btn btn-secondary"
                     onClick={() => {
                         append({

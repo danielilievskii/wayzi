@@ -105,7 +105,7 @@ export const RidesPagination = ({ onPageChange, setPagination, state }: Props) =
                     <option value={20}>20</option>
                     <option value={50}>50</option>
                 </select>
-                <span>{startItem}-{endItem} of {totalItems} rides</span>
+                <span>{startItem}-{endItem} of <span id="totalItems">{totalItems}</span> rides</span>
             </div>
         </div>
     );
